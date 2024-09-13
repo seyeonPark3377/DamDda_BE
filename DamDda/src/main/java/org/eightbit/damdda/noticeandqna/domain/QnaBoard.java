@@ -1,13 +1,11 @@
-package org.eightbit.damdda.qna.domain;
+package org.eightbit.damdda.noticeandqna.domain;
 
 import lombok.*;
-import org.eightbit.damdda.common.domain.BaseEntity;
 import org.eightbit.damdda.common.domain.DateEntity;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.project.domain.Project;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
