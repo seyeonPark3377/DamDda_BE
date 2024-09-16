@@ -16,8 +16,8 @@ public class RewardOption extends BaseEntity {
     @ManyToOne
     private ProjectReward projectReward;
 
-    private String optionType;
-    private String optionName;
+    private String type;
+    private String name;
 
 }
 

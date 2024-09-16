@@ -1,16 +1,13 @@
 package org.eightbit.damdda.project.domain;
 
 import lombok.*;
-import org.eightbit.damdda.common.domain.BaseEntity;
 import org.eightbit.damdda.common.domain.DateEntity;
 import org.eightbit.damdda.member.domain.Member;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name = "projects")
@@ -21,10 +18,12 @@ import java.time.LocalDate;
 @ToString
 public class Project extends DateEntity {
 
-    @ManyToOne
-    private Member member;
-    @ManyToOne
-    private Category category;
+    //@ManyToOne
+    //private Member member;
+    //@ManyToOne
+    //private Category category;
+    //@ManyToMany
+    //private Set<Tag> tags;
 
     private String title;
     private String description;
@@ -36,4 +35,5 @@ public class Project extends DateEntity {
     private Long viewCount;
     private Long likeCount;
     private String thumbnailUrl;
+    private Timestamp submitAt;
 }

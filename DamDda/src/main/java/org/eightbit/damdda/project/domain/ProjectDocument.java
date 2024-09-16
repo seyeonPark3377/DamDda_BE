@@ -20,7 +20,9 @@ public class ProjectDocument extends BaseEntity {
     @ManyToOne
     private Project project;
 
-    private String documentUrl;
+    private int ord;
+    private String fileName;
+    private String url;
 
 }
 

@@ -14,6 +14,6 @@ public class ProjectImageDTO {
     private Long id;
     private Project project;
     private String imageUrl;
-    private ProjectImageType imageType;
+    private ProjectImageTypeDTO imageType;
 
 }

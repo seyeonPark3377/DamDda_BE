@@ -13,6 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @ToString
 public class Tag extends BaseEntity {
+
     private String name;
     private Integer usageFrequency;
 }

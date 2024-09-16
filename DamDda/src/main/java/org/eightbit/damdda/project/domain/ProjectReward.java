@@ -16,9 +16,6 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @ToString
 public class ProjectReward extends BaseEntity {
-    @ManyToOne
-    private Project project;
-
-    private String rewardName;
+    private String name;
 }
 

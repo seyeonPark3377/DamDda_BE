@@ -4,7 +4,6 @@ import lombok.*;
 import org.eightbit.damdda.common.domain.BaseEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -15,13 +14,14 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class PackageRewardOption extends BaseEntity {
+//PackageRewardOption -> PackageReward
+public class PackageReward extends BaseEntity {
+    @ManyToOne
+    private Project project;
     @ManyToOne
     private ProjectPackage projectPackage;
     @ManyToOne
     private ProjectReward projectReward;
-    @ManyToOne
-    private RewardOption rewardOption;
 
     private Integer rewardCount;
 }

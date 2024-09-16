@@ -16,10 +16,9 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @ToString
 public class ProjectPackage extends BaseEntity {
-    @ManyToOne
-    private Project project;
 
-    private String packageName;
-    private Integer packagePrice;
+    private String name;
+    private Integer price;
+    private Integer qtyLimit;
 }
 

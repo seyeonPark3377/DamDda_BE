@@ -1,4 +1,5 @@
 package org.eightbit.damdda.project.domain;
+//이거 필요 없을 듯
 
 import lombok.*;
 import org.eightbit.damdda.common.domain.BaseEntity;

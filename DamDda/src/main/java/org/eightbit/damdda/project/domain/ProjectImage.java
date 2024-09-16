@@ -21,7 +21,9 @@ public class ProjectImage extends BaseEntity {
     @ManyToOne
     private Project project;
 
-    private String imageUrl;
+    private String url;
+    private int ord;
+    private String fileName;
 
     @ManyToOne
     private ProjectImageType imageType;

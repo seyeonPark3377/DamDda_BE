@@ -14,6 +14,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @ToString
 public class ProjectImageType {
+
     @Id
     private String imageType;
 }
