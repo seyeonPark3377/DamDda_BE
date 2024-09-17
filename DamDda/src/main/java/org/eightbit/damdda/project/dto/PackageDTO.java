@@ -1,4 +1,4 @@
-package org.eightbit.damdda.project.dto;
-
-public class PackageDTO {
-}
+//package org.eightbit.damdda.project.dto;
+//
+//public class PackageDTO {
+//}

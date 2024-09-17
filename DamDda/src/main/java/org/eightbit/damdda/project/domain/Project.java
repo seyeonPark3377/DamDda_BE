@@ -7,6 +7,7 @@ import org.eightbit.damdda.member.domain.Member;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,15 +16,21 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"category", "tags"})
 public class Project extends DateEntity {
 
-    //@ManyToOne
-    //private Member member;
-    //@ManyToOne
-    //private Category category;
-    //@ManyToMany
-    //private Set<Tag> tags;
+//    @ManyToOne
+//    private Member member;
+    @ManyToOne
+    @JoinColumn(name = "category", referencedColumnName = "name")
+    private Category category;
+    @ManyToMany
+    @JoinTable(
+            name = "project_tag",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "tags_id")
+    )
+    private List<Tag> tags;
 
     private String title;
     private String description;
@@ -31,9 +38,19 @@ public class Project extends DateEntity {
     private Timestamp endDate;
     private Long targetFunding;
     private Long fundsReceive;
-    private Long supporterCount;
-    private Long viewCount;
-    private Long likeCount;
+    private Long supporterCnt;
+    private Long viewCnt;
+    private Long likeCnt;
     private String thumbnailUrl;
     private Timestamp submitAt;
+
+    // Category를 설정하는 setter
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    // Tags를 설정하는 setter
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
 }

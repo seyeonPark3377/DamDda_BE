@@ -5,10 +5,9 @@ import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.project.domain.Category;
 import org.eightbit.damdda.project.domain.Project;
-import org.eightbit.damdda.project.domain.ProjectDocument;
 import org.eightbit.damdda.project.domain.Tag;
-import org.eightbit.damdda.project.dto.ProjectDTO;
-import org.eightbit.damdda.project.dto.ProjectRegistDTO;
+import org.eightbit.damdda.project.dto.CategoriesDTO;
+import org.eightbit.damdda.project.dto.ProjectDetailDTO;
 import org.eightbit.damdda.project.repository.*;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +16,10 @@ import javax.persistence.ManyToOne;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -26,41 +27,63 @@ import java.util.Set;
 @Transactional
 public class ProjectServiceImpl implements ProjectService {
 
-    private final ProjectDocumentRepository projectDocumentRepository;
-    private final ProjectImageRepository projectImageRepository;
-    private final ProjectRepository projectRepository;
-    private final TagRepository tagRepository;
 
+
+//    private final ProjectDocumentRepository projectDocumentRepository;
+//    private final ProjectImageRepository projectImageRepository;
+    private final ProjectRepository projectRepository;
+    private final CategoryService categoryService;
+    private final TagService tagService;
+//    private final TagRepository tagRepository;
+//    private final CategoryRepository categoryRepository;
 //    private Member member = new Member();
 
+
+//    public List<Project> getProjectsByIds(List<Long> projectIds) {
+//        return projectRepository.findAllById(projectIds);
+//    }
+
     @Override
-    public Long register(ProjectRegistDTO projectRegistDTO, boolean submit){
-        log.info(submit);
-        log.info(projectRegistDTO);
-        log.info("service----------------------------------------");
+    public Long register(ProjectDetailDTO projectDetailDTO, boolean submit){
 
-        // projeectRegisterDTO to ProjectDocument / ProjectImage / Project / Tag
+        Category category = categoryService.registerCategory(projectDetailDTO.getCategory());
 
+        List<Tag> tags = tagService.registerTags(projectDetailDTO.getTags());
 
+        // 1. 프로젝트 생성 및 저장 (ID 생성)
         Project project = Project.builder()
-//                .member(member)
-//                .category(projectRegistDTO.getCategory())
-//                .tags(projectRegistDTO.getTags())
-                .title(projectRegistDTO.getTitle())
-                .description(projectRegistDTO.getDescription())
-                .startDate(projectRegistDTO.getStartDate())
-                .endDate(projectRegistDTO.getEndDate())
-                .targetFunding(projectRegistDTO.getTargetFunding())
-                .fundsReceive(projectRegistDTO.getFundsReceive())
-                .supporterCount(projectRegistDTO.getSupporterCount())
-                .viewCount(0L)
-                .likeCount(projectRegistDTO.getLikeCount())
-                .thumbnailUrl(projectRegistDTO.getThumbnailUrl())
-                .submitAt(submit ? Timestamp.valueOf(LocalDateTime.now()) : null)
+                .tags(tags)
+                .category(category)
+                .title(projectDetailDTO.getTitle())
+                .description(projectDetailDTO.getDescription())
+                .startDate(Timestamp.valueOf(projectDetailDTO.getStartDate()))
+                .endDate(Timestamp.valueOf(projectDetailDTO.getEndDate()))
+                .targetFunding(projectDetailDTO.getTargetFunding())
+                .fundsReceive(0L)
+                .supporterCnt(0L)  // 기본값 0
+                .viewCnt(0L)       // 기본값 0
+                .likeCnt(0L)       // 기본값 0
+                .thumbnailUrl("")  // 기본값은 빈 문자열로 설정
+                .submitAt(submit ? Timestamp.valueOf(LocalDateTime.now()) : null)  // 제출 시간 설정
                 .build();
-        log.info("project----------------------------------------");
 
-        return projectRepository.save(project).getId();
+        // 프로젝트를 저장해 ID를 생성
+        project = projectRepository.save(project);
+        final Long projectId = project.getId();
+
+        // 2. 카테고리 설정
+        category = categoryService.addProjectToCategory(projectId, projectDetailDTO.getCategory());  // 카테고리 등록 서비스 호출
+        project.setCategory(category);  // 카테고리 설정
+
+
+        // 3. 태그 설정
+        tags = tagService.addProjectToTags(projectDetailDTO.getTags(), projectId);
+        project.setTags(tags);  // 프로젝트에 태그 추가
+
+        log.info("Registered project " + project);
+
+        // 5. 최종 프로젝트 저장
+        return project.getId();
     }
 
     @Override

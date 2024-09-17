@@ -1,21 +1,22 @@
 //package org.eightbit.damdda.project.domain;
 //
 //import lombok.*;
+//import org.eightbit.damdda.common.domain.BaseEntity;
 //
 //import javax.persistence.Entity;
-//import javax.persistence.Id;
 //import javax.persistence.Table;
 //
 //@Entity
-//@Table(name = "project_image_type")
+//@Table(name = "packages")
 //@Getter
 //@Builder
 //@AllArgsConstructor
 //@NoArgsConstructor
 //@ToString
-//public class ProjectImageType {
+//public class Package extends BaseEntity {
 //
-//    @Id
-//    private String imageType;
+//    private String name;
+//    private Integer price;
+//    private Integer qtyLimit;
 //}
 //

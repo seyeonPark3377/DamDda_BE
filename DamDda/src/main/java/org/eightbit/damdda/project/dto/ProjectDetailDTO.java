@@ -1,9 +1,16 @@
 package org.eightbit.damdda.project.dto;
 
+import lombok.*;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
-
-public class ProjectDetailHostDTO {
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class ProjectDetailDTO {
     private String title;
     private String description;
     private Long fundsReceive;
@@ -12,9 +19,9 @@ public class ProjectDetailHostDTO {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Long supporterCnt;
-    private Long likerCnt;
+    private Long likeCnt;
     private String category;
-    private String Approval;
-    private String rejectMessage;
-//    private List<projectImageDTO> imgs;
+    //    private List<projectImageDTO> imgs;
+    private List<TagDTO> tags;
+
 }

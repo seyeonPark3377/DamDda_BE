@@ -3,7 +3,8 @@ package org.eightbit.damdda.project.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.project.dto.ProjectRegistDTO;
+import org.eightbit.damdda.project.dto.CategoriesDTO;
+import org.eightbit.damdda.project.dto.ProjectDetailDTO;
 import org.eightbit.damdda.project.service.ProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,15 +21,22 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class ProjectApiController {
 
+    private final ProjectService projectService;
+
     @GetMapping("/index")
     public String index(Model model) {
         return "This is the project index page.";
     }
 
-    private final ProjectService projectService;
+
+//    @PostMapping("/register/category")
+//    public String registerCategory(@RequestBody CategoriesDTO categoriesDTO, RedirectAttributes redirectAttributes) {
+//        return projectService.registerCategory(categoriesDTO);
+//    }
+
 
     @PostMapping("/register")
-    public String registerPost(@RequestBody ProjectRegistDTO projectRegistDTO, String submit, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String registerPost(@RequestBody ProjectDetailDTO projectDetailDTO, String submit, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         // 유효성 검사 실패 시 처리
         if (bindingResult.hasErrors()) {
             log.info("has errors..........");
@@ -38,12 +46,12 @@ public class ProjectApiController {
         // 프로젝트 ID 변수 선언
         Long projectId = null;
         log.info(submit + "submit!!----------------------------------------------------------");
-        log.info(projectRegistDTO + "projectRegistDTO!!------==============================");
+        log.info(projectDetailDTO + "projectRegistDTO!!------==============================");
         // submit 값에 따른 처리
         if (submit.equals("저장")) {
-            projectId = projectService.register(projectRegistDTO, false);
+            projectId = projectService.register(projectDetailDTO, false);
         } else if (submit.equals("제출")) {
-            projectId = projectService.register(projectRegistDTO, true);
+            projectId = projectService.register(projectDetailDTO, true);
         } else {
             redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
             return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동

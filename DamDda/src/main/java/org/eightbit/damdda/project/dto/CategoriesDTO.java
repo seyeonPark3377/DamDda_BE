@@ -1,7 +1,7 @@
 package org.eightbit.damdda.project.dto;
 
+
 import lombok.*;
-import org.eightbit.damdda.project.domain.Project;
 
 import java.util.List;
 
@@ -10,8 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class TagDTO {
+public class CategoriesDTO {
     private String name;
-    private int usuageFrequency;
     private List<Long> projectIds;
 }
