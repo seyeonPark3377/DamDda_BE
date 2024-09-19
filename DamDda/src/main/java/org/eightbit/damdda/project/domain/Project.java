@@ -25,6 +25,10 @@ public class Project extends DateEntity {
     @ManyToOne
     @JoinColumn(name = "category", referencedColumnName = "name")
     private Category category;
+
+    @OneToMany
+    private List<ProjectImage> projectImages;
+
     @ManyToMany
     @JoinTable(
             name = "project_tag",
@@ -35,6 +39,7 @@ public class Project extends DateEntity {
 
     private String title;
     private String description;
+    private String descriptionDetail;
     private Timestamp startDate;
     private Timestamp endDate;
     private Long targetFunding;
@@ -44,18 +49,5 @@ public class Project extends DateEntity {
     private Long likeCnt;
     private String thumbnailUrl;
     private Timestamp submitAt;
-
-//
-//
-//    // Category를 설정하는 setter
-//    public void setCategory(Category category) {
-//        this.category = category;
-//    }
-//
-//    // Tags를 설정하는 setter
-//    public void setTags(List<Tag> tags) {
-//        this.tags = tags;
-//    }
-
 
 }

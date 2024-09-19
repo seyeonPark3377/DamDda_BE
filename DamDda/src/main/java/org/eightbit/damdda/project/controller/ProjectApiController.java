@@ -7,15 +7,18 @@ import org.eightbit.damdda.project.dto.CategoriesDTO;
 import org.eightbit.damdda.project.dto.ProjectDetailDTO;
 import org.eightbit.damdda.project.service.ProjectService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/project")
@@ -37,8 +40,9 @@ public class ProjectApiController {
 //    }
 
 
-    @PostMapping("/register")
-    public String registerPost(@RequestBody ProjectDetailDTO projectDetailDTO, String submit, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String registerPost(@RequestBody ProjectDetailDTO projectDetailDTO, String submit,
+                               @RequestPart("images") List<MultipartFile> images, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         // 유효성 검사 실패 시 처리
         if (bindingResult.hasErrors()) {
             log.info("has errors..........");
@@ -51,9 +55,9 @@ public class ProjectApiController {
         log.info(projectDetailDTO + "projectRegistDTO!!------==============================");
         // submit 값에 따른 처리
         if (submit.equals("저장")) {
-            projectId = projectService.register(projectDetailDTO, false);
+            projectId = projectService.register(projectDetailDTO, false, images);
         } else if (submit.equals("제출")) {
-            projectId = projectService.register(projectDetailDTO, true);
+            projectId = projectService.register(projectDetailDTO, true,images);
         } else {
             redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
             return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
@@ -65,7 +69,8 @@ public class ProjectApiController {
 
 
     @PutMapping("/register/{projectId}")
-    public String registerPut(@PathVariable Long projectId, @Valid @RequestBody ProjectDetailDTO projectDetailDTO, String submit, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String registerPut(@PathVariable Long projectId,
+                              @RequestPart("images") List<MultipartFile> images, @Valid @RequestBody ProjectDetailDTO projectDetailDTO, String submit, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         // 유효성 검사 실패 시 처리
         if (bindingResult.hasErrors()) {
             log.info("has errors..........");
@@ -76,9 +81,9 @@ public class ProjectApiController {
         log.info(projectDetailDTO + "projectRegistDTO!!------==============================");
         // submit 값에 따른 처리
         if (submit.equals("저장")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, false);
+            projectId = projectService.updateProject(projectDetailDTO, projectId, false, images);
         } else if (submit.equals("제출")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, true);
+            projectId = projectService.updateProject(projectDetailDTO, projectId, true, images);
         } else {
             redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
             return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
