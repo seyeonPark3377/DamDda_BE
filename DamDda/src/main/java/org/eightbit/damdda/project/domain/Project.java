@@ -13,6 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "projects")
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -44,13 +45,17 @@ public class Project extends DateEntity {
     private String thumbnailUrl;
     private Timestamp submitAt;
 
-    // Category를 설정하는 setter
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+//
+//
+//    // Category를 설정하는 setter
+//    public void setCategory(Category category) {
+//        this.category = category;
+//    }
+//
+//    // Tags를 설정하는 setter
+//    public void setTags(List<Tag> tags) {
+//        this.tags = tags;
+//    }
 
-    // Tags를 설정하는 setter
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
+
 }

@@ -1,5 +1,6 @@
 package org.eightbit.damdda.common.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

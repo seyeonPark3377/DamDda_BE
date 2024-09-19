@@ -46,7 +46,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category addProjectToCategory(Long projectId, String categoryName) {
-// 카테고리 조회
+        registerCategory(categoryName);
+        // 카테고리 조회
         Category category = categoryRepository.findByName(categoryName);
 
         if (category == null) {
@@ -68,6 +69,29 @@ public class CategoryServiceImpl implements CategoryService {
                 category.setProjects(projects);  // 업데이트
             }
         }
+        return category;
+    }
+
+    @Override
+    public Category delProjectFromCategory(Long projectId, String categoryName) {
+        // 카테고리 조회
+        Category category = categoryRepository.findByName(categoryName);
+
+        if (category == null) {
+            throw new RuntimeException("Category not found: " + categoryName);
+        }
+
+        // 프로젝트가 존재하는지 확인
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found: " + projectId));
+
+
+        if (category.getProjects().contains(project)) {
+            List<Project> projects = category.getProjects();
+            projects.remove(project);
+            category.setProjects(projects);  // 업데이트
+        }
+
         return category;
     }
 

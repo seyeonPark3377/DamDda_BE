@@ -42,6 +42,17 @@ public class ProjectServiceImpl implements ProjectService {
 //    public List<Project> getProjectsByIds(List<Long> projectIds) {
 //        return projectRepository.findAllById(projectIds);
 //    }
+    @Override
+    public  String delProject(Long projectId){
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        Category delCategory = categoryService.delProjectFromCategory(projectId, project.getCategory().getName());
+        List<Tag> delTags = tagService.delProjectFromTags(project);
+
+        projectRepository.delete(project);
+        return delCategory.getName();
+    }
 
     @Override
     public Long register(ProjectDetailDTO projectDetailDTO, boolean submit){
@@ -85,6 +96,54 @@ public class ProjectServiceImpl implements ProjectService {
         // 5. 최종 프로젝트 저장
         return project.getId();
     }
+
+    @Override
+    public Long updateProject(ProjectDetailDTO projectDetailDTO, Long projectId, boolean submit){
+
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        Category delCategory = categoryService.delProjectFromCategory(projectId, project.getCategory().getName());
+//        Category newCategory = categoryService.registerCategory(projectDetailDTO.getCategory());
+        Category newCategory = categoryService.addProjectToCategory(projectId, projectDetailDTO.getCategory());
+
+        List<Tag> delTags = tagService.delProjectFromTags(project);
+//        List<Tag> newTags = tagService.registerTags(projectDetailDTO.getTags());
+        List<Tag> newTags = tagService.addProjectToTags(projectDetailDTO.getTags(), projectId);
+
+        project.setTags(newTags);
+        project.setCategory(newCategory);
+        project.setTitle(projectDetailDTO.getTitle());
+        project.setDescription(projectDetailDTO.getDescription());
+        project.setStartDate(Timestamp.valueOf(projectDetailDTO.getStartDate()));
+        project.setEndDate(Timestamp.valueOf(projectDetailDTO.getEndDate()));
+        project.setTargetFunding(projectDetailDTO.getTargetFunding());
+//        project.setFundsReceive(0L);  // 기본값 0
+//        project.setSupporterCnt(0L);  // 기본값 0
+//        project.setViewCnt(0L);       // 기본값 0
+//        project.setLikeCnt(0L);       // 기본값 0
+        project.setThumbnailUrl("");  // 기본값은 빈 문자열로 설정
+        project.setSubmitAt(submit ? Timestamp.valueOf(LocalDateTime.now()) : null);  // 제출 시간 설정
+
+
+//
+//        // 2. 카테고리 설정
+//        newCategory = categoryService.addProjectToCategory(projectId, projectDetailDTO.getCategory());  // 카테고리 등록 서비스 호출
+//        project.setCategory(newCategory);  // 카테고리 설정
+//
+//
+//        // 3. 태그 설정
+//        tags = tagService.addProjectToTags(projectDetailDTO.getTags(), projectId);
+//        project.setTags(tags);  // 프로젝트에 태그 추가
+
+        log.info("Registered project " + project);
+
+        // 5. 최종 프로젝트 저장
+        return project.getId();
+    }
+
+
 
     @Override
     public Project findById(Long id) {

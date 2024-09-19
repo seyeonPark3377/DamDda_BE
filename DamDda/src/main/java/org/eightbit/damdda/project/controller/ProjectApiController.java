@@ -6,6 +6,8 @@ import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.project.dto.CategoriesDTO;
 import org.eightbit.damdda.project.dto.ProjectDetailDTO;
 import org.eightbit.damdda.project.service.ProjectService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -58,7 +60,47 @@ public class ProjectApiController {
         }
 
         // projectId 리턴
-        return "projectId: " + projectId + "\n" +  projectService.findById(projectId);
+        return "projectId: " + projectId + "\n" + projectService.findById(projectId);
+    }
+
+
+    @PutMapping("/register/{projectId}")
+    public String registerPut(@PathVariable Long projectId, @Valid @RequestBody ProjectDetailDTO projectDetailDTO, String submit, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        // 유효성 검사 실패 시 처리
+        if (bindingResult.hasErrors()) {
+            log.info("has errors..........");
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "error";  // 유효성 검증 실패 시 에러 페이지로 이동
+        }
+        log.info(submit + "submit!!----------------------------------------------------------");
+        log.info(projectDetailDTO + "projectRegistDTO!!------==============================");
+        // submit 값에 따른 처리
+        if (submit.equals("저장")) {
+            projectId = projectService.updateProject(projectDetailDTO, projectId, false);
+        } else if (submit.equals("제출")) {
+            projectId = projectService.updateProject(projectDetailDTO, projectId, true);
+        } else {
+            redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
+            return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
+        }
+
+        // projectId 리턴
+        return "projectId: " + projectId + "\n" + projectService.findById(projectId);
+    }
+
+    @DeleteMapping("/register/{projectId}")
+    public ResponseEntity<String> registerDelete(@PathVariable Long projectId) {
+
+        try {
+            // 프로젝트가 존재하는지 확인
+            projectService.findById(projectId);
+            projectService.delProject(projectId);
+            return ResponseEntity.ok("Project deleted successfully.");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
     }
 
 
@@ -105,4 +147,5 @@ public class ProjectApiController {
 //
 //        return "redirect:/board/list";
 //    }
+
 }

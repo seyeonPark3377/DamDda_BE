@@ -12,6 +12,6 @@ import java.util.List;
 @ToString
 public class TagDTO {
     private String name;
-    private int usuageFrequency;
+    private int usageFrequency;
     private List<Long> projectIds;
 }
