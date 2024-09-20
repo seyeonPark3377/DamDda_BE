@@ -3,10 +3,7 @@ package org.eightbit.damdda.project.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.member.domain.Member;
-import org.eightbit.damdda.project.domain.Category;
-import org.eightbit.damdda.project.domain.Project;
-import org.eightbit.damdda.project.domain.ProjectImage;
-import org.eightbit.damdda.project.domain.Tag;
+import org.eightbit.damdda.project.domain.*;
 import org.eightbit.damdda.project.dto.CategoriesDTO;
 import org.eightbit.damdda.project.dto.ProjectDetailDTO;
 import org.eightbit.damdda.project.repository.*;
@@ -40,6 +37,8 @@ public class ProjectServiceImpl implements ProjectService {
     private final CategoryService categoryService;
     private final TagService tagService;
     private final ImgService imgService;
+    private final DocService docService;
+    private final ProjectDocumentRepository projectDocumentRepository;
 //    private final TagRepository tagRepository;
 //    private final CategoryRepository categoryRepository;
 //    private Member member = new Member();
@@ -55,25 +54,29 @@ public class ProjectServiceImpl implements ProjectService {
 
         Category delCategory = categoryService.delProjectFromCategory(projectId, project.getCategory().getName());
         List<Tag> delTags = tagService.delProjectFromTags(project);
-        log.info("11111111111111111111111111111111111-del-tag");
 
 
         Boolean delImg = imgService.deleteImageFiles(project.getProjectImages(), project.getThumbnailUrl());
-        log.info("222222222222222222222222222222222222222222222-del-img");
 
+        docService.deleteDocFiles(projectDocumentRepository.findByProjectId(projectId));
 
         projectRepository.delete(project);
         return delCategory.getName();
     }
 
     @Override
-    public Long register(ProjectDetailDTO projectDetailDTO, boolean submit, List<MultipartFile> productImages, List<MultipartFile> descriptionImages){
+    public Long register(ProjectDetailDTO projectDetailDTO,
+                         boolean submit,
+                         List<MultipartFile> productImages,
+                         List<MultipartFile> descriptionImages,
+                         List<MultipartFile> docs){
 
         Category category = categoryService.registerCategory(projectDetailDTO.getCategory());
 
         List<Tag> tags = tagService.registerTags(projectDetailDTO.getTags());
 
         List<ProjectImage> projectImages = new ArrayList<>();
+
 
         // 1. 프로젝트 생성 및 저장 (ID 생성)
         Project project = Project.builder()
@@ -113,15 +116,19 @@ public class ProjectServiceImpl implements ProjectService {
 
         imgService.saveImages(project, productImages, descriptionImages);
 
-
-
+        docService.saveDocs(project, docs);
 
         // 5. 최종 프로젝트 저장
         return project.getId();
     }
 
     @Override
-    public Long updateProject(ProjectDetailDTO projectDetailDTO, Long projectId, boolean submit,List<MultipartFile> productImages, List<MultipartFile> descriptionImages){
+    public Long updateProject(ProjectDetailDTO projectDetailDTO,
+                              Long projectId,
+                              boolean submit,
+                              List<MultipartFile> productImages,
+                              List<MultipartFile> descriptionImages,
+                              List<MultipartFile> docs){
 
 
         Project project = projectRepository.findById(projectId)
@@ -135,12 +142,12 @@ public class ProjectServiceImpl implements ProjectService {
 //        List<Tag> newTags = tagService.registerTags(projectDetailDTO.getTags());
         List<Tag> newTags = tagService.addProjectToTags(projectDetailDTO.getTags(), projectId);
 
-
         Boolean delImg = imgService.deleteImageFiles(project.getProjectImages(), project.getThumbnailUrl());
         try {
             imgService.saveImages(project, productImages, descriptionImages);
         } catch (Exception e) {    }
 
+        docService.deleteDocFiles(projectDocumentRepository.findByProjectId(projectId));
 
         project.setTags(newTags);
         project.setCategory(newCategory);
@@ -169,6 +176,9 @@ public class ProjectServiceImpl implements ProjectService {
 //        project.setTags(tags);  // 프로젝트에 태그 추가
 
         log.info("Registered project " + project);
+
+
+        docService.saveDocs(project, docs);
 
         // 5. 최종 프로젝트 저장
         return project.getId();

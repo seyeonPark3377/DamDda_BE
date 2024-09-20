@@ -191,7 +191,6 @@ public class ImgServiceImpl implements ImgService {
             // 7. 프로젝트 저장 (이미지 리스트 포함)
             projectRepository.save(project);  // 프로젝트의 projectImages 리스트 업데이트
 
-            log.info("11111111111111111111111111" + project.getProjectImages());
         }
 
     }
