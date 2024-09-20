@@ -1,8 +1,14 @@
 package org.eightbit.damdda.project.dto;
 
+import lombok.*;
+
 import java.time.LocalDateTime;
 
-
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class ProjectDetailHostDTO {
     private String title;
     private String description;

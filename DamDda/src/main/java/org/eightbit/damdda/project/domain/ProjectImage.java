@@ -13,11 +13,11 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "projects")
+@ToString(exclude = "project")
 public class ProjectImage extends BaseEntity {
 
-//    @ManyToOne
-//    private Project project;
+    @ManyToOne
+    private Project project;
 
     private String url;
     private int ord;

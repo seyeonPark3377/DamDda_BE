@@ -17,7 +17,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"category", "tags", "projectImages"})
+@ToString(exclude = {"category", "tags"})
 public class Project extends DateEntity {
 
 //    @ManyToOne
@@ -26,8 +26,8 @@ public class Project extends DateEntity {
     @JoinColumn(name = "category", referencedColumnName = "name")
     private Category category;
 
-    @OneToMany
-    private List<ProjectImage> projectImages;
+//    @OneToMany
+//    private List<ProjectImage> projectImages;
 
     @ManyToMany
     @JoinTable(
@@ -49,5 +49,6 @@ public class Project extends DateEntity {
     private Long likeCnt;
     private String thumbnailUrl;
     private Timestamp submitAt;
+
 
 }

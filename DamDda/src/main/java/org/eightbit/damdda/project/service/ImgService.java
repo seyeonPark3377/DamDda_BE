@@ -8,6 +8,6 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ImgService {
-    boolean deleteImageFiles(List<ProjectImage> images, String S_imageUrl);
+    boolean deleteImageFiles(List<ProjectImage> images);
     void saveImages(Project project, List<MultipartFile> productImages, List<MultipartFile> descriptionImages);
 }

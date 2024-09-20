@@ -35,39 +35,49 @@ public class ImgServiceImpl implements ImgService {
     private final ProjectImageTypeRepository projectImageTypeRepository;
 
     @Override
-    public boolean deleteImageFiles(List<ProjectImage> images, String S_imageUrl) {
+    public boolean deleteImageFiles(List<ProjectImage> images) {
         boolean result = true;
+        // 첫 번째 파일의 폴더 경로를 추출
+        if (!images.isEmpty()) {
+            String folderPath = basePath + images.get(0).getUrl().replace("/uploads", ""); // 기본 경로 설정
+            folderPath = folderPath.substring(0, folderPath.lastIndexOf("/")); // 파일명 제외하고 폴더 경로만 추출
+            File directory = new File(folderPath);
 
-        for (ProjectImage img : images) {
-            String filePath = basePath + img.getUrl().replace("/uploads", "");  // img.getUrl()이 상대 경로라 가정
-            File file = new File(filePath);
 
-            if (file.exists()) {
-                result = result && file.delete(); // 파일 삭제
-            } else {
-                result = false;
+            for (ProjectImage img : images) {
+                String filePath = basePath + img.getUrl().replace("/uploads", "");  // img.getUrl()이 상대 경로라 가정
+                File file = new File(filePath);
+
+                if (file.exists()) {
+                    result = result && file.delete(); // 파일 삭제
+                } else {
+                    result = false;
+                }
             }
+
+            // 3. 이미지 파일 삭제가 성공했을 경우, DB에서 해당 이미지 정보 삭제
+            if (result) {
+                // 데이터베이스에서 ProjectImage 엔티티 삭제
+                // DB에서 이미지 삭제
+                projectImageRepository.deleteAll(images);
+
+            }
+
+            // 폴더가 존재하고, 폴더 안에 파일이 없는 경우 삭제
+            if (directory.exists() && directory.isDirectory() && directory.list().length == 0) {
+                if (directory.delete()) {
+                    System.out.println("빈 폴더 삭제 완료: " + directory.getAbsolutePath());
+                } else {
+                    System.out.println("폴더 삭제 실패: " + directory.getAbsolutePath());
+                }
+            } else {
+                System.out.println("폴더가 비어 있지 않거나 존재하지 않습니다: " + directory.getAbsolutePath());
+            }
+
         }
 
-//        File S_file = new File(basePath + S_imageUrl.replace("/uploads", ""));
-//        if (S_file.exists()) {
-//            result = result && S_file.delete();  // 파일 삭제
-//        } else {
-//            result = false;
-//        }
-
-        log.info("11111111111111111111111111111111111111111-del-file" + result);
-        log.info("삭제할 이미지 목록: " + images);
-        // 3. 이미지 파일 삭제가 성공했을 경우, DB에서 해당 이미지 정보 삭제
-        if (result) {
-            // 데이터베이스에서 ProjectImage 엔티티 삭제
-            // DB에서 이미지 삭제
-            projectImageRepository.deleteAll(images);
-
-        }
 
 
-        log.info("333333333333333333333333333333333333-del-file" + result);
 
         return result;  // 파일이 존재하지 않으면 false 반환
     }
@@ -79,12 +89,9 @@ public class ImgServiceImpl implements ImgService {
         String uploadDirectory = basePath + "/projects/" + project.getId();
         File uploadDir = new File(uploadDirectory);
 
-        List<ProjectImage> projectImages = new ArrayList<>();
-
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();  // 경로 없으면 생성
         }
-
 
         for (int i = 0; i < productImages.size(); i++) {
             try {
@@ -116,7 +123,7 @@ public class ImgServiceImpl implements ImgService {
 
                     // 이미지 엔티티 저장
                     ProjectImage projectImage = ProjectImage.builder()
-//                            .project(project)
+                            .project(project)
                             .url(thumbnailUrl)
                             .fileName(thumbnailFileName)
                             .ord(i)
@@ -124,9 +131,6 @@ public class ImgServiceImpl implements ImgService {
                             .build();
 
                     projectImageRepository.save(projectImage);
-
-                    // 프로젝트의 이미지 리스트에 추가
-                    projectImages.add(projectImage);  // 이미지 리스트에 추가
                 }
 
                 // 이미지 타입 설정 (썸네일과 일반 이미지)
@@ -134,7 +138,7 @@ public class ImgServiceImpl implements ImgService {
 
                 // 이미지 엔티티 저장
                 ProjectImage projectImage = ProjectImage.builder()
-//                        .project(project)
+                        .project(project)
                         .url("/uploads/projects/" + project.getId() + "/" + fileName)
                         .fileName(fileName)
                         .ord(i)
@@ -143,9 +147,6 @@ public class ImgServiceImpl implements ImgService {
 
                 projectImageRepository.save(projectImage);
 
-
-                // 프로젝트의 이미지 리스트에 추가
-                projectImages.add(projectImage);  // 이미지 리스트에 추가
             } catch (IOException e) {
                 // 예외 처리 로직 작성 (로그 기록 또는 사용자에게 알림 등)
                 e.printStackTrace();
@@ -169,7 +170,7 @@ public class ImgServiceImpl implements ImgService {
 
                 // 이미지 엔티티 저장
                 ProjectImage projectImage = ProjectImage.builder()
-//                        .project(project)
+                        .project(project)
                         .url("/uploads/projects/" + project.getId() + "/" + fileName)
                         .fileName(fileName)
                         .ord(i)
@@ -178,18 +179,10 @@ public class ImgServiceImpl implements ImgService {
 
                 projectImageRepository.save(projectImage);
 
-
-                // 프로젝트의 이미지 리스트에 추가
-                projectImages.add(projectImage);  // 이미지 리스트에 추가
             } catch (IOException e) {
                 // 예외 처리 로직 작성 (로그 기록 또는 사용자에게 알림 등)
                 e.printStackTrace();
             }
-
-            project.setProjectImages(projectImages);
-
-            // 7. 프로젝트 저장 (이미지 리스트 포함)
-            projectRepository.save(project);  // 프로젝트의 projectImages 리스트 업데이트
 
         }
 

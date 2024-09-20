@@ -3,7 +3,6 @@ package org.eightbit.damdda.project.dto;
 import lombok.*;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -11,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ProjectDetailDTO {
+public class ProjectResponseDetailDTO {
     private String title;       // 프로젝트 명
     private String description;     // 프로젝트 설명
     private String descriptionDetail;     // 프로젝트 상세설명
@@ -23,7 +22,9 @@ public class ProjectDetailDTO {
     private Long supporterCnt;  //후원자수
     private Long likeCnt;   //좋아요 한 사람 수
     private String category;    // 카테고리
-    //    private List<projectImageDTO> imgs; // 이미지-사진5장이랑 설명이미지 같이 들어있을듯
-    private List<TagDTO> tags;  //태그-아마도 tags.getName()으로 하시면 될듯
+    private String thumbnailUrl; // 이미지-사진5장이랑 설명이미지 같이 들어있을듯
+    private List<String> productImages; // 이미지-사진5장이랑 설명이미지 같이 들어있을듯
+    private List<String> descriptionImages; // 이미지-사진5장이랑 설명이미지 같이 들어있을듯
+    private List<String> tags;  //태그-아마도 tags.getName()으로 하시면 될듯
 
 }

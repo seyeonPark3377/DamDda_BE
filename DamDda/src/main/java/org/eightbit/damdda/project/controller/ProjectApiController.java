@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.project.dto.CategoriesDTO;
 import org.eightbit.damdda.project.dto.ProjectDetailDTO;
+import org.eightbit.damdda.project.dto.ProjectResponseDetailDTO;
 import org.eightbit.damdda.project.service.ProjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,12 +34,13 @@ public class ProjectApiController {
         return "This is the project index page.";
     }
 
+    @GetMapping("/{projectId}")
+    public ProjectResponseDetailDTO readProjectDetail(@PathVariable Long projectId) {
+        return projectService.readProjectDetail(projectId);
+    }
 
-//    @PostMapping("/register/category")
-//    public String registerCategory(@RequestBody CategoriesDTO categoriesDTO, RedirectAttributes redirectAttributes) {
-//        return projectService.registerCategory(categoriesDTO);
-//    }
-//@PostMapping("/register")
+
+    //@PostMapping("/register")
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String registerPost(@RequestPart("projectDetailDTO")  ProjectDetailDTO projectDetailDTO,
                                String submit,
