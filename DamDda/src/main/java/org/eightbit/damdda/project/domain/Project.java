@@ -17,7 +17,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"category", "tags"})
+@ToString(exclude = {"category", "tags", "projectImages"})
 public class Project extends DateEntity {
 
 //    @ManyToOne

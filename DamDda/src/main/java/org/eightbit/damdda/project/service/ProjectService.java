@@ -11,7 +11,7 @@ public interface ProjectService {
 
 //    public List<Project> getProjectsByIds(List<Long> projectIds);
     String delProject(Long projectId);
-    Long register(ProjectDetailDTO projectDetailDTO, boolean submit, List<MultipartFile> images);
+    Long register(ProjectDetailDTO projectDetailDTO, boolean submit, List<MultipartFile> productImages, List<MultipartFile> descriptionImages);
     Project findById(Long id);
-    Long updateProject(ProjectDetailDTO projectDetailDTO, Long projectId, boolean submit, List<MultipartFile> images);
+    Long updateProject(ProjectDetailDTO projectDetailDTO, Long projectId, boolean submit,List<MultipartFile> productImages, List<MultipartFile> descriptionImages);
 }

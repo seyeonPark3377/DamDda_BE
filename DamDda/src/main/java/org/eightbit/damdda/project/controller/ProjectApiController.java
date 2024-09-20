@@ -38,39 +38,47 @@ public class ProjectApiController {
 //    public String registerCategory(@RequestBody CategoriesDTO categoriesDTO, RedirectAttributes redirectAttributes) {
 //        return projectService.registerCategory(categoriesDTO);
 //    }
-
-
+//@PostMapping("/register")
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String registerPost(@RequestBody ProjectDetailDTO projectDetailDTO, String submit,
-                               @RequestPart("images") List<MultipartFile> images, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        // 유효성 검사 실패 시 처리
-        if (bindingResult.hasErrors()) {
-            log.info("has errors..........");
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "error";  // 유효성 검증 실패 시 에러 페이지로 이동
-        }
-        // 프로젝트 ID 변수 선언
-        Long projectId = null;
-        log.info(submit + "submit!!----------------------------------------------------------");
-        log.info(projectDetailDTO + "projectRegistDTO!!------==============================");
-        // submit 값에 따른 처리
-        if (submit.equals("저장")) {
-            projectId = projectService.register(projectDetailDTO, false, images);
-        } else if (submit.equals("제출")) {
-            projectId = projectService.register(projectDetailDTO, true,images);
-        } else {
-            redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
-            return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
-        }
-
-        // projectId 리턴
-        return "projectId: " + projectId + "\n" + projectService.findById(projectId);
+    public String registerPost(@RequestPart("projectDetailDTO")  ProjectDetailDTO projectDetailDTO,
+                               String submit,
+                               @RequestPart("productImages") List<MultipartFile> productImages,
+                               @RequestPart("descriptionImages") List<MultipartFile> descriptionImages,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes) {
+    // 유효성 검사 실패 시 처리
+    if (bindingResult.hasErrors()) {
+        log.info("has errors..........");
+        redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+        return "error";  // 유효성 검증 실패 시 에러 페이지로 이동
+    }
+    // 프로젝트 ID 변수 선언
+    Long projectId = null;
+    log.info(submit + "submit!!----------------------------------------------------------");
+    log.info(projectDetailDTO + "projectRegistDTO!!------==============================");
+    // submit 값에 따른 처리
+    if (submit.equals("저장")) {
+        projectId = projectService.register(projectDetailDTO, false, productImages, descriptionImages);
+    } else if (submit.equals("제출")) {
+        projectId = projectService.register(projectDetailDTO, true, productImages, descriptionImages);
+    } else {
+        redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
+        return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
     }
 
+    // projectId 리턴
+    return "projectId: " + projectId + "\n" + projectService.findById(projectId);
+
+    }
 
     @PutMapping("/register/{projectId}")
     public String registerPut(@PathVariable Long projectId,
-                              @RequestPart("images") List<MultipartFile> images, @Valid @RequestBody ProjectDetailDTO projectDetailDTO, String submit, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+                              @RequestPart("productImages") List<MultipartFile> productImages,
+                              @RequestPart("descriptionImages") List<MultipartFile> descriptionImages,
+                              @Valid @RequestPart("projectDetailDTO") ProjectDetailDTO projectDetailDTO,
+                              String submit,
+                              BindingResult bindingResult,
+                              RedirectAttributes redirectAttributes) {
         // 유효성 검사 실패 시 처리
         if (bindingResult.hasErrors()) {
             log.info("has errors..........");
@@ -81,9 +89,9 @@ public class ProjectApiController {
         log.info(projectDetailDTO + "projectRegistDTO!!------==============================");
         // submit 값에 따른 처리
         if (submit.equals("저장")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, false, images);
+            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImages, descriptionImages);
         } else if (submit.equals("제출")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, true, images);
+            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImages, descriptionImages);
         } else {
             redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
             return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동

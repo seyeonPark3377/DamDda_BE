@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface ImgService {
     boolean deleteImageFiles(List<ProjectImage> images, String S_imageUrl);
-    void saveImages(Project project, List<MultipartFile> images) throws IOException;
+    void saveImages(Project project, List<MultipartFile> productImages, List<MultipartFile> descriptionImages);
 }

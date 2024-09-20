@@ -55,8 +55,11 @@ public class ProjectServiceImpl implements ProjectService {
 
         Category delCategory = categoryService.delProjectFromCategory(projectId, project.getCategory().getName());
         List<Tag> delTags = tagService.delProjectFromTags(project);
+        log.info("11111111111111111111111111111111111-del-tag");
+
 
         Boolean delImg = imgService.deleteImageFiles(project.getProjectImages(), project.getThumbnailUrl());
+        log.info("222222222222222222222222222222222222222222222-del-img");
 
 
         projectRepository.delete(project);
@@ -64,7 +67,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Long register(ProjectDetailDTO projectDetailDTO, boolean submit, List<MultipartFile> images){
+    public Long register(ProjectDetailDTO projectDetailDTO, boolean submit, List<MultipartFile> productImages, List<MultipartFile> descriptionImages){
 
         Category category = categoryService.registerCategory(projectDetailDTO.getCategory());
 
@@ -91,6 +94,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .submitAt(submit ? Timestamp.valueOf(LocalDateTime.now()) : null)  // 제출 시간 설정
                 .build();
 
+
         // 프로젝트를 저장해 ID를 생성
         project = projectRepository.save(project);
         final Long projectId = project.getId();
@@ -104,18 +108,20 @@ public class ProjectServiceImpl implements ProjectService {
         tags = tagService.addProjectToTags(projectDetailDTO.getTags(), projectId);
         project.setTags(tags);  // 프로젝트에 태그 추가
 
-        log.info("Registered project " + project);
 
-    try {
-        imgService.saveImages(project, images);
-    } catch (Exception e) {    }
+
+
+        imgService.saveImages(project, productImages, descriptionImages);
+
+
+
 
         // 5. 최종 프로젝트 저장
         return project.getId();
     }
 
     @Override
-    public Long updateProject(ProjectDetailDTO projectDetailDTO, Long projectId, boolean submit, List<MultipartFile> images){
+    public Long updateProject(ProjectDetailDTO projectDetailDTO, Long projectId, boolean submit,List<MultipartFile> productImages, List<MultipartFile> descriptionImages){
 
 
         Project project = projectRepository.findById(projectId)
@@ -132,7 +138,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         Boolean delImg = imgService.deleteImageFiles(project.getProjectImages(), project.getThumbnailUrl());
         try {
-            imgService.saveImages(project, images);
+            imgService.saveImages(project, productImages, descriptionImages);
         } catch (Exception e) {    }
 
 
