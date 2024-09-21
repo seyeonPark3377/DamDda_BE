@@ -2,13 +2,19 @@ package org.eightbit.damdda.project.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.eightbit.damdda.admin.domain.AdminApproval;
+import org.eightbit.damdda.admin.repository.AdminApprovalRepository;
 import org.eightbit.damdda.common.domain.DateEntity;
 import org.eightbit.damdda.member.domain.Member;
+import org.eightbit.damdda.member.repository.MemberRepository;
+import org.eightbit.damdda.order.Repository.SupportingProjectRepository;
 import org.eightbit.damdda.project.domain.*;
-import org.eightbit.damdda.project.dto.CategoriesDTO;
-import org.eightbit.damdda.project.dto.ProjectDetailDTO;
-import org.eightbit.damdda.project.dto.ProjectResponseDetailDTO;
+import org.eightbit.damdda.project.dto.*;
 import org.eightbit.damdda.project.repository.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,8 +40,7 @@ import java.util.stream.Collectors;
 public class ProjectServiceImpl implements ProjectService {
 
 
-
-//    private final ProjectDocumentRepository projectDocumentRepository;
+    //    private final ProjectDocumentRepository projectDocumentRepository;
 //    private final ProjectImageRepository projectImageRepository;
     private final ProjectRepository projectRepository;
     private final CategoryService categoryService;
@@ -44,6 +49,10 @@ public class ProjectServiceImpl implements ProjectService {
     private final DocService docService;
     private final ProjectDocumentRepository projectDocumentRepository;
     private final ProjectImageRepository projectImageRepository;
+    private final MemberRepository memberRepository;
+    private final SupportingProjectRepository supportingProjectRepository;
+    private final AdminApprovalRepository adminApprovalRepository;
+    private final LikedProjectRepository likedProjectRepository;
 //    private final TagRepository tagRepository;
 //    private final CategoryRepository categoryRepository;
 //    private Member member = new Member();
@@ -53,24 +62,113 @@ public class ProjectServiceImpl implements ProjectService {
 //        return projectRepository.findAllById(projectIds);
 //    }
 
-    public ProjectResponseDetailDTO readProjectDetail(Long projectId){
+
+    @Override
+    public PageResponseDTO<ProjectBoxHostDTO> getListProjectBoxHostDTO(Long memberId, PageRequestDTO pageRequestDTO) {
+        Pageable pageable =
+                PageRequest.of(pageRequestDTO.getPage() <= 0 ?
+                                0 : pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(),
+                        Sort.by("id").ascending());
+        Page<Project> result = projectRepository.listOfProjectBoxHost(memberId, pageable);
+
+
+        List<ProjectBoxHostDTO> dtoList = result.getContent().stream()
+                .map(project -> {
+                    AdminApproval adminApproval = adminApprovalRepository.findByProjectId(project.getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Approval not found for projectId: " + project.getId()));
+
+                    return ProjectBoxHostDTO.builder()
+                            .title(project.getTitle())
+                            .description(project.getDescription())
+                            .thumbnailUrl(project.getThumbnailUrl())
+                            .fundsReceive(project.getFundsReceive())
+                            .targetFunding(project.getTargetFunding())
+                            .nickName(project.getMember().getNickname())
+                            .endDate(project.getEndDate())
+                            .approval(adminApproval.getApproval())
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        return PageResponseDTO.<ProjectBoxHostDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int) result.getTotalElements())
+                .build();
+
+    }
+
+
+    public ProjectDetailHostDTO readProjectDetailHost(Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        List<ProjectImage> projectImages =  projectImageRepository.findByProjectId(projectId);
-        List<String> productImages = new ArrayList<>();
-        List<String> descriptionImages = new ArrayList<>();
-        for(ProjectImage projectImage : projectImages){
-            if(projectImage.getImageType().getImageType().equals("PRODUCT_IMAGE")){
-                productImages.add(projectImage.getUrl());
-            } else if(projectImage.getImageType().getImageType().equals("PRODUCT_DESCRIPTION_IMAGE")){
-                descriptionImages.add(projectImage.getUrl());
-            }
-        }
+        List<ProjectImage> projectImages = projectImageRepository.findAllByProjectId(projectId);
+        List<String> productImages = projectImages.stream()
+                .filter(projectImage -> projectImage.getImageType().getImageType().equals("PRODUCT_IMAGE"))
+                .map(ProjectImage::getUrl)
+                .collect(Collectors.toList());
+
         List<Tag> tags = project.getTags();
         List<String> tagDTOs = tags.stream()
                 .map(Tag::getName)
                 .collect(Collectors.toList());
+
+        AdminApproval adminApproval = adminApprovalRepository.findByProjectId(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("Approval not found for projectId: " + project.getId()));
+
+
+
+        ProjectDetailHostDTO projectDetailHostDTO = ProjectDetailHostDTO.builder()
+                .title(project.getTitle())
+                .description(project.getDescription())
+                .fundsReceive(project.getFundsReceive())
+                .targetFunding(project.getTargetFunding())
+                .category(project.getCategory().getName())
+                .nickName(project.getMember().getNickname())
+                .startDate(project.getStartDate())
+                .endDate(project.getEndDate())
+                .supporterCnt(supportingProjectRepository.countByProject(project))
+                .approval(adminApproval.getApproval())
+                .rejectMessage(adminApproval.getApprovalText())
+                .likerCnt(likedProjectRepository.countByProjectId(projectId))
+                .productImages(productImages)
+                .tags(tagDTOs)
+                .build();
+
+        return projectDetailHostDTO;
+    }
+
+    public ProjectResponseDetailDTO readProjectDetail(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        List<ProjectImage> projectImages = projectImageRepository.findAllByProjectId(projectId);
+        List<String> productImages = projectImages.stream()
+                .filter(projectImage -> projectImage.getImageType().getImageType().equals("PRODUCT_IMAGE"))
+                .map(ProjectImage::getUrl)
+                .collect(Collectors.toList());
+
+        List<String> descriptionImages = projectImages.stream()
+                .filter(projectImage -> projectImage.getImageType().getImageType().equals("PRODUCT_DESCRIPTION_IMAGE"))
+                .map(ProjectImage::getUrl)
+                .collect(Collectors.toList());
+//        List<String> productImages = new ArrayList<>();
+//        List<String> descriptionImages = new ArrayList<>();
+//        for(ProjectImage projectImage : projectImages){
+//            if(projectImage.getImageType().getImageType().equals("PRODUCT_IMAGE")){
+//                productImages.add(projectImage.getUrl());
+//            } else if(projectImage.getImageType().getImageType().equals("PRODUCT_DESCRIPTION_IMAGE")){
+//                descriptionImages.add(projectImage.getUrl());
+//            }
+//        }
+        List<Tag> tags = project.getTags();
+        List<String> tagDTOs = tags.stream()
+                .map(Tag::getName)
+                .collect(Collectors.toList());
+
+        project.setViewCnt(project.getViewCnt() + 1);
+//        project.setSupporterCnt(supportingProjectRepository.countByProject(project));
 
         ProjectResponseDetailDTO projectResponseDetailDTO = ProjectResponseDetailDTO.builder()
                 .title(project.getTitle())
@@ -79,11 +177,12 @@ public class ProjectServiceImpl implements ProjectService {
                 .fundsReceive(project.getFundsReceive())
                 .targetFunding(project.getTargetFunding())
                 .category(project.getCategory().getName())
-                //.nickName(project.getMember.getNickName())
+                .nickName(project.getMember().getNickname())
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
-                .supporterCnt(project.getSupporterCnt())
-                .likeCnt(project.getLikeCnt())
+                .supporterCnt(supportingProjectRepository.countByProject(project))
+                .likeCnt(likedProjectRepository.countByProjectId(projectId))
+//                .likeCnt(project.getLikeCnt())
                 .thumbnailUrl(project.getThumbnailUrl())
                 .productImages(productImages)
                 .descriptionImages(descriptionImages)
@@ -95,7 +194,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public String delProject(Long projectId){
+    public String delProject(Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
@@ -103,12 +202,12 @@ public class ProjectServiceImpl implements ProjectService {
         List<Tag> delTags = tagService.delProjectFromTags(project);
 
 
-        boolean delImg = imgService.deleteImageFiles(projectImageRepository.findByProjectId(projectId));
+        boolean delImg = imgService.deleteImageFiles(projectImageRepository.findAllByProjectId(projectId));
         project.setThumbnailUrl(null);
 
         docService.deleteDocFiles(projectDocumentRepository.findByProjectId(projectId));
 
-        if(delImg){
+        if (delImg) {
 
             // 삭제 시간을 현재 시간으로 설정
 //            project.setDeletedAt(Timestamp.from(Instant.now()));
@@ -134,19 +233,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Long register(ProjectDetailDTO projectDetailDTO,
+    public Long register(Long memberId,
+                         ProjectDetailDTO projectDetailDTO,
                          boolean submit,
                          List<MultipartFile> productImages,
                          List<MultipartFile> descriptionImages,
-                         List<MultipartFile> docs){
+                         List<MultipartFile> docs) {
 
         Category category = categoryService.registerCategory(projectDetailDTO.getCategory());
 
         List<Tag> tags = tagService.registerTags(projectDetailDTO.getTags());
 
+        Member member = memberRepository.getById(memberId);
 
         // 1. 프로젝트 생성 및 저장 (ID 생성)
         Project project = Project.builder()
+                .member(member)
                 .tags(tags)
                 .category(category)
                 .title(projectDetailDTO.getTitle())
@@ -156,7 +258,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .endDate(projectDetailDTO.getEndDate())
                 .targetFunding(projectDetailDTO.getTargetFunding())
                 .fundsReceive(0L)
-                .supporterCnt(0L)  // 기본값 0
+//                .supporterCnt(0L)  // 기본값 0
                 .viewCnt(0L)       // 기본값 0
                 .likeCnt(0L)       // 기본값 0
                 .thumbnailUrl("")  // 기본값은 빈 문자열로 설정
@@ -178,8 +280,6 @@ public class ProjectServiceImpl implements ProjectService {
         project.setTags(tags);  // 프로젝트에 태그 추가
 
 
-
-
         imgService.saveImages(project, productImages, descriptionImages);
 
         docService.saveDocs(project, docs);
@@ -194,7 +294,7 @@ public class ProjectServiceImpl implements ProjectService {
                               boolean submit,
                               List<MultipartFile> productImages,
                               List<MultipartFile> descriptionImages,
-                              List<MultipartFile> docs){
+                              List<MultipartFile> docs) {
 
 
         Project project = projectRepository.findById(projectId)
@@ -208,7 +308,7 @@ public class ProjectServiceImpl implements ProjectService {
 //        List<Tag> newTags = tagService.registerTags(projectDetailDTO.getTags());
         List<Tag> newTags = tagService.addProjectToTags(projectDetailDTO.getTags(), projectId);
 
-        Boolean delImg = imgService.deleteImageFiles(projectImageRepository.findByProjectId(projectId));
+        Boolean delImg = imgService.deleteImageFiles(projectImageRepository.findAllByProjectId(projectId));
         project.setThumbnailUrl(null);
 
         docService.deleteDocFiles(projectDocumentRepository.findByProjectId(projectId));
@@ -235,7 +335,6 @@ public class ProjectServiceImpl implements ProjectService {
         // 5. 최종 프로젝트 저장
         return project.getId();
     }
-
 
 
     @Override

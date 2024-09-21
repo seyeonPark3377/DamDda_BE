@@ -43,25 +43,32 @@ public class ImgServiceImpl implements ImgService {
             folderPath = folderPath.substring(0, folderPath.lastIndexOf("/")); // 파일명 제외하고 폴더 경로만 추출
             File directory = new File(folderPath);
 
+            log.info("11111111111111111111111111111"+folderPath);
 
             for (ProjectImage img : images) {
                 String filePath = basePath + img.getUrl().replace("/uploads", "");  // img.getUrl()이 상대 경로라 가정
                 File file = new File(filePath);
+                log.info(result + "22222222222222222222222222" + file.exists() + filePath);
 
                 if (file.exists()) {
-                    result = result && file.delete(); // 파일 삭제
+                    boolean isDelete = file.delete();
+                    result = result && isDelete; // 파일 삭제
+                    if (isDelete){
+                        projectImageRepository.delete(img);
+                    }
                 } else {
                     result = false;
                 }
+                log.info("22222222222222222222222222" + result);
             }
 
-            // 3. 이미지 파일 삭제가 성공했을 경우, DB에서 해당 이미지 정보 삭제
-            if (result) {
-                // 데이터베이스에서 ProjectImage 엔티티 삭제
-                // DB에서 이미지 삭제
-                projectImageRepository.deleteAll(images);
-
-            }
+//            // 3. 이미지 파일 삭제가 성공했을 경우, DB에서 해당 이미지 정보 삭제
+//            if (result) {
+//                // 데이터베이스에서 ProjectImage 엔티티 삭제
+//                // DB에서 이미지 삭제
+//                projectImageRepository.deleteAll(images);
+//
+//            }
 
             // 폴더가 존재하고, 폴더 안에 파일이 없는 경우 삭제
             if (directory.exists() && directory.isDirectory() && directory.list().length == 0) {
@@ -75,9 +82,6 @@ public class ImgServiceImpl implements ImgService {
             }
 
         }
-
-
-
 
         return result;  // 파일이 존재하지 않으면 false 반환
     }
@@ -110,7 +114,7 @@ public class ImgServiceImpl implements ImgService {
                     // 이미지 리사이징 및 압축하여 썸네일 생성
                     Thumbnails.of(destinationFile)
                             .size(200, 200)  // 썸네일 크기 설정 (200x200 예시)
-                            .outputFormat("jpg")  // 출력 포맷 설정 (필요 시)
+//                            .outputFormat("jpg")  // 출력 포맷 설정 (필요 시)
                             .toFile(thumbnailFile);
 
                     String thumbnailUrl = "/uploads/projects/" + project.getId() + "/" + thumbnailFileName;

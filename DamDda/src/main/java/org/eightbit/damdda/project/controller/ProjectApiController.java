@@ -3,9 +3,9 @@ package org.eightbit.damdda.project.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.project.dto.CategoriesDTO;
-import org.eightbit.damdda.project.dto.ProjectDetailDTO;
-import org.eightbit.damdda.project.dto.ProjectResponseDetailDTO;
+import org.eightbit.damdda.project.domain.LikedProject;
+import org.eightbit.damdda.project.dto.*;
+import org.eightbit.damdda.project.service.LikedProjectService;
 import org.eightbit.damdda.project.service.ProjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,12 +22,20 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/project")
+@RequestMapping("/api/projects")
 @Log4j2
 @RequiredArgsConstructor
 public class ProjectApiController {
 
     private final ProjectService projectService;
+    private final LikedProjectService likedProjectService;
+
+    @GetMapping(value = "/myporject/{memberId}")
+    public PageResponseDTO<ProjectBoxHostDTO> getList(@PathVariable("memberId") Long memberId,
+                                             PageRequestDTO pageRequestDTO) {
+        PageResponseDTO<ProjectBoxHostDTO> projectBoxHostDTO = projectService.getListProjectBoxHostDTO(memberId, pageRequestDTO);
+        return projectBoxHostDTO;
+    }
 
     @GetMapping("/index")
     public String index(Model model) {
@@ -40,10 +48,30 @@ public class ProjectApiController {
     }
 
 
+
+    @GetMapping("/myproject/{projectId}")
+    public ProjectDetailHostDTO readProjectDetailHost(@PathVariable Long projectId) {
+        return projectService.readProjectDetailHost(projectId);
+    }
+
+    @PostMapping("/like")
+    public Long registerLikedProject(@RequestParam Long memberId,
+                                                      @RequestParam Long projectId) {
+        return likedProjectService.insertLikedProject(projectId, memberId);
+    }
+
+    @DeleteMapping("/like")
+    public void deleteLikedProject(@RequestParam Long memberId,
+                                     @RequestParam Long projectId) {
+        likedProjectService.deleteLikedProject(projectId, memberId);
+    }
+
+
     //@PostMapping("/register")
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String registerPost(@RequestPart("projectDetailDTO")  ProjectDetailDTO projectDetailDTO,
-                               String submit,
+    public String registerPost(@RequestParam("memberId")  Long memberId,
+                               @RequestPart("projectDetailDTO")  ProjectDetailDTO projectDetailDTO,
+                               @RequestParam("submit") String submit,
                                @RequestPart("productImages") List<MultipartFile> productImages,
                                @RequestPart("descriptionImages") List<MultipartFile> descriptionImages,
                                @RequestPart("docs") List<MultipartFile> docs,
@@ -61,9 +89,9 @@ public class ProjectApiController {
     log.info(projectDetailDTO + "projectRegistDTO!!------==============================");
     // submit 값에 따른 처리
     if (submit.equals("저장")) {
-        projectId = projectService.register(projectDetailDTO, false, productImages, descriptionImages, docs);
+        projectId = projectService.register(memberId, projectDetailDTO, false, productImages, descriptionImages, docs);
     } else if (submit.equals("제출")) {
-        projectId = projectService.register(projectDetailDTO, true, productImages, descriptionImages, docs);
+        projectId = projectService.register(memberId, projectDetailDTO, true, productImages, descriptionImages, docs);
     } else {
         redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
         return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
@@ -105,7 +133,7 @@ public class ProjectApiController {
         return "projectId: " + projectId + "\n" + projectService.findById(projectId);
     }
 
-    @DeleteMapping("/register/{projectId}")
+    @DeleteMapping("/{projectId}")
     public ResponseEntity<String> registerDelete(@PathVariable Long projectId) {
 
         try {

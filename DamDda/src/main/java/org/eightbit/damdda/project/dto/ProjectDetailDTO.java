@@ -23,7 +23,6 @@ public class ProjectDetailDTO {
     private Long supporterCnt;  //후원자수
     private Long likeCnt;   //좋아요 한 사람 수
     private String category;    // 카테고리
-    //    private List<projectImageDTO> imgs; // 이미지-사진5장이랑 설명이미지 같이 들어있을듯
     private List<TagDTO> tags;  //태그-아마도 tags.getName()으로 하시면 될듯
 
 }

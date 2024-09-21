@@ -1,9 +1,7 @@
 package org.eightbit.damdda.project.service;
 
 import org.eightbit.damdda.project.domain.Project;
-import org.eightbit.damdda.project.dto.CategoriesDTO;
-import org.eightbit.damdda.project.dto.ProjectDetailDTO;
-import org.eightbit.damdda.project.dto.ProjectResponseDetailDTO;
+import org.eightbit.damdda.project.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -11,9 +9,12 @@ import java.util.List;
 public interface ProjectService {
 
 //    public List<Project> getProjectsByIds(List<Long> projectIds);
+    PageResponseDTO<ProjectBoxHostDTO> getListProjectBoxHostDTO(Long bno, PageRequestDTO pageRequestDTO);
+    ProjectDetailHostDTO readProjectDetailHost(Long projectId);
     ProjectResponseDetailDTO readProjectDetail(Long projectId);
     String delProject(Long projectId);
-    Long register(ProjectDetailDTO projectDetailDTO,
+    Long register(Long memberId,
+                  ProjectDetailDTO projectDetailDTO,
                   boolean submit,
                   List<MultipartFile> productImages,
                   List<MultipartFile> descriptionImages,

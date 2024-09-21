@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ProjectImageRepository extends JpaRepository<ProjectImage, Long> {
 
-    public List<ProjectImage> findByProjectId(Long projectId);
+    public List<ProjectImage> findAllByProjectId(Long projectId);
 
 }

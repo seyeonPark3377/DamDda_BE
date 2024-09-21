@@ -20,8 +20,9 @@ import java.util.Set;
 @ToString(exclude = {"category", "tags"})
 public class Project extends DateEntity {
 
-//    @ManyToOne
-//    private Member member;
+    @ManyToOne
+    private Member member;
+
     @ManyToOne
     @JoinColumn(name = "category", referencedColumnName = "name")
     private Category category;
@@ -44,7 +45,7 @@ public class Project extends DateEntity {
     private Timestamp endDate;
     private Long targetFunding;
     private Long fundsReceive;
-    private Long supporterCnt;
+//    private Long supporterCnt;
     private Long viewCnt;
     private Long likeCnt;
     private String thumbnailUrl;

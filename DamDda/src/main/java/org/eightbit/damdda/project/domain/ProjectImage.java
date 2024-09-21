@@ -26,8 +26,5 @@ public class ProjectImage extends BaseEntity {
     @ManyToOne
     private ProjectImageType imageType;
 
-//    public void setProject(Project project) {
-//        this.project = project;
-//    }
 
 }
