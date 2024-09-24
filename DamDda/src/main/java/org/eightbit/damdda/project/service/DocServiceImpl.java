@@ -35,7 +35,7 @@ public class DocServiceImpl implements DocService {
         boolean result = true;
 
         for (ProjectDocument doc : docs) {
-            String filePath = basePath + doc.getUrl().replace("/uploads", "");  // img.getUrl()이 상대 경로라 가정
+            String filePath = basePath + doc.getUrl().replace("/files", "");  // img.getUrl()이 상대 경로라 가정
             File file = new File(filePath);
 
             if (file.exists()) {
@@ -72,7 +72,7 @@ public class DocServiceImpl implements DocService {
                 // 이미지 엔티티 저장
                 ProjectDocument projectDocument = ProjectDocument.builder()
                         .project(project)
-                        .url("/uploads/projects/" + project.getId() + "/" + fileName)
+                        .url("files/projects/" + project.getId() + "/" + fileName)
                         .fileName(fileName)
                         .ord(i)
                         .build();

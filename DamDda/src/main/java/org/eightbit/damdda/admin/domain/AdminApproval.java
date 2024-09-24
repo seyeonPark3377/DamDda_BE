@@ -28,6 +28,7 @@ public class AdminApproval extends BaseEntity {
     @ColumnDefault("0")
     private Integer approval;
 
+    @ColumnDefault("'프로젝트 승인 대기 중...'")
     private String approvalText;
     private Timestamp approvalAt;
 

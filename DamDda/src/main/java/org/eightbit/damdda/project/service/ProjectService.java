@@ -9,10 +9,14 @@ import java.util.List;
 public interface ProjectService {
 
 //    public List<Project> getProjectsByIds(List<Long> projectIds);
+    PageResponseDTO<ProjectBoxDTO> getProjects(PageRequestDTO pageRequestDTO, Long memberId, int page, int size, String category, String search, String progress, List<String> sortConditions);
+    PageResponseDTO<ProjectBoxDTO> getProjectsSortedByFundingRatio(Long memberId, PageRequestDTO pageRequestDTO);
+//    PageResponseDTO<ProjectBoxDTO> findSortedProjects(Long memberId, PageRequestDTO pageRequestDTO, List<String> sortConditions);
     PageResponseDTO<ProjectBoxHostDTO> getListProjectBoxHostDTO(Long bno, PageRequestDTO pageRequestDTO);
-    ProjectDetailHostDTO readProjectDetailHost(Long projectId);
-    ProjectResponseDetailDTO readProjectDetail(Long projectId);
-    String delProject(Long projectId);
+    PageResponseDTO<ProjectBoxDTO> getListProjectBoxLikeDTO(Long memberId, PageRequestDTO pageRequestDTO);
+    ProjectDetailHostDTO readProjectDetailHost(Long projectId, Long memberId);
+    ProjectResponseDetailDTO readProjectDetail(Long projectId, Long memberId);
+    void delProject(Long projectId);
     Long register(Long memberId,
                   ProjectDetailDTO projectDetailDTO,
                   boolean submit,

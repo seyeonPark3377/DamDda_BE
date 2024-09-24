@@ -4,9 +4,11 @@ package org.eightbit.damdda.project.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.project.domain.LikedProject;
+import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.dto.*;
 import org.eightbit.damdda.project.service.LikedProjectService;
 import org.eightbit.damdda.project.service.ProjectService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -30,28 +33,75 @@ public class ProjectApiController {
     private final ProjectService projectService;
     private final LikedProjectService likedProjectService;
 
-    @GetMapping(value = "/myporject/{memberId}")
-    public PageResponseDTO<ProjectBoxHostDTO> getList(@PathVariable("memberId") Long memberId,
+
+//    @GetMapping("/index")
+//    public String index(Model model) {
+//        return "This is the project index page.";
+//    }
+
+
+//    @GetMapping("")
+//    public PageResponseDTO<ProjectBoxDTO> getSort(@RequestParam("memberId") Long memberId,
+//                                                  @RequestParam("sortConditions") List<String> sortConditions,
+//                                                  PageRequestDTO pageRequestDTO){
+//        PageResponseDTO<ProjectBoxDTO> sortedProjects;
+//        if(sortConditions.get(0).equals("fundsReceive")){
+//            sortedProjects =  projectService.getProjectsSortedByFundingRatio(memberId, pageRequestDTO);
+//        } else{
+//            sortedProjects =  projectService.findSortedProjects(memberId, pageRequestDTO, sortConditions);
+//        }
+//        return sortedProjects;
+//    }
+
+    @GetMapping("/projects")
+    public PageResponseDTO<ProjectBoxDTO> getProjects(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Long memberId,
+            @RequestParam(defaultValue = "all") String category,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String progress,
+            @RequestParam(required = false) String[] sort,
+            PageRequestDTO pageRequestDTO
+    ) {
+        List<String> sortConditions = sort != null ? Arrays.asList(sort) : List.of();
+
+        PageResponseDTO<ProjectBoxDTO> sortedProjects;
+        if(sortConditions.get(0).equals("fundsReceive")){
+            sortedProjects =  projectService.getProjectsSortedByFundingRatio(memberId, pageRequestDTO);
+        } else{
+            sortedProjects =  projectService.getProjects(pageRequestDTO, memberId, page, size, category, search, progress, sortConditions);
+        }
+
+        return sortedProjects;
+    }
+
+    @GetMapping("/like")
+    public PageResponseDTO<ProjectBoxDTO> getLikedProjectList(@RequestParam("memberId") Long memberId,
+                                                      PageRequestDTO pageRequestDTO) {
+        PageResponseDTO<ProjectBoxDTO> projectBoxDTO = projectService.getListProjectBoxLikeDTO(memberId, pageRequestDTO);
+
+        return projectBoxDTO;
+    }
+
+    @GetMapping(value = "/myproject")
+    public PageResponseDTO<ProjectBoxHostDTO> getMyProjectList(@RequestParam("memberId") Long memberId,
                                              PageRequestDTO pageRequestDTO) {
         PageResponseDTO<ProjectBoxHostDTO> projectBoxHostDTO = projectService.getListProjectBoxHostDTO(memberId, pageRequestDTO);
         return projectBoxHostDTO;
     }
 
-    @GetMapping("/index")
-    public String index(Model model) {
-        return "This is the project index page.";
-    }
 
     @GetMapping("/{projectId}")
-    public ProjectResponseDetailDTO readProjectDetail(@PathVariable Long projectId) {
-        return projectService.readProjectDetail(projectId);
+    public ProjectResponseDetailDTO readProjectDetail(@RequestParam("memberId") Long memberId,
+                                                      @PathVariable Long projectId) {
+        return projectService.readProjectDetail(projectId, memberId);
     }
 
-
-
     @GetMapping("/myproject/{projectId}")
-    public ProjectDetailHostDTO readProjectDetailHost(@PathVariable Long projectId) {
-        return projectService.readProjectDetailHost(projectId);
+    public ProjectDetailHostDTO readProjectDetailHost(@RequestParam("memberId") Long memberId,
+                                                      @PathVariable Long projectId) {
+        return projectService.readProjectDetailHost(projectId, memberId);
     }
 
     @PostMapping("/like")

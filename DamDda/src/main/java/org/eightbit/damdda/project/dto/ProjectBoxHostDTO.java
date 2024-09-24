@@ -21,4 +21,5 @@ public class ProjectBoxHostDTO {
     private String nickName;    //프로젝트 담당자 닉네임
     private Timestamp endDate;  //마감일
     private Integer approval;    //관리자 승인여부
+    private boolean Liked;  // 좋아요 했는지 여부(T/F)
 }

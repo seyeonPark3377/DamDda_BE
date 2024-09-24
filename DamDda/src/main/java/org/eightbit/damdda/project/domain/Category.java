@@ -13,16 +13,16 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "projects")
+@ToString   //(exclude = "projects")
 public class Category {
 
     @Id
     private String name;
 
-    @OneToMany(mappedBy = "category")
-    private List<Project> projects;
-
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
+//    @OneToMany(mappedBy = "category")
+//    private List<Project> projects;
+//
+//    public void setProjects(List<Project> projects) {
+//        this.projects = projects;
+//    }
 }

@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @RestController
-@RequestMapping("/uploads/projects")
+@RequestMapping("/files/projects")
 @Log4j2
 @RequiredArgsConstructor
 public class FileApiController {

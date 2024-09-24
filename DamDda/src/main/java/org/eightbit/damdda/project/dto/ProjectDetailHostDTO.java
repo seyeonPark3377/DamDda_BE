@@ -26,5 +26,7 @@ public class ProjectDetailHostDTO {
     private String rejectMessage;   //거절메시지
     private List<String> productImages; // 이미지-사진5장 들어있을듯
     private List<String> tags;  //태그
+    private boolean Liked;  // 좋아요 했는지 여부(T/F)
 //    private List<projectImageDTO> imgs;
 }
+

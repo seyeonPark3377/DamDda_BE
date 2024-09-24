@@ -3,6 +3,7 @@ package org.eightbit.damdda.project.domain;
 import lombok.*;
 import org.eightbit.damdda.common.domain.DateEntity;
 import org.eightbit.damdda.member.domain.Member;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -24,7 +25,7 @@ public class Project extends DateEntity {
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "category", referencedColumnName = "name")
+//    @JoinColumn(name = "category", referencedColumnName = "name")
     private Category category;
 
 //    @OneToMany
@@ -44,9 +45,13 @@ public class Project extends DateEntity {
     private Timestamp startDate;
     private Timestamp endDate;
     private Long targetFunding;
+    @ColumnDefault("0")
     private Long fundsReceive;
-//    private Long supporterCnt;
+    @ColumnDefault("0")
+    private Long supporterCnt;
+    @ColumnDefault("0")
     private Long viewCnt;
+    @ColumnDefault("0")
     private Long likeCnt;
     private String thumbnailUrl;
     private Timestamp submitAt;

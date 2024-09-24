@@ -39,16 +39,14 @@ public class ImgServiceImpl implements ImgService {
         boolean result = true;
         // 첫 번째 파일의 폴더 경로를 추출
         if (!images.isEmpty()) {
-            String folderPath = basePath + images.get(0).getUrl().replace("/uploads", ""); // 기본 경로 설정
+            String folderPath = basePath + images.get(0).getUrl().replace("/files", ""); // 기본 경로 설정
             folderPath = folderPath.substring(0, folderPath.lastIndexOf("/")); // 파일명 제외하고 폴더 경로만 추출
             File directory = new File(folderPath);
 
-            log.info("11111111111111111111111111111"+folderPath);
 
             for (ProjectImage img : images) {
-                String filePath = basePath + img.getUrl().replace("/uploads", "");  // img.getUrl()이 상대 경로라 가정
+                String filePath = basePath + img.getUrl().replace("/files", "");  // img.getUrl()이 상대 경로라 가정
                 File file = new File(filePath);
-                log.info(result + "22222222222222222222222222" + file.exists() + filePath);
 
                 if (file.exists()) {
                     boolean isDelete = file.delete();
@@ -59,7 +57,6 @@ public class ImgServiceImpl implements ImgService {
                 } else {
                     result = false;
                 }
-                log.info("22222222222222222222222222" + result);
             }
 
 //            // 3. 이미지 파일 삭제가 성공했을 경우, DB에서 해당 이미지 정보 삭제
@@ -113,11 +110,11 @@ public class ImgServiceImpl implements ImgService {
 
                     // 이미지 리사이징 및 압축하여 썸네일 생성
                     Thumbnails.of(destinationFile)
-                            .size(200, 200)  // 썸네일 크기 설정 (200x200 예시)
+                            .size(300, 300)  // 썸네일 크기 설정 (200x200 예시)
 //                            .outputFormat("jpg")  // 출력 포맷 설정 (필요 시)
                             .toFile(thumbnailFile);
 
-                    String thumbnailUrl = "/uploads/projects/" + project.getId() + "/" + thumbnailFileName;
+                    String thumbnailUrl = "files/projects/" + project.getId() + "/" + thumbnailFileName;
                     // 프로젝트에 썸네일 경로 저장
                     project.setThumbnailUrl(thumbnailUrl);
                     projectRepository.save(project);  // 썸네일 URL 저장
@@ -143,7 +140,7 @@ public class ImgServiceImpl implements ImgService {
                 // 이미지 엔티티 저장
                 ProjectImage projectImage = ProjectImage.builder()
                         .project(project)
-                        .url("/uploads/projects/" + project.getId() + "/" + fileName)
+                        .url("files/projects/" + project.getId() + "/" + fileName)
                         .fileName(fileName)
                         .ord(i)
                         .imageType(imageType)
@@ -175,7 +172,7 @@ public class ImgServiceImpl implements ImgService {
                 // 이미지 엔티티 저장
                 ProjectImage projectImage = ProjectImage.builder()
                         .project(project)
-                        .url("/uploads/projects/" + project.getId() + "/" + fileName)
+                        .url("files/projects/" + project.getId() + "/" + fileName)
                         .fileName(fileName)
                         .ord(i)
                         .imageType(imageType)
