@@ -67,14 +67,15 @@ public class ProjectApiController {
     ) {
         List<String> sortConditions = sort != null ? Arrays.asList(sort) : List.of();
 
-        PageResponseDTO<ProjectBoxDTO> sortedProjects;
-        if (!sortConditions.isEmpty() && "fundsReceive".equals(sortConditions.get(0))) {
-            // sort 조건 중 첫 번째가 "fundsReceive"일 때
-            sortedProjects = projectService.getProjectsSortedByFundingRatio(memberId, pageRequestDTO);
-        } else {
-            // 그 외의 경우
-            sortedProjects = projectService.getProjects(pageRequestDTO, memberId, page, size, category, search, progress, sortConditions);
-        }
+        PageResponseDTO<ProjectBoxDTO> sortedProjects = projectService.getProjects(pageRequestDTO, memberId, page, size, category, search, progress, sortConditions);
+//        PageResponseDTO<ProjectBoxDTO> sortedProjects;
+//        if (!sortConditions.isEmpty() && "fundsReceive".equals(sortConditions.get(0))) {
+//            // sort 조건 중 첫 번째가 "fundsReceive"일 때
+//            sortedProjects = projectService.getProjectsSortedByFundingRatio(category, search, progress,  memberId, pageRequestDTO);
+//        } else {
+//            // 그 외의 경우
+//            sortedProjects = projectService.getProjects(pageRequestDTO, memberId, page, size, category, search, progress, sortConditions);
+//        }
 
         log.info("getProjects"+progress);
         log.info(sortedProjects);

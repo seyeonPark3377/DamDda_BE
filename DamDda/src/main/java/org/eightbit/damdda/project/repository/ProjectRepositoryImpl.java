@@ -33,7 +33,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         BooleanBuilder builder = new BooleanBuilder();
 
         // 1. 카테고리 필터 (all인 경우 필터링 안 함)
-        if (category != null && !"all".equals(category)) {
+        if (category != null && !"전체".equals(category) && !"all".equals(category)) {
             builder.and(project.category.name.eq(category));
 //            builder.and(project.category.name.eq(category));
         }
@@ -60,6 +60,8 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             }
         }
 
+// 4. 삭제되지 않은 항목 필터 (deletedAt IS NULL 추가)
+        builder.and(project.deletedAt.isNull()); // deletedAt이 NULL인 항목만 조회
 
         // 4. 정렬 처리 (동적 정렬)
         OrderSpecifier<?>[] orderSpecifiers = getOrderSpecifiers(sortConditions, project);
@@ -111,6 +113,9 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         } else {
             for (String condition : sortConditions) {
                 switch (condition) {
+                    case "all":
+                        orderSpecifiers.add(project.id.desc());
+                        break;
                     case "likeCnt":
                         orderSpecifiers.add(project.likeCnt.desc());
                         break;
@@ -124,14 +129,14 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                         orderSpecifiers.add(project.supporterCnt.desc());
                         break;
                     case "targetFunding":
-                        orderSpecifiers.add(project.targetFunding.desc());
-                        break;
-                    case "registDate":
-                        orderSpecifiers.add(project.createdAt.desc());
-                        break;
-                    case "fundsReceive":
                         orderSpecifiers.add(project.fundsReceive.desc());
                         break;
+                    case "createdAt":
+                        orderSpecifiers.add(project.createdAt.desc());
+                        break;
+//                    case "fundsReceive":
+//                        orderSpecifiers.add(project.fundsReceive.desc());
+//                        break;
                     default:
                         log.warn("Unknown sort condition: " + condition);
                         break;

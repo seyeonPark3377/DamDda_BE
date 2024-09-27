@@ -63,9 +63,24 @@ public class ProjectServiceImpl implements ProjectService {
     public PageResponseDTO<ProjectBoxDTO> getProjects(PageRequestDTO pageRequestDTO, Long memberId, int page, int size, String category, String search, String progress, List<String> sortConditions) {
         PageRequest pageable = PageRequest.of(page - 1, size);  // PageRequest를 사용해 페이지와 크기를 지정
         log.info(progress + "1111111111111111111111111");
-        Page<Project> projects = projectRepository.findProjects(memberId, category, search, progress, sortConditions, pageable);
 
-        log.info(progress + "1111111111111111111111111");
+        Page<Project> projects;
+        if (!sortConditions.isEmpty() && "fundsReceive".equals(sortConditions.get(0))) {
+            // sort 조건 중 첫 번째가 "fundsReceive"일 때
+            List<Project> sortProjects = projectRepository.findAllSortedByFundingRatio(category, search, progress);
+            // 페이지 번호에 맞는 결과를 가져오기 위한 subList
+//            int start = (int) pageable.getOffset();
+//            int end = Math.min((start + pageable.getPageSize()), sortProjects.size());
+            projects = new PageImpl<>(sortProjects, pageable, sortProjects.size());
+        } else {
+            // 그 외의 경우
+            projects = projectRepository.findProjects(memberId, category, search, progress, sortConditions, pageable);
+        }
+
+//                Page<Project> projects = projectRepository.findProjects(memberId, category, search, progress, sortConditions, pageable);
+
+                     log.info(progress + "1111111111111111111111111");
+
         final List<Long> likedProjectId;
         if (memberId != null) {
             likedProjectId = likedProjectRepository.findAllByMemberId(memberId).stream()
@@ -297,55 +312,60 @@ public class ProjectServiceImpl implements ProjectService {
 
     }
 
-    @Override
-    public PageResponseDTO<ProjectBoxDTO> getProjectsSortedByFundingRatio(Long memberId, PageRequestDTO pageRequestDTO) {
-        Pageable pageable =
-                PageRequest.of(pageRequestDTO.getPage() <= 0 ?
-                                0 : pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
-
-
-        final List<Long> likedProjectId;
-        if (memberId != null) {
-            likedProjectId = likedProjectRepository.findAllByMemberId(memberId).stream()
-                    .map(likedProject -> likedProject.getProject().getId())
-                    .collect(Collectors.toList());
-        } else {
-            likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
-        }
-
-        Page<Project> projects = projectRepository.findAllSortedByFundingRatio(pageable);
-
-        List<AdminApproval> approvedAdminApprovals = adminApprovalService.findAllByApproval(1);
-
-        // 3. approval이 1인 프로젝트 ID 목록 생성
-        Set<Long> approvedProjectIds = approvedAdminApprovals.stream()
-                .map(adminApproval -> adminApproval.getProject().getId())
-                .collect(Collectors.toSet());
-
-        // 4. LikedProject에서 approval이 1인 프로젝트들만 필터링
-        List<ProjectBoxDTO> dtoList = projects.getContent().stream()
-                .filter(project -> approvedProjectIds.contains(project.getId()))  // approval이 1인 것만 필터링
-                .map(project -> ProjectBoxDTO.builder()
-                        .id(project.getId())
-                        .title(project.getTitle())
-                        .description(project.getDescription())
-                        .thumbnailUrl(project.getThumbnailUrl())
-                        .fundsReceive(project.getFundsReceive())
-                        .targetFunding(project.getTargetFunding())
-                        .nickName(project.getMember().getNickname())
-                        .endDate(project.getEndDate())
-                        .Liked(likedProjectId.contains(project.getId()))  // 좋아요 여부는 기본적으로 false
-                        .build())
-                .collect(Collectors.toList());
-
-
-        return PageResponseDTO.<ProjectBoxDTO>withAll()
-                .pageRequestDTO(pageRequestDTO)
-                .dtoList(dtoList)
-                .total(dtoList.size())
-                .build();
-
-    }
+//    @Override
+//    public PageResponseDTO<ProjectBoxDTO> getProjectsSortedByFundingRatio(String category, String search, String progress, Long memberId, PageRequestDTO pageRequestDTO) {
+////        PageRequest pageable = PageRequest.of(page - 1, size);  // PageRequest를 사용해 페이지와 크기를 지정
+//        Pageable pageable =
+//                PageRequest.of(pageRequestDTO.getPage() <= 0 ?
+//                                0 : pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+//
+//        final List<Long> likedProjectId;
+//        if (memberId != null) {
+//            likedProjectId = likedProjectRepository.findAllByMemberId(memberId).stream()
+//                    .map(likedProject -> likedProject.getProject().getId())
+//                    .collect(Collectors.toList());
+//        } else {
+//            likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
+//        }
+//
+//        log.info(category + search +  progress + "1111111111111111111111111111111111111");
+//        Page<Project> projects = projectRepository.findAllSortedByFundingRatio(category, search, progress);
+//        log.info(projects.getSize() + "dldldlld1111111111111111111111111111111111111");
+//
+//                List<AdminApproval> approvedAdminApprovals = adminApprovalService.findAllByApproval(1);
+//
+//        // 3. approval이 1인 프로젝트 ID 목록 생성
+//        Set<Long> approvedProjectIds = approvedAdminApprovals.stream()
+//                .map(adminApproval -> adminApproval.getProject().getId())
+//                .collect(Collectors.toSet());
+//
+//        // 4. LikedProject에서 approval이 1인 프로젝트들만 필터링
+//        List<ProjectBoxDTO> dtoList = projects.getContent().stream()
+//                .filter(project -> approvedProjectIds.contains(project.getId()))  // approval이 1인 것만 필터링
+//                .map(project -> ProjectBoxDTO.builder()
+//                        .id(project.getId())
+//                        .title(project.getTitle())
+//                        .description(project.getDescription())
+//                        .thumbnailUrl(project.getThumbnailUrl())
+//                        .fundsReceive(project.getFundsReceive())
+//                        .targetFunding(project.getTargetFunding())
+//                        .nickName(project.getMember().getNickname())
+//                        .endDate(project.getEndDate())
+//                        .Liked(likedProjectId.contains(project.getId()))  // 좋아요 여부는 기본적으로 false
+//                        .build())
+//                .collect(Collectors.toList());
+//
+//        log.info(projects.getSize() + "dd22222222222222211111111111111111111111111111111111111111111111111112222222222222222222222222222222222");
+//        log.info(dtoList.size() + "dd22222222222222211111111111111111111111111111111111111111111111111112222222222222222222222222222222222");
+//
+//
+//        return PageResponseDTO.<ProjectBoxDTO>withAll()
+//                .pageRequestDTO(pageRequestDTO)
+//                .dtoList(dtoList)
+//                .total(dtoList.size())
+//                .build();
+//
+//    }
 
 
     @Override

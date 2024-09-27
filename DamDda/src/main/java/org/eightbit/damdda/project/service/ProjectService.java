@@ -10,7 +10,7 @@ public interface ProjectService {
 
 //    public List<Project> getProjectsByIds(List<Long> projectIds);
     PageResponseDTO<ProjectBoxDTO> getProjects(PageRequestDTO pageRequestDTO, Long memberId, int page, int size, String category, String search, String progress, List<String> sortConditions);
-    PageResponseDTO<ProjectBoxDTO> getProjectsSortedByFundingRatio(Long memberId, PageRequestDTO pageRequestDTO);
+//    PageResponseDTO<ProjectBoxDTO> getProjectsSortedByFundingRatio(String category, String search, String progress, Long memberId, PageRequestDTO pageRequestDTO);
 //    PageResponseDTO<ProjectBoxDTO> findSortedProjects(Long memberId, PageRequestDTO pageRequestDTO, List<String> sortConditions);
     PageResponseDTO<ProjectBoxHostDTO> getListProjectBoxHostDTO(Long bno, PageRequestDTO pageRequestDTO);
     PageResponseDTO<ProjectBoxDTO> getListProjectBoxLikeDTO(Long memberId, PageRequestDTO pageRequestDTO);
