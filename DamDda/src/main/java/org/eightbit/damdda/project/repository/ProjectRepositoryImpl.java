@@ -60,6 +60,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             }
         }
 
+
         // 4. 정렬 처리 (동적 정렬)
         OrderSpecifier<?>[] orderSpecifiers = getOrderSpecifiers(sortConditions, project);
 
@@ -74,6 +75,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 //                .limit(pageable.getPageSize())
                 .fetch();
 
+        log.info(progress + "1111111111111111111111111111111111111111111");
         log.info("!11111111111111111111111111111111111"+content.size());
         log.info("Builder conditions: " + builder.toString());
         log.info("Sort Conditions: " + sortConditions);

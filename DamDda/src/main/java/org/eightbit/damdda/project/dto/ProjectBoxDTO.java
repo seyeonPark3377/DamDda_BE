@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 public class ProjectBoxDTO {
+    private Long id;
     private String title;   //프로젝트명
     private String description; //프로젝트 설명
     private String thumbnailUrl;    //썸네일 url

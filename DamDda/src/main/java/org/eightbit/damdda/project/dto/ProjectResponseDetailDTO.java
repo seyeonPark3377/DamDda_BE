@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class ProjectResponseDetailDTO {
+    private Long id;
     private String title;       // 프로젝트 명
     private String description;     // 프로젝트 설명
     private String descriptionDetail;     // 프로젝트 상세설명

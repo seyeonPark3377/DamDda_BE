@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/projects")
 @Log4j2
@@ -67,11 +68,16 @@ public class ProjectApiController {
         List<String> sortConditions = sort != null ? Arrays.asList(sort) : List.of();
 
         PageResponseDTO<ProjectBoxDTO> sortedProjects;
-        if(sortConditions.get(0).equals("fundsReceive")){
-            sortedProjects =  projectService.getProjectsSortedByFundingRatio(memberId, pageRequestDTO);
-        } else{
-            sortedProjects =  projectService.getProjects(pageRequestDTO, memberId, page, size, category, search, progress, sortConditions);
+        if (!sortConditions.isEmpty() && "fundsReceive".equals(sortConditions.get(0))) {
+            // sort 조건 중 첫 번째가 "fundsReceive"일 때
+            sortedProjects = projectService.getProjectsSortedByFundingRatio(memberId, pageRequestDTO);
+        } else {
+            // 그 외의 경우
+            sortedProjects = projectService.getProjects(pageRequestDTO, memberId, page, size, category, search, progress, sortConditions);
         }
+
+        log.info("getProjects"+progress);
+        log.info(sortedProjects);
 
         return sortedProjects;
     }

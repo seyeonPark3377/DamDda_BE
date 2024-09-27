@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class ProjectDetailHostDTO {
+    private Long id;
     private String title;   //제목
     private String description; //설명
     private Long fundsReceive;  //받은 후원금

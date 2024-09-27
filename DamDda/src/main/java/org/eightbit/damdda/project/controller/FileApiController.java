@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/files/projects")
 @Log4j2
@@ -28,6 +29,7 @@ public class FileApiController {
 
     @GetMapping("/{projectId}/{fileName:.+}")
     public ResponseEntity<Resource> serveFile(@PathVariable String projectId, @PathVariable String fileName) {
+//        log.info("Serving file " + fileName);
         try {
             // 파일 경로 생성
             Path filePath = Paths.get(basePath).resolve("projects").resolve(projectId).resolve(fileName).normalize();

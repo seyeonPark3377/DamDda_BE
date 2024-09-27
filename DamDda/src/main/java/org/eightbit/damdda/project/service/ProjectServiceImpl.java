@@ -62,15 +62,16 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public PageResponseDTO<ProjectBoxDTO> getProjects(PageRequestDTO pageRequestDTO, Long memberId, int page, int size, String category, String search, String progress, List<String> sortConditions) {
         PageRequest pageable = PageRequest.of(page - 1, size);  // PageRequest를 사용해 페이지와 크기를 지정
+        log.info(progress + "1111111111111111111111111");
         Page<Project> projects = projectRepository.findProjects(memberId, category, search, progress, sortConditions, pageable);
 
-        log.info("11111111111111111111111111111111111"+projects.getSize());
-
+        log.info(progress + "1111111111111111111111111");
         final List<Long> likedProjectId;
         if (memberId != null) {
             likedProjectId = likedProjectRepository.findAllByMemberId(memberId).stream()
-                    .map(likedProject -> likedProject.getId())
+                    .map(likedProject -> likedProject.getProject().getId())
                     .collect(Collectors.toList());
+            log.info(likedProjectId);
         } else {
             likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
         }
@@ -88,6 +89,7 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectBoxDTO> dtoList = projects.getContent().stream()
                 .filter(project -> approvedProjectIds.contains(project.getId()))  // approval이 1인 것만 필터링
                 .map(project -> ProjectBoxDTO.builder()
+                        .id(project.getId())
                         .title(project.getTitle())
                         .description(project.getDescription())
                         .thumbnailUrl(project.getThumbnailUrl())
@@ -99,7 +101,7 @@ public class ProjectServiceImpl implements ProjectService {
                         .build())
                 .collect(Collectors.toList());
 
-        log.info("11111111111111111111111111111111111"+dtoList.size());
+//        log.info("11111111111111111111111111111111111"+dtoList.size());
 
 
 
@@ -108,12 +110,11 @@ public class ProjectServiceImpl implements ProjectService {
         int end = Math.min(start + size, dtoList.size());
         List<ProjectBoxDTO> paginatedList = dtoList.subList(start, end);
 
-
-        // 6. PageResponseDTO로 반환
+// PageResponseDTO로 반환
         return PageResponseDTO.<ProjectBoxDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)  // 페이지 요청 정보
-                .dtoList(dtoList)  // 필터링된 DTO 리스트
-                .total(dtoList.size())
+                .dtoList(paginatedList)  // 페이지네이션된 DTO 리스트
+                .total(dtoList.size())   // 전체 데이터 수
                 .build();
     }
 
@@ -132,7 +133,7 @@ public class ProjectServiceImpl implements ProjectService {
 //        final List<Long> likedProjectId;
 //        if (memberId != null) {
 //            likedProjectId = likedProjectRepository.findAllByMemberId(memberId).stream()
-//                    .map(likedProject -> likedProject.getId())
+//                    .map(likedProject -> likedProject.getProject().getId())
 //                    .collect(Collectors.toList());
 //        } else {
 //            likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
@@ -225,6 +226,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .map(LikedProject::getProject)
                 .filter(project -> approvedProjectIds.contains(project.getId()))  // approval이 1인 것만 필터링
                 .map(project -> ProjectBoxDTO.builder()
+                        .id(project.getId())
                         .title(project.getTitle())
                         .description(project.getDescription())
                         .thumbnailUrl(project.getThumbnailUrl())
@@ -259,7 +261,7 @@ public class ProjectServiceImpl implements ProjectService {
         final List<Long> likedProjectId;
         if (memberId != null) {
             likedProjectId = likedProjectRepository.findAllByMemberId(memberId).stream()
-                    .map(likedProject -> likedProject.getId())
+                    .map(likedProject -> likedProject.getProject().getId())
                     .collect(Collectors.toList());
         } else {
             likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
@@ -273,6 +275,7 @@ public class ProjectServiceImpl implements ProjectService {
                             .orElseThrow(() -> new IllegalArgumentException("Approval not found for projectId: " + project.getId()));
 
                     return ProjectBoxHostDTO.builder()
+                            .id(project.getId())
                             .title(project.getTitle())
                             .description(project.getDescription())
                             .thumbnailUrl(project.getThumbnailUrl())
@@ -304,7 +307,7 @@ public class ProjectServiceImpl implements ProjectService {
         final List<Long> likedProjectId;
         if (memberId != null) {
             likedProjectId = likedProjectRepository.findAllByMemberId(memberId).stream()
-                    .map(likedProject -> likedProject.getId())
+                    .map(likedProject -> likedProject.getProject().getId())
                     .collect(Collectors.toList());
         } else {
             likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
@@ -323,6 +326,7 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectBoxDTO> dtoList = projects.getContent().stream()
                 .filter(project -> approvedProjectIds.contains(project.getId()))  // approval이 1인 것만 필터링
                 .map(project -> ProjectBoxDTO.builder()
+                        .id(project.getId())
                         .title(project.getTitle())
                         .description(project.getDescription())
                         .thumbnailUrl(project.getThumbnailUrl())
@@ -353,7 +357,7 @@ public class ProjectServiceImpl implements ProjectService {
         final List<Long> likedProjectId;
         if (memberId != null) {
             likedProjectId = likedProjectRepository.findAllByMemberId(memberId).stream()
-                    .map(likedProject -> likedProject.getId())
+                    .map(likedProject -> likedProject.getProject().getId())
                     .collect(Collectors.toList());
         } else {
             likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
@@ -377,6 +381,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         ProjectDetailHostDTO projectDetailHostDTO = ProjectDetailHostDTO.builder()
+                .id(project.getId())
                 .title(project.getTitle())
                 .description(project.getDescription())
                 .fundsReceive(project.getFundsReceive())
@@ -406,7 +411,7 @@ public class ProjectServiceImpl implements ProjectService {
         final List<Long> likedProjectId;
         if (memberId != null) {
             likedProjectId = likedProjectRepository.findAllByMemberId(memberId).stream()
-                    .map(likedProject -> likedProject.getId())
+                    .map(likedProject -> likedProject.getProject().getId())
                     .collect(Collectors.toList());
         } else {
             likedProjectId = new ArrayList<>();  // null인 경우 빈 리스트로 초기화
@@ -446,6 +451,7 @@ public class ProjectServiceImpl implements ProjectService {
 //        project.setSupporterCnt(supportingProjectService.countByProject(project));
 
             ProjectResponseDetailDTO projectResponseDetailDTO = ProjectResponseDetailDTO.builder()
+                    .id(project.getId())
                     .title(project.getTitle())
                     .description(project.getDescription())
                     .descriptionDetail(project.getDescriptionDetail())
