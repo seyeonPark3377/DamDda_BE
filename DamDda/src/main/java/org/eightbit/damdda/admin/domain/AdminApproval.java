@@ -1,8 +1,8 @@
 package org.eightbit.damdda.admin.domain;
 
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.common.domain.BaseEntity;
-import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.project.domain.Project;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -17,9 +17,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Log4j2
 public class AdminApproval extends BaseEntity {
-    @ManyToOne
-    private Admin admin;
+//    @ManyToOne
+//    private Admin admin;
 
     @OneToOne
     private Project project;
@@ -27,7 +28,8 @@ public class AdminApproval extends BaseEntity {
     @ColumnDefault("0")
     private Integer approval;
 
+    @ColumnDefault("'프로젝트 승인 대기 중...'")
     private String approvalText;
     private Timestamp approvalAt;
-}
 
+}

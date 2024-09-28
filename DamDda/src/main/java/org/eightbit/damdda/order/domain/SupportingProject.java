@@ -20,18 +20,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 public class SupportingProject extends BaseEntity {
+
     private Timestamp supportedAt;
 
-    @ManyToOne
-    private Member member;
+//    @ManyToOne
+//    private Member member;
 
     @ManyToOne
     private Project project;
 
-    @ManyToOne
-    private Payment payment;
+//    @ManyToOne
+//    private Payment payment;
 
-    @ManyToOne
-    private Delivery delivery;
+//    @ManyToOne
+//    private Delivery delivery;
 }
 
