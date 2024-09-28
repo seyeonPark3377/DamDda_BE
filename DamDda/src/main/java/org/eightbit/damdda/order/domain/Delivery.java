@@ -12,6 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @ToString
 public class Delivery {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long deliveryId;

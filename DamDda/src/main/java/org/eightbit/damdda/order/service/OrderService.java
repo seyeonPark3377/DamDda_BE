@@ -1,7 +1,7 @@
 package org.eightbit.damdda.order.service;
 
 import lombok.RequiredArgsConstructor;
-import org.eightbit.damdda.admin.repository.ProjectRepository;
+import org.eightbit.damdda.admin.repository.AdminProjectRepository;
 import org.eightbit.damdda.order.domain.*;
 import org.eightbit.damdda.order.dto.OrderDTO;
 import org.eightbit.damdda.order.repository.*;
@@ -26,7 +26,7 @@ public class OrderService {
     private final SupportingProjectRepository supportingProjectRepository;
     private final SupportingPackageRepository supportingPackageRepository;
     @Autowired
-    private ProjectRepository projectRepository;
+    private AdminProjectRepository projectRepository;
 
 
     //주문 저장
