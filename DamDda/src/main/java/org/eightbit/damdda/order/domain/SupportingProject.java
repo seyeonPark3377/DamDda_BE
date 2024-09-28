@@ -1,38 +1,40 @@
 package org.eightbit.damdda.order.domain;
 
 import lombok.*;
-import org.eightbit.damdda.common.domain.BaseEntity;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.project.domain.Project;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import java.sql.Timestamp;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "supporting_projects")
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class SupportingProject extends BaseEntity {
+public class SupportingProject {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long SupportingProjectId;
 
-    private Timestamp supportedAt;
-
-//    @ManyToOne
-//    private Member member;
+    private LocalDateTime supportedAt; // 후원 시간
 
     @ManyToOne
+    @JoinColumn(name = "user_id")  // 외래 키로 참조할 필드
+    private Member user;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
     private Project project;
 
-//    @ManyToOne
-//    private Payment payment;
+    @ManyToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
-//    @ManyToOne
-//    private Delivery delivery;
+    @ManyToOne
+    @JoinColumn(name = "delivery_id")
+    private Delivery delivery;
 }
 

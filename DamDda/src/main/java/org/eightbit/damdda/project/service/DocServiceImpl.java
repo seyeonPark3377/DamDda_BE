@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.domain.ProjectDocument;
-import org.eightbit.damdda.project.domain.ProjectImage;
 import org.eightbit.damdda.project.repository.ProjectDocumentRepository;
 import org.eightbit.damdda.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

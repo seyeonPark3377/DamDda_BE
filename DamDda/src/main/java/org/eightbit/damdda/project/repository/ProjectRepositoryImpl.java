@@ -4,12 +4,12 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.log4j.Log4j2;
+import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.domain.QProject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.eightbit.damdda.project.domain.Project;
 
 import javax.persistence.EntityManager;
 import java.sql.Timestamp;

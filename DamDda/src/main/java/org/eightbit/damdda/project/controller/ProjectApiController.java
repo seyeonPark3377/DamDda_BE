@@ -3,22 +3,16 @@ package org.eightbit.damdda.project.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.project.domain.LikedProject;
-import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.dto.*;
 import org.eightbit.damdda.project.service.LikedProjectService;
 import org.eightbit.damdda.project.service.ProjectService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -93,8 +87,12 @@ public class ProjectApiController {
 
     @GetMapping(value = "/myproject")
     public PageResponseDTO<ProjectBoxHostDTO> getMyProjectList(@RequestParam("memberId") Long memberId,
-                                             PageRequestDTO pageRequestDTO) {
+//                                                               @RequestParam("page") int page, // 페이지 번호 직접 받기
+//                                                               @RequestParam("size") int size){  // 페이지 크기 직접 받기
+                                                               PageRequestDTO pageRequestDTO) {
+//        PageRequestDTO pageRequestDTO = new PageRequestDTO(page, size, null, null, null); // type, keyword, link를 null로 설정
         PageResponseDTO<ProjectBoxHostDTO> projectBoxHostDTO = projectService.getListProjectBoxHostDTO(memberId, pageRequestDTO);
+        log.info(projectBoxHostDTO + "11111111111111111111111111111111111111111111111111");
         return projectBoxHostDTO;
     }
 

@@ -25,11 +25,7 @@ public class Project extends DateEntity {
     private Member member;
 
     @ManyToOne
-//    @JoinColumn(name = "category", referencedColumnName = "name")
     private Category category;
-
-//    @OneToMany
-//    private List<ProjectImage> projectImages;
 
     @ManyToMany
     @JoinTable(
@@ -56,5 +52,7 @@ public class Project extends DateEntity {
     private String thumbnailUrl;
     private Timestamp submitAt;
 
+//    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval=true)
+//    private List<PackageRewards> packageRewards;
 
 }

@@ -3,7 +3,6 @@ package org.eightbit.damdda.project.dto;
 import lombok.*;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
