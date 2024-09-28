@@ -8,7 +8,6 @@ import org.eightbit.damdda.project.domain.LikedProject;
 import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.repository.LikedProjectRepository;
 import org.eightbit.damdda.project.repository.ProjectRepository;
-import org.eightbit.damdda.project.service.LikedProjectService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

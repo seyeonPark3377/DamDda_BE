@@ -1,7 +1,6 @@
 package org.eightbit.damdda.project.dto;
 
 import lombok.*;
-import org.eightbit.damdda.project.domain.Project;
 
 import java.util.List;
 

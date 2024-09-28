@@ -1,12 +1,9 @@
 package org.eightbit.damdda.project.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 
 @Data

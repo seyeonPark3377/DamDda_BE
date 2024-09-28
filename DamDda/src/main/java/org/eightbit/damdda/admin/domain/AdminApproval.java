@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @ToString
 @Log4j2
 public class AdminApproval extends BaseEntity {
+    //프로젝트에서 사용(주석처리함)
 //    @ManyToOne
 //    private Admin admin;
 

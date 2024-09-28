@@ -3,22 +3,16 @@ package org.eightbit.damdda.project.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.project.domain.LikedProject;
-import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.dto.*;
 import org.eightbit.damdda.project.service.LikedProjectService;
 import org.eightbit.damdda.project.service.ProjectService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -93,7 +87,7 @@ public class ProjectApiController {
 
     @GetMapping(value = "/myproject")
     public PageResponseDTO<ProjectBoxHostDTO> getMyProjectList(@RequestParam("memberId") Long memberId,
-                                             PageRequestDTO pageRequestDTO) {
+                                                               PageRequestDTO pageRequestDTO) {
         PageResponseDTO<ProjectBoxHostDTO> projectBoxHostDTO = projectService.getListProjectBoxHostDTO(memberId, pageRequestDTO);
         return projectBoxHostDTO;
     }

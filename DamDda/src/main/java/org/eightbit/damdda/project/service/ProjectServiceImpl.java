@@ -8,23 +8,24 @@ import org.eightbit.damdda.common.domain.DateEntity;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.order.service.SupportingProjectService;
-import org.eightbit.damdda.project.domain.*;
+import org.eightbit.damdda.project.domain.LikedProject;
+import org.eightbit.damdda.project.domain.Project;
+import org.eightbit.damdda.project.domain.ProjectImage;
+import org.eightbit.damdda.project.domain.Tag;
 import org.eightbit.damdda.project.dto.*;
 import org.eightbit.damdda.project.repository.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,6 +59,13 @@ public class ProjectServiceImpl implements ProjectService {
 //    public List<Project> getProjectsByIds(List<Long> projectIds) {
 //        return projectRepository.findAllById(projectIds);
 //    }
+
+    @Override
+    public Long getMemberId(Long projectId){
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchElementException("해당 아이디와 일치하는 프로젝트 없음! Project not found with ID: " + projectId));
+        return project.getMember().getId();
+    }
 
     @Override
     public PageResponseDTO<ProjectBoxDTO> getProjects(PageRequestDTO pageRequestDTO, Long memberId, int page, int size, String category, String search, String progress, List<String> sortConditions) {
@@ -410,7 +418,8 @@ public class ProjectServiceImpl implements ProjectService {
                 .nickName(project.getMember().getNickname())
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
-                .supporterCnt(supportingProjectService.countByProject(project))
+//                .supporterCnt(supportingProjectService.countByProject(project))
+                .supporterCnt(project.getSupporterCnt())
                 .approval(adminApproval.getApproval())
                 .rejectMessage(adminApproval.getApprovalText())
                 .likerCnt(project.getLikeCnt())
@@ -481,7 +490,8 @@ public class ProjectServiceImpl implements ProjectService {
                     .nickName(project.getMember().getNickname())
                     .startDate(project.getStartDate())
                     .endDate(project.getEndDate())
-                    .supporterCnt(supportingProjectService.countByProject(project))
+//                    .supporterCnt(supportingProjectService.countByProject(project))
+                    .supporterCnt(project.getSupporterCnt())
                     .likeCnt(project.getLikeCnt())
                     .thumbnailUrl(project.getThumbnailUrl())
                     .productImages(productImages)
