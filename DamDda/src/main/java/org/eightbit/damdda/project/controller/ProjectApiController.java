@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000", "http://127.0.0.1:3000"})
 @RestController
 @RequestMapping("/api/projects")
 @Log4j2
