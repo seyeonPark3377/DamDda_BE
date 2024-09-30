@@ -453,13 +453,14 @@ public class ProjectServiceImpl implements ProjectService {
         } else {
 
             List<ProjectImage> projectImages = projectImageRepository.findAllByProjectId(projectId);
+            log.info(projectImages);
             List<String> productImages = projectImages.stream()
-                    .filter(projectImage -> projectImage.getImageType().getImageType().equals("PRODUCT_IMAGE"))
+                    .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))
                     .map(ProjectImage::getUrl)
                     .collect(Collectors.toList());
 
             List<String> descriptionImages = projectImages.stream()
-                    .filter(projectImage -> projectImage.getImageType().getImageType().equals("PRODUCT_DESCRIPTION_IMAGE"))
+                    .filter(projectImage -> projectImage.getImageType().getImageType().equals("description"))
                     .map(ProjectImage::getUrl)
                     .collect(Collectors.toList());
 //        List<String> productImages = new ArrayList<>();

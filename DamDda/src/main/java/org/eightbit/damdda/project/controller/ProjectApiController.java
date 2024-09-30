@@ -100,7 +100,10 @@ public class ProjectApiController {
     @GetMapping("/{projectId}")
     public ProjectResponseDetailDTO readProjectDetail(@RequestParam("memberId") Long memberId,
                                                       @PathVariable Long projectId) {
-        return projectService.readProjectDetail(projectId, memberId);
+        log.info("readProjectDetail"+projectId);
+        ProjectResponseDetailDTO projectResponseDetailDTO = projectService.readProjectDetail(projectId, memberId);
+        log.info("readProjectDetail"+projectResponseDetailDTO);
+        return projectResponseDetailDTO;
     }
 
     @GetMapping("/myproject/{projectId}")
