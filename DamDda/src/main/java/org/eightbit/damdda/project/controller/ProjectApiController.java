@@ -18,7 +18,10 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
+// pr완료
+@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000", "http://127.0.0.1:3000"})
+
+
 @RestController
 @RequestMapping("/api/projects")
 @Log4j2
@@ -87,8 +90,12 @@ public class ProjectApiController {
 
     @GetMapping(value = "/myproject")
     public PageResponseDTO<ProjectBoxHostDTO> getMyProjectList(@RequestParam("memberId") Long memberId,
+//                                                               @RequestParam("page") int page, // 페이지 번호 직접 받기
+//                                                               @RequestParam("size") int size){  // 페이지 크기 직접 받기
                                                                PageRequestDTO pageRequestDTO) {
+//        PageRequestDTO pageRequestDTO = new PageRequestDTO(page, size, null, null, null); // type, keyword, link를 null로 설정
         PageResponseDTO<ProjectBoxHostDTO> projectBoxHostDTO = projectService.getListProjectBoxHostDTO(memberId, pageRequestDTO);
+        log.info(projectBoxHostDTO + "11111111111111111111111111111111111111111111111111");
         return projectBoxHostDTO;
     }
 
@@ -96,7 +103,11 @@ public class ProjectApiController {
     @GetMapping("/{projectId}")
     public ProjectResponseDetailDTO readProjectDetail(@RequestParam("memberId") Long memberId,
                                                       @PathVariable Long projectId) {
-        return projectService.readProjectDetail(projectId, memberId);
+
+        log.info("readProjectDetail"+projectId);
+        ProjectResponseDetailDTO projectResponseDetailDTO = projectService.readProjectDetail(projectId, memberId);
+        log.info("readProjectDetail"+projectResponseDetailDTO);
+        return projectResponseDetailDTO;
     }
 
     @GetMapping("/myproject/{projectId}")

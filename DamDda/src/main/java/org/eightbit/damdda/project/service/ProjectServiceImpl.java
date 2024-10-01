@@ -315,7 +315,9 @@ public class ProjectServiceImpl implements ProjectService {
         return PageResponseDTO.<ProjectBoxHostDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
-                .total(dtoList.size())
+
+                .total((int) result.getTotalElements())  // 전체 프로젝트 수를 설정
+
                 .build();
 
     }
@@ -453,13 +455,18 @@ public class ProjectServiceImpl implements ProjectService {
         } else {
 
             List<ProjectImage> projectImages = projectImageRepository.findAllByProjectId(projectId);
+
+            log.info(projectImages);
             List<String> productImages = projectImages.stream()
-                    .filter(projectImage -> projectImage.getImageType().getImageType().equals("PRODUCT_IMAGE"))
+                    .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))
+
                     .map(ProjectImage::getUrl)
                     .collect(Collectors.toList());
 
             List<String> descriptionImages = projectImages.stream()
-                    .filter(projectImage -> projectImage.getImageType().getImageType().equals("PRODUCT_DESCRIPTION_IMAGE"))
+
+                    .filter(projectImage -> projectImage.getImageType().getImageType().equals("description"))
+
                     .map(ProjectImage::getUrl)
                     .collect(Collectors.toList());
 //        List<String> productImages = new ArrayList<>();
