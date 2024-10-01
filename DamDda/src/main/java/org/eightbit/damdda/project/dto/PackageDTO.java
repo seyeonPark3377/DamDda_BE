@@ -1,5 +1,6 @@
 package org.eightbit.damdda.project.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class PackageDTO {
 
     private int quantityLimited;
 
+    @JsonProperty("RewardList")
     private List<RewardDTO> RewardList;
 
 }

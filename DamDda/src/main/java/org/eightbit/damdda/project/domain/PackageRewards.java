@@ -1,10 +1,8 @@
 package org.eightbit.damdda.project.domain;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.eightbit.damdda.common.domain.BaseEntity;
 
 import javax.persistence.*;
@@ -36,21 +34,41 @@ public class PackageRewards extends BaseEntity {
 
     private int rewardCount; //선물 갯수
 
-    public void setProjectPackage(ProjectPackage projectPackage){this.projectPackage =projectPackage;}
-    public void changeRewardCount(int rewardCount){
-        this.rewardCount = rewardCount;
-    }
+
     public void setProject(Project project){this.project = project;}
-    //reward가 package보다 먼저 생성이 되기 떄문에 project는 reward, package 내부에 있음.
+
+    // toString 메서드 대신 별도의 메서드 사용 -> toString 순환 참조 문제.
+    public String getProjectPackageInfo() {
+        if (projectPackage == null) return "null";
+        return String.format("ProjectPackage(id=%d, packageName='%s', packagePrice=%d, quantityLimited=%d)",
+                projectPackage.getId(), projectPackage.getPackageName(),
+                projectPackage.getPackagePrice(), projectPackage.getQuantityLimited());
+    }
+
+    public String getProjectRewardInfo() {
+        if (projectReward == null) return "null";
+        try {
+            return String.format("ProjectReward(id=%d, rewardName='%s', optionType='%s', optionList=%s)",
+                    projectReward.getId(), projectReward.getRewardName(),
+                    projectReward.getOptionType(), projectReward.getOptionList());
+        } catch (Exception e) {
+            return String.format("ProjectReward(id=%d, rewardName='%s', optionType='%s', optionListError='%s')",
+                    projectReward.getId(), projectReward.getRewardName(),
+                    projectReward.getOptionType(), e.getMessage());
+        }
+    }
+
+    public String getProjectInfo() {
+        if (project == null) return "null";
+        return String.format("Project(id=%d, title='%s')", project.getId(), project.getTitle());
+    }
 
     @Override
     public String toString() {
-        ObjectMapper objectMapper = new ObjectMapper();
 
-            return "ProjectReward{" +
-                    "id=" + id +
-                    ", rewardCount=" + rewardCount +
-                    '}';
+        return String.format("PackageRewards(id=%d, rewardCount=%d, projectPackage=%s, projectReward=%s, project=%s)",
+                id, rewardCount, getProjectPackageInfo(), getProjectRewardInfo(), getProjectInfo());
+
     }
 }
 

@@ -14,8 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CollaborationDetailDTO {
     /*제목이 프로젝트의 제목이라면 백쪽에서 처리를 해주는 것도 좋을 듯-> */
-    @NotBlank(message="제목은 필수 값입니다.")
-    private String title;
+    /*@NotBlank는 string만 사용 가능*/
 
     @NotBlank(message="전화번호는 필수 값입니다.")
     private String phoneNumber;
@@ -27,13 +26,10 @@ public class CollaborationDetailDTO {
     @NotBlank(message="세부 내용을 입력해주세요.")
     private String content;
 
-    //NotBlank -> 라고 하면 어떻게 되는 지 알지 못해서 안넣음.
     private CollaborationDTO collaborationDTO;
 
     private Long user_id;
 
-    // 파일 목록 -> 필수가 아닐 수도 있겠다는 의견.
     private List<Object> collabDocList;
-
 
 }
