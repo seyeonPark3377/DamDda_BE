@@ -20,8 +20,6 @@ import java.util.List;
 
 // pr완료
 @CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000", "http://127.0.0.1:3000"})
-
-
 @RestController
 @RequestMapping("/api/projects")
 @Log4j2
@@ -166,13 +164,21 @@ public class ProjectApiController {
 
     @PutMapping("/register/{projectId}")
     public String registerPut(@PathVariable Long projectId,
-                              @RequestPart("productImages") List<MultipartFile> productImages,
-                              @RequestPart("descriptionImages") List<MultipartFile> descriptionImages,
-                              @RequestPart("docs") List<MultipartFile> docs,
+                              @RequestPart(value = "productImages", required = false) List<MultipartFile> productImages,
+                              @RequestPart(value = "descriptionImages", required = false) List<MultipartFile> descriptionImages,
+                              @RequestPart(value = "docs", required = false) List<MultipartFile> docs,
                               @Valid @RequestPart("projectDetailDTO") ProjectDetailDTO projectDetailDTO,
                               String submit,
                               BindingResult bindingResult,
                               RedirectAttributes redirectAttributes) {
+
+        log.info("projectId : " +  projectId);
+        log.info("productImages : " +  productImages);
+        log.info("descriptionImages : " +  descriptionImages);
+        log.info("docs : " +  docs);
+        log.info("projectDetailDTO : " +  projectDetailDTO);
+        log.info("submit : " +  submit);
+
         // 유효성 검사 실패 시 처리
         if (bindingResult.hasErrors()) {
             log.info("has errors..........");
