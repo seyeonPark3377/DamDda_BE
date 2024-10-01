@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000", "http://127.0.0.1:3000"})
+
 @RestController
 @RequestMapping("/files/projects")
 @Log4j2
@@ -28,7 +29,9 @@ public class FileApiController {
 
     @GetMapping("/{projectId}/{fileName:.+}")
     public ResponseEntity<Resource> serveFile(@PathVariable String projectId, @PathVariable String fileName) {
-        log.info("Serving file " + fileName);
+
+//        log.info("Serving file " + fileName);
+
         try {
             // 파일 경로 생성
             Path filePath = Paths.get(basePath).resolve("projects").resolve(projectId).resolve(fileName).normalize();
@@ -45,7 +48,9 @@ public class FileApiController {
                     contentType = "application/octet-stream";
                 }
 
+
                 log.info("Served file " + fileName);
+
                 // ResponseEntity로 파일과 헤더 반환
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(contentType))

@@ -20,6 +20,8 @@ import java.util.List;
 
 // pr완료
 @CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000", "http://127.0.0.1:3000"})
+
+
 @RestController
 @RequestMapping("/api/projects")
 @Log4j2
@@ -101,6 +103,7 @@ public class ProjectApiController {
     @GetMapping("/{projectId}")
     public ProjectResponseDetailDTO readProjectDetail(@RequestParam("memberId") Long memberId,
                                                       @PathVariable Long projectId) {
+
         log.info("readProjectDetail"+projectId);
         ProjectResponseDetailDTO projectResponseDetailDTO = projectService.readProjectDetail(projectId, memberId);
         log.info("readProjectDetail"+projectResponseDetailDTO);
