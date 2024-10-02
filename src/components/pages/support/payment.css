@@ -1,0 +1,209 @@
+.big-container {
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 0px;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: space-between;
+}
+
+.container {
+  width: 70%; /* Adjust this to control how much space the form takes */
+}
+
+.title{
+  font-size: 2em; /* 글자 크기 */
+  color: #333; /* 글자 색상 */
+
+  margin-bottom: 20px; /* 하단 여백 */
+  font-weight: bold; /* 글자 굵기 */
+  letter-spacing: 1px; /* 글자 간격 */
+  border-bottom: 2px solid #ccc; /* 하단에 테두리 추가 */
+  padding-bottom: 10px; /* 패딩으로 하단에 공간 추가 */
+}
+.order-summary p {
+  margin-bottom: 5px; /* 원하는 간격으로 조정 */
+}
+
+
+.order-summary {
+  background-color: #fff;
+  border: 1px solid #ccc; /* 테두리 추가 */
+  padding: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+  border-radius: 8px; /* 모서리를 둥글게 만듦 */
+}
+
+.form-section {
+  background-color: #fff;
+
+  border: 1px solid #ccc; /* 테두리 추가 */
+  padding: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+  border-radius: 8px; /* 모서리를 둥글게 만듦 */
+}
+
+.input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.address-group {
+  display: flex;
+}
+
+.small-container {
+  margin-left: 20px;
+  margin-top: 50px;
+}
+
+.payment-summary {
+  width: 450px;
+  height: 480px;
+  background-color: #ffffff;
+  padding: 40px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  position: sticky;
+  top: 20px;
+}
+.button-1 {
+  background-color: #7a82ed;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 2px 2px;
+  width: 130px;
+  height: 40px;
+  margin-left:20px;
+  text-align: center;
+}
+
+.button-2 {
+  background-color: #7a82ed;
+  color: white;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 8px 16px;
+  box-shadow: none;
+  border: none;
+  transition: background-color 0.3s ease;
+  width: 300px;
+  height: 50px;
+  text-align: center;
+  font-size: 22px;
+}
+
+.button:hover {
+  background-color: #33C2E2;
+}
+.agreement-section {
+  margin: 5px 0;
+}
+
+
+
+/* 체크박스 그룹 스타일 */
+.checkbox-group {
+  margin-top:10px;
+  margin-bottom:10px;
+  
+  display: flex;
+  gap: 7px;
+  flex-direction: column;
+  padding: 10px;
+  font-size: 17px;
+
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.delivery-message-container h1 {
+  margin-top: 20px;
+}
+
+.delivery-select {
+  width: 100%;    /* 선택 상자의 너비를 100%로 설정 */
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+}
+
+.delivery-select option {
+  padding: 10px;
+  background-color: #fff; /* 옵션 배경 */
+  color: #333;            /* 텍스트 색상 */
+}
+
+.custom-textarea {
+  width: 520px; /* 너비를 100%로 설정하여 부모 요소에 맞게 조정 */
+  height: 120px; /* 적당한 높이 설정 */
+  padding: 10px; /* 안쪽 여백 추가 */
+  font-size: 16px; /* 글자 크기 */
+  border: 1px solid #ccc; /* 테두리 설정 */
+  border-radius: 8px; /* 모서리를 둥글게 */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* 안쪽 그림자 */
+  resize: none; /* 사용자가 크기를 조절하지 못하게 */
+  margin-top: 10px;
+}
+
+.custom-textarea:focus {
+  border-color: #66afe9; /* 포커스 시 테두리 색 변경 */
+  outline: none; /* 기본 outline 제거 */
+  box-shadow: 0 0 8px rgba(102, 175, 233, 0.6); /* 포커스 시 외곽 그림자 */
+}
+
+.payment-method-form {
+  margin: 20px 0; /* 폼의 상하 간격 */
+}
+
+.payment-method-radio-group {
+  display: flex;
+  flex-direction: column; /* 수직 배치 */
+  gap: 4px; /* 각 라디오 버튼 간의 간격 */
+}
+
+.payment-method-option {
+  display: flex;
+  align-items: center; /* 라디오 버튼과 텍스트, 이미지 정렬 */
+  font-size: 26px; /* 텍스트 크기 */
+}
+
+.payment-method-option span {
+  font-weight: 500;
+  margin-right: 7px; /* 라디오 버튼과 이미지 사이 간격 */
+}
+
+.payment-logo {
+  width: 70px; /* 결제 로고 이미지 크기 */
+  height: auto;
+}
+
+.payment-summary-title {
+  font-size: 25px; /* 글자 크기 */
+  color: #333; /* 글자 색상 */
+  margin-bottom: 10px; /* 하단 여백 */
+  font-weight: bold; /* 글자 굵기 */
+  letter-spacing: 1px; /* 글자 간격 */
+  border-bottom: 2px solid #ccc; /* 하단에 테두리 추가 */
+  padding-bottom: 10px; /* 패딩으로 하단에 공간 추가 */
+}
+
+.payment-summary-amount{
+  padding: 10px; /* 안쪽 여백 추가 */
+
+}
+.small-container p{
+  margin-bottom: 10px; /* 원하는 간격으로 조정 */
+}
