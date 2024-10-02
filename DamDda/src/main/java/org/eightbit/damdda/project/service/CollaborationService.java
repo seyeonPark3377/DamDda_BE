@@ -11,6 +11,7 @@ import org.eightbit.damdda.project.dto.PageResponseDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,11 +28,12 @@ public interface CollaborationService {
     void rejectRequest(List<Long> idList);
 
     default Collaboration collabDtoToEntiy(CollaborationDetailDTO collabDTO, Project project){
-       return  Collaboration.builder()
+        return  Collaboration.builder()
+                .savedAt(collabDTO.getCollaborationDTO().getCollaborateDate())
                 .userId(collabDTO.getUser_id())
                 .project(project)
                 .collaborationText(collabDTO.getContent())
-                .name(collabDTO.getTitle())
+                .name(collabDTO.getCollaborationDTO().getTitle())
                 .email(collabDTO.getEmail())
                 .phoneNumber(collabDTO.getPhoneNumber())
                 .build();
@@ -39,6 +41,7 @@ public interface CollaborationService {
 
     default CollaborationDetailDTO collabEntityToDto(Collaboration collaboration) throws JsonProcessingException {
         return CollaborationDetailDTO.builder()
+                .collaborationDTO(CollaborationDTO.builder().id(collaboration.getId()).title(collaboration.getProject().getTitle()).approval(collaboration.getApproval()).CollaborateDate(collaboration.getSavedAt()).name(collaboration.getName()).build())
                 .phoneNumber(collaboration.getPhoneNumber())
                 .email(collaboration.getEmail())
                 .collabDocList(collaboration.getCollabDocList().stream().map(String.class::cast).collect(Collectors.toList()))
@@ -51,7 +54,7 @@ public interface CollaborationService {
         return CollaborationDTO.builder()
                 .id(collaboration.getId())
                 .title(collaboration.getProject().getTitle())
-                .approval("대기") //확인해보기
+                .approval(collaboration.getApproval()) //확인해보기
                 .CollaborateDate(collaboration.getSavedAt())
                 .name(collaboration.getName())
                 .build();

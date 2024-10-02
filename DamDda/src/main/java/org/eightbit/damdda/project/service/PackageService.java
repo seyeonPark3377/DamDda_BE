@@ -16,9 +16,8 @@ public interface PackageService {
     void registerPackage(PackageDTO packageDTO,Long project_id);
     List<RewardDTO> viewRewardByPackage(Long package_id);
     List<RewardDTO> viewRewardByProject(Long project_id);
-    List<PackageDTO> viewPackage(Long project_id);
-    void modifyPackage(PackageDTO packageDTO,Long package_id, Long project_id);
-    void deleteReward(Long reward_id);
+    List<PackageDTO> viewPackage(Long project_id) throws JsonProcessingException;
+    void modifyPackage(PackageDTO packageDTO,  Long project_id);    void deleteReward(Long reward_id);
     void deletePackage(Long package_id);
 
     //rewardDTo -> ProjectReward
@@ -34,8 +33,9 @@ public interface PackageService {
                 .id(pr.getId())
                 .name(pr.getRewardName())
                 .count(packageRewardList.stream()
-                        .filter(packageReward -> packageReward.getProjectReward().getId().equals(pr.getId()))
-                        .filter(packageReward -> packageReward.getProjectPackage().getId().equals(pr.getId()))
+                        .filter(packageReward ->
+                                packageReward.getProjectReward().getId().equals(pr.getId())
+                        )
                         .mapToInt(PackageRewards::getRewardCount).sum())
                 .optionType(pr.getOptionType())
                 .OptionList(pr.getOptionList())

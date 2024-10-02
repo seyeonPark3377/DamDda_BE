@@ -36,11 +36,12 @@ public class ProjectRewards extends BaseEntity {
 
     private String optionType;
 
+    //setter 함수
     public void setPackageReward(Project project){
         PackageRewards packageRewards1 = PackageRewards.builder()
-                        .projectReward(this)
-                        .project(project)
-                        .build();
+                .projectReward(this)
+                .project(project)
+                .build();
         packageRewards.add(packageRewards1);
     }
     public void setOptionList(List<String> options) throws JsonProcessingException{
@@ -49,6 +50,7 @@ public class ProjectRewards extends BaseEntity {
         this.optionList = objectMapper.writeValueAsString(options);
     }
 
+    //json 역직렬화
     public List<String> getOptionList() throws  JsonProcessingException{
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(this.optionList, new TypeReference<List<String>>(){});
@@ -61,7 +63,6 @@ public class ProjectRewards extends BaseEntity {
         try {
             return "ProjectReward{" +
                     "id=" + id +
-
                     ", optionType=" + optionType +
                     ", rewardName=" + rewardName +
                     ", optionList=" + objectMapper.writeValueAsString(getOptionList()) +

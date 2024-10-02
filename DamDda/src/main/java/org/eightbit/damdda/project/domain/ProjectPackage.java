@@ -1,6 +1,8 @@
 package org.eightbit.damdda.project.domain;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 import org.eightbit.damdda.common.domain.BaseEntity;
 
@@ -38,6 +40,7 @@ public class ProjectPackage extends BaseEntity {
         this.quantityLimited = quantityLimited;
 
     }
+
     public void addPackageReward(List<PackageRewards> packageReward) {
         this.packageRewards.addAll(packageReward);
     }
@@ -45,34 +48,36 @@ public class ProjectPackage extends BaseEntity {
     // 커스텀 toString() 메서드 ->  packageReward와 toString() 순환 참조 문제
     @Override
     public String toString() {
-        // 기본 필드 출력
         StringBuilder sb = new StringBuilder();
         sb.append("ProjectPackage(id=").append(id)
                 .append(", packageName=").append(packageName)
                 .append(", packagePrice=").append(packagePrice)
                 .append(", quantityLimited=").append(quantityLimited);
 
-        // packageRewards 출력 (순환 참조 방지)
         sb.append(", packageRewards=[");
         for (PackageRewards reward : packageRewards) {
             sb.append("PackageRewards(id=").append(reward.getId())
                     .append(", rewardCount=").append(reward.getRewardCount());
 
-            // projectReward가 null이 아닐 때만 추가 정보 출력
             if (reward.getProjectReward() != null) {
+                sb.append(", rewardName=").append(reward.getProjectReward().getRewardName())
+                        .append(", optionType=").append(reward.getProjectReward().getOptionType())
+                        .append(", optionList=");
                 try {
-                    sb.append(", rewardName=").append(reward.getProjectReward().getRewardName())
-                            .append(", optionType=").append(reward.getProjectReward().getOptionType())
-                            .append(", optionList=").append(reward.getProjectReward().getOptionList());
+                    sb.append(reward.getProjectReward().getOptionList());
                 } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
+                    sb.append("Error processing JSON: ").append(e.getMessage());
                 }
             }
-            sb.append("), ");
+            sb.append("), ");  // 각 PackageRewards 항목의 끝
         }
-        sb.append("])");
+        if (!packageRewards.isEmpty()) {
+            sb.setLength(sb.length() - 2);  // 마지막 ", " 제거
+        }
+        sb.append("]");  // packageRewards 리스트의 끝
+
+        sb.append(")");  // ProjectPackage의 끝
 
         return sb.toString();
     }
 }
-
