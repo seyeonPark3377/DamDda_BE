@@ -57,7 +57,8 @@ public class FileApiController {
                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
                         .body(resource);
             } else {
-                throw new RuntimeException("파일을 찾을 수 없거나 읽을 수 없습니다.");
+                log.info(fileName + " not found");
+                throw new RuntimeException(fileName + " not found" + "파일을 찾을 수 없거나 읽을 수 없습니다.");
             }
         } catch (MalformedURLException e) {
             throw new RuntimeException("잘못된 파일 경로입니다.", e);

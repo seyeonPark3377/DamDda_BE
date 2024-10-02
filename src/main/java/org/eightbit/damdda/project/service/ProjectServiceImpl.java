@@ -60,28 +60,34 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectRegisterDetailDTO getProjectDetail(Long projectId){
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("해당 아이디와 일치하는 프로젝트 없음! Project not found with ID: " + projectId));
-
+//수정필요
         List<ProjectImage> projectImages = projectImageRepository.findAllByProjectIdOrderByOrd(projectId);
         List<String> productImages = projectImages.stream()
                 .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))
-                .map(ProjectImage::getUrl)
+                .map(projectImage -> "http://localhost:9000/" + projectImage.getUrl())  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
 
         List<String> descriptionImages = projectImages.stream()
                 .filter(projectImage -> projectImage.getImageType().getImageType().equals("description"))
-                .map(ProjectImage::getUrl)
+                .map(projectImage -> "http://localhost:9000/" + projectImage.getUrl())  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
 
         List<ProjectDocument> projectDocs = projectDocumentRepository.findAllByProjectIdOrderByOrd(projectId);
+        log.info(projectDocs);
         List<String> certDocs = projectDocs.stream()
-                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 19).equals("인증"))
-                .map(ProjectDocument::getUrl)
+                .filter(projectDoc -> projectDoc.getFileName().contains("[인증]"))
+//                .filter(projectDoc -> projectDoc.getFileName().length() >= 5 && projectDoc.getFileName().substring(0, 4).equals("[인증]"))
+//                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 18).equals("[인증]"))
+                .map(ProjectDocument -> "http://localhost:9000/" + ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
         List<String> reqDocs = projectDocs.stream()
-                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 19).equals("진행자"))
-                .map(ProjectDocument::getUrl)
+                .filter(projectDoc -> projectDoc.getFileName().contains("[진행자]"))
+//                .filter(projectDoc -> projectDoc.getFileName().length() >= 6 && projectDoc.getFileName().substring(0, 5).equals("[진행자]"))
+//                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 19).equals("[진행자]"))
+                .map(ProjectDocument -> "http://localhost:9000/" + ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
 
+        log.info(certDocs);
 
         List<Tag> tags = project.getTags();
         List<String> tagDTOs = tags.stream()
@@ -676,7 +682,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
 
-        if ((productImages != null && !productImages.isEmpty()) || (descriptionImages != null && !descriptionImages.isEmpty())) {
+        if ((productImages != null && !productImages.isEmpty()) && (descriptionImages != null && !descriptionImages.isEmpty())) {
             // productImages나 descriptionImages 중 하나라도 null이 아니고 빈 배열이 아닌 경우에만 실행
             imgService.saveImages(project, productImages, descriptionImages);
         }
@@ -731,7 +737,10 @@ public class ProjectServiceImpl implements ProjectService {
 //        project.setThumbnailUrl("");  // 기본값은 빈 문자열로 설정
         project.setSubmitAt(submit ? Timestamp.valueOf(LocalDateTime.now()) : null);  // 제출 시간 설정
 
-        if ((productImages != null && !productImages.isEmpty()) || (descriptionImages != null && !descriptionImages.isEmpty())) {
+        log.info(productImages);
+        log.info(descriptionImages);
+        log.info(docs);
+        if ((productImages != null && !productImages.isEmpty()) && (descriptionImages != null && !descriptionImages.isEmpty())) {
             // productImages나 descriptionImages 중 하나라도 null이 아니고 빈 배열이 아닌 경우에만 실행
             imgService.saveImages(project, productImages, descriptionImages);
         }
