@@ -141,7 +141,7 @@ public class ProjectApiController {
 
     //@PostMapping("/register")
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String registerPost(@RequestParam("memberId")  Long memberId,
+    public Long registerPost(@RequestParam("memberId")  Long memberId,
                                @RequestPart("projectDetailDTO")  ProjectDetailDTO projectDetailDTO,
                                @RequestParam(value = "submit", required = false) String submit,
                                @RequestPart(value = "productImages", required = false) List<MultipartFile> productImages,
@@ -150,11 +150,11 @@ public class ProjectApiController {
                                BindingResult bindingResult,
                                RedirectAttributes redirectAttributes) {
     // 유효성 검사 실패 시 처리
-    if (bindingResult.hasErrors()) {
-        log.info("has errors..........");
-        redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-        return "error";  // 유효성 검증 실패 시 에러 페이지로 이동
-    }
+//    if (bindingResult.hasErrors()) {
+//        log.info("has errors..........");
+//        redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+//        return "error";  // 유효성 검증 실패 시 에러 페이지로 이동
+//    }
     // 프로젝트 ID 변수 선언
     Long projectId = null;
     log.info(submit + "submit!!----------------------------------------------------------");
@@ -166,11 +166,11 @@ public class ProjectApiController {
         projectId = projectService.register(memberId, projectDetailDTO, true, productImages, descriptionImages, docs);
     } else {
         redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
-        return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
+//        return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
     }
 
     // projectId 리턴
-    return "projectId: " + projectId + "\n" + projectService.findById(projectId);
+    return projectId;
 
     }
 
