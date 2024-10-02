@@ -670,9 +670,21 @@ public class ProjectServiceImpl implements ProjectService {
         project.setTags(tags);  // 프로젝트에 태그 추가
 
 
-        imgService.saveImages(project, productImages, descriptionImages);
+//        imgService.saveImages(project, productImages, descriptionImages);
+//
+//        docService.saveDocs(project, docs);
 
-        docService.saveDocs(project, docs);
+
+
+        if ((productImages != null && !productImages.isEmpty()) || (descriptionImages != null && !descriptionImages.isEmpty())) {
+            // productImages나 descriptionImages 중 하나라도 null이 아니고 빈 배열이 아닌 경우에만 실행
+            imgService.saveImages(project, productImages, descriptionImages);
+        }
+//        imgService.saveImages(project, productImages, descriptionImages);
+        if (docs != null && !docs.isEmpty()) {
+            docService.saveDocs(project, docs);
+        }
+        
 
         // 5. 최종 프로젝트 저장
         return project.getId();

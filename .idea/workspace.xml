@@ -5,17 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c1bb7eb2-f9aa-4fc9-80a7-29a723583fa7" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/dto/ProjectRegisterDetailDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/dto/WritingProjectDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/config/WebConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/controller/ProjectApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/controller/ProjectApiController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/repository/ProjectRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/repository/ProjectRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/DocServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/DocServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ImgServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ImgServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -134,7 +125,7 @@
       <updated>1726455745756</updated>
       <workItem from="1726455747229" duration="17000" />
       <workItem from="1727837533004" duration="168000" />
-      <workItem from="1727837707801" duration="8186000" />
+      <workItem from="1727837707801" duration="9689000" />
     </task>
     <servers />
   </component>

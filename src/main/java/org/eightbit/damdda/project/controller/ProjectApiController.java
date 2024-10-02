@@ -72,7 +72,7 @@ public class ProjectApiController {
 //            sortedProjects = projectService.getProjects(pageRequestDTO, memberId, page, size, category, search, progress, sortConditions);
 //        }
 
-        log.info("getProjects"+progress);
+        log.info("getProjects" + progress);
         log.info(sortedProjects);
 
         return sortedProjects;
