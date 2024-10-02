@@ -1,139 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="c1bb7eb2-f9aa-4fc9-80a7-29a723583fa7" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/dto/ProjectRegisterDetailDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/dto/WritingProjectDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.test.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/api/api.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/0f535aea-f7a4-4134-930f-03e9cb0e9630-jpg.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/Banner2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/CollaborationImage.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/DamDda_FE-feature-hooi.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/DamDda_FE-feature-nami (1).zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/DamDda_FE-feature-woni (1).zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/DamDda_FE-feature-youngi.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/Food-basket-with-groceries.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/Icon.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/assets.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/banner-1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/cart.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/cosmetic-composition.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/coverImage.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/d-abstract-holographic-form.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/damdda-special-exhibition.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/flag.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/fresh-sale.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/game-controller.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/heart.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/kakao.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/lg-png-3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/lg-png.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/link-1.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/link-2.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/link-3.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/link-4.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/link.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/margin-1.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/margin.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/movie-video-camera.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/mysql-workbench-community-8.0.38-winx64.msi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/naver.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/pink-headphones-floating.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/project-button-toggle.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/right-arrow.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/search-button.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/svg-margin.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/svg.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/t-shirt-mockup.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/toss.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/assets/traditional.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/hooks/hooks.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/Category.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/Category.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/Footer.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/Footer.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/Header.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/Product.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/ProgressBar/ProgressBar.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/ProgressBar/ProgressBar.stories.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/ProgressBar/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/ProgressBar/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/SearchBar.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/YourPage.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/YourPage.module.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/layout.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/detail/Detail.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/detail/ProjectDetail.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/detail/detail.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/detail/notices.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/detail/qna.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/entire/Main.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/entire/MainBanner.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/entire/NewSection.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/entire/Product.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/entire/ServiceCards.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/entire/entire.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/entire/mainpage.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/error/ErrorPage.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/error/Game.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mainpage/Carousel.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mainpage/Collaboration.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mainpage/Main.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mainpage/MainBanner.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mainpage/NewSection.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mainpage/Product.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mainpage/ServiceCards.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mainpage/mainpage.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/member/FindID.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/member/Join.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/member/Login.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/member/ResetPassword.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/member/member.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/EditModal.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/LikeProject.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/MyProject.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/MyProjectDetail.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/Mypage.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/MypageHeader.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/MyprojectDashBoard.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/PaginationButtons.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/PaymentDeliveryInfo.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/ProfileEditPage.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/ProfileStatistics.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/ProjectCard.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/StatusButton.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/SupportedProjects.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/TabsUnderlinePlacement.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/mypage/css/SupportedProjects.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/register/Register.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/register/detailPage.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/register/package.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/register/package.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/register/projectDocument.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/register/register.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/support/MyOrders.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/support/Mysupport.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/support/OrderPage.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/support/PaymentSuccess.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/support/PaymentSuccess.module.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/support/constants.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/support/payment.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/support/payment.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/pages/support/support.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/styles/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/styles/styles.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/reportWebVitals.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/utils.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/controller/ProjectApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/controller/ProjectApiController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/repository/ProjectRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/repository/ProjectRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/DocServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/DocServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ImgServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ImgServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="DamDda" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="DamDda" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -148,14 +66,56 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Gradle.Build DamDda_BE.executor": "Run",
+    "Gradle.C:/Users/aiass/Documents/GitHub/DamDda_BE/build.gradle.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.DamDdaApplication.executor": "Run",
     "git-widget-placeholder": "feature/project",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/aiass/Documents/GitHub/DamDda_BE",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mariadb"
+    ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.eightbit.damdda.project.dto" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="DamDdaApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="DamDda.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.eightbit.damdda.DamDdaApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.eightbit.damdda.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.DamDdaApplication" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -174,6 +134,7 @@
       <updated>1726455745756</updated>
       <workItem from="1726455747229" duration="17000" />
       <workItem from="1727837533004" duration="168000" />
+      <workItem from="1727837707801" duration="8186000" />
     </task>
     <servers />
   </component>

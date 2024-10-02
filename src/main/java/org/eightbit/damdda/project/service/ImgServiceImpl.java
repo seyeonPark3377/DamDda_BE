@@ -34,16 +34,17 @@ public class ImgServiceImpl implements ImgService {
 
     @Override
     public boolean deleteImageFiles(List<ProjectImage> images) {
+        log.info(images);
         boolean result = true;
         // 첫 번째 파일의 폴더 경로를 추출
         if (!images.isEmpty()) {
-            String folderPath = basePath + images.get(0).getUrl().replace("/files", ""); // 기본 경로 설정
+            String folderPath = basePath + images.get(0).getUrl().replace("files", ""); // 기본 경로 설정
             folderPath = folderPath.substring(0, folderPath.lastIndexOf("/")); // 파일명 제외하고 폴더 경로만 추출
             File directory = new File(folderPath);
 
 
             for (ProjectImage img : images) {
-                String filePath = basePath + img.getUrl().replace("/files", "");  // img.getUrl()이 상대 경로라 가정
+                String filePath = basePath + img.getUrl().replace("files", "");  // img.getUrl()이 상대 경로라 가정
                 File file = new File(filePath);
 
                 if (file.exists()) {

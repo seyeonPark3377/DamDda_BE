@@ -8,10 +8,7 @@ import org.eightbit.damdda.common.domain.DateEntity;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.order.service.SupportingProjectService;
-import org.eightbit.damdda.project.domain.LikedProject;
-import org.eightbit.damdda.project.domain.Project;
-import org.eightbit.damdda.project.domain.ProjectImage;
-import org.eightbit.damdda.project.domain.Tag;
+import org.eightbit.damdda.project.domain.*;
 import org.eightbit.damdda.project.dto.*;
 import org.eightbit.damdda.project.repository.*;
 import org.springframework.data.domain.*;
@@ -59,6 +56,58 @@ public class ProjectServiceImpl implements ProjectService {
 //    public List<Project> getProjectsByIds(List<Long> projectIds) {
 //        return projectRepository.findAllById(projectIds);
 //    }
+    @Override
+    public ProjectRegisterDetailDTO getProjectDetail(Long projectId){
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchElementException("해당 아이디와 일치하는 프로젝트 없음! Project not found with ID: " + projectId));
+
+        List<ProjectImage> projectImages = projectImageRepository.findAllByProjectIdOrderByOrd(projectId);
+        List<String> productImages = projectImages.stream()
+                .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))
+                .map(ProjectImage::getUrl)
+                .collect(Collectors.toList());
+
+        List<String> descriptionImages = projectImages.stream()
+                .filter(projectImage -> projectImage.getImageType().getImageType().equals("description"))
+                .map(ProjectImage::getUrl)
+                .collect(Collectors.toList());
+
+        List<ProjectDocument> projectDocs = projectDocumentRepository.findAllByProjectIdOrderByOrd(projectId);
+        List<String> certDocs = projectDocs.stream()
+                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 19).equals("인증"))
+                .map(ProjectDocument::getUrl)
+                .collect(Collectors.toList());
+        List<String> reqDocs = projectDocs.stream()
+                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 19).equals("진행자"))
+                .map(ProjectDocument::getUrl)
+                .collect(Collectors.toList());
+
+
+        List<Tag> tags = project.getTags();
+        List<String> tagDTOs = tags.stream()
+                .map(Tag::getName)
+                .collect(Collectors.toList());
+
+
+        ProjectRegisterDetailDTO dto = ProjectRegisterDetailDTO.builder()
+                .id(project.getId())
+                .title(project.getTitle())
+                .description(project.getDescription())
+                .descriptionDetail(project.getDescriptionDetail())
+                .targetFunding(project.getTargetFunding())
+                .startDate(project.getStartDate())
+                .endDate(project.getEndDate())
+                .category(project.getCategory() == null ? null : project.getCategory().getName())
+                .productImages(productImages)
+                .descriptionImages(descriptionImages)
+                .reqDocs(reqDocs)
+                .certDocs(certDocs)
+                .tags(tagDTOs)
+                .build();
+
+        return dto;
+
+    }
 
     @Override
     public Long getMemberId(Long projectId){
@@ -322,6 +371,28 @@ public class ProjectServiceImpl implements ProjectService {
 
     }
 
+
+
+    @Override
+    public List<WritingProjectDTO> getWritingProjectDTO(Long memberId) {
+
+        List<Project> result = projectRepository.findAllByMemberIdAndSubmitAtIsNullAndDeletedAtIsNull(memberId);
+
+        List<WritingProjectDTO> dtoList = result.stream()
+                .map(project -> {
+                    return WritingProjectDTO.builder()
+                            .id(project.getId())
+                            .title(project.getTitle())
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        return dtoList;
+
+    }
+
+
+
 //    @Override
 //    public PageResponseDTO<ProjectBoxDTO> getProjectsSortedByFundingRatio(String category, String search, String progress, Long memberId, PageRequestDTO pageRequestDTO) {
 ////        PageRequest pageable = PageRequest.of(page - 1, size);  // PageRequest를 사용해 페이지와 크기를 지정
@@ -396,7 +467,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         List<ProjectImage> projectImages = projectImageRepository.findAllByProjectIdOrderByOrd(projectId);
         List<String> productImages = projectImages.stream()
-                .filter(projectImage -> projectImage.getImageType().getImageType().equals("PRODUCT_IMAGE"))
+                .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))
                 .map(ProjectImage::getUrl)
                 .collect(Collectors.toList());
 
@@ -464,9 +535,7 @@ public class ProjectServiceImpl implements ProjectService {
                     .collect(Collectors.toList());
 
             List<String> descriptionImages = projectImages.stream()
-
                     .filter(projectImage -> projectImage.getImageType().getImageType().equals("description"))
-
                     .map(ProjectImage::getUrl)
                     .collect(Collectors.toList());
 //        List<String> productImages = new ArrayList<>();
@@ -550,6 +619,8 @@ public class ProjectServiceImpl implements ProjectService {
 //            projectRepository.delete(project);
         }
     }
+
+
 
     @Override
     public Long register(Long memberId,

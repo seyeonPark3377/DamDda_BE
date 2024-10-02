@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 // pr완료
-@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000", "http://127.0.0.1:3000"})
+@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000", "http://127.0.0.1:3000",  "http://223.130.156.95", "http://223.130.156.95"})
 @RestController
 @RequestMapping("/api/projects")
 @Log4j2
@@ -78,6 +78,18 @@ public class ProjectApiController {
         return sortedProjects;
     }
 
+    @GetMapping("/write/{projectId}")
+    public ProjectRegisterDetailDTO getWriteProject(@PathVariable Long projectId) {
+        ProjectRegisterDetailDTO dto = projectService.getProjectDetail(projectId);
+        log.info("getWriteProject : " + projectId + dto);
+        return dto;
+    }
+
+    @GetMapping("/write")
+    public List<WritingProjectDTO> getWritingProjects(Long memberId) {
+        return projectService.getWritingProjectDTO(memberId);
+    }
+
     @GetMapping("/like")
     public PageResponseDTO<ProjectBoxDTO> getLikedProjectList(@RequestParam("memberId") Long memberId,
                                                       PageRequestDTO pageRequestDTO) {
@@ -131,10 +143,10 @@ public class ProjectApiController {
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String registerPost(@RequestParam("memberId")  Long memberId,
                                @RequestPart("projectDetailDTO")  ProjectDetailDTO projectDetailDTO,
-                               @RequestParam("submit") String submit,
-                               @RequestPart("productImages") List<MultipartFile> productImages,
-                               @RequestPart("descriptionImages") List<MultipartFile> descriptionImages,
-                               @RequestPart("docs") List<MultipartFile> docs,
+                               @RequestParam(value = "submit", required = false) String submit,
+                               @RequestPart(value = "productImages", required = false) List<MultipartFile> productImages,
+                               @RequestPart(value = "descriptionImages", required = false) List<MultipartFile> descriptionImages,
+                               @RequestPart(value = "docs", required = false) List<MultipartFile> docs,
                                BindingResult bindingResult,
                                RedirectAttributes redirectAttributes) {
     // 유효성 검사 실패 시 처리

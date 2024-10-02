@@ -23,8 +23,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
     @Query("select p from Project p where p.member.id = :memberId and p.deletedAt is null")
     Project findByMemberId(@Param("memberId") Long memberId);
 
-
     Page<Project> findAllByDeletedAtIsNull(Pageable pageable);
+
+    List<Project> findAllByMemberIdAndSubmitAtIsNullAndDeletedAtIsNull(Long memberId);
 //    public Project findByMemberId(Long memberId);
 
 //    @Query("SELECT p FROM Project p " +

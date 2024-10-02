@@ -30,14 +30,19 @@ public class DocServiceImpl implements DocService {
 
 
     public boolean deleteDocFiles(List<ProjectDocument> docs){
+        log.info("delete doc files" + docs);
         boolean result = true;
 
         for (ProjectDocument doc : docs) {
-            String filePath = basePath + doc.getUrl().replace("/files", "");  // img.getUrl()이 상대 경로라 가정
+            String filePath = basePath + doc.getUrl().replace("files", "");  // img.getUrl()이 상대 경로라 가정
             File file = new File(filePath);
 
             if (file.exists()) {
-                result = result && file.delete(); // 파일 삭제
+                boolean isDelete = file.delete();
+                result = result && isDelete; // 파일 삭제
+                if (isDelete){
+                    projectDocumentRepository.delete(doc);
+                }
             } else {
                 result = false;
             }
