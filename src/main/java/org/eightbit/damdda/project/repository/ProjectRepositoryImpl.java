@@ -34,8 +34,13 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
         // 1. 카테고리 필터 (all인 경우 필터링 안 함)
         if (category != null && !"전체".equals(category) && !"all".equals(category)) {
-            builder.and(project.category.name.eq(category));
-//            builder.and(project.category.name.eq(category));
+            // 카테고리 배열 선언
+            List<String> validCategories = Arrays.asList("K-POP", "K-콘텐츠", "게임", "문화재", "뷰티", "음식", "패션");
+
+            // category가 유효한 카테고리 중 하나인지 확인
+            if (validCategories.contains(category)) {
+                builder.and(project.category.name.eq(category));
+            }
         }
 
         // 2. 검색어 필터 (%search%)

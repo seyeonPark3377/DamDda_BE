@@ -17,7 +17,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
 //    @Query("select p from Project p where p.member.id = :memberId" )
 //    Page<Project> listOfProjectBoxHost(@Param("memberId") Long memberId, Pageable pageable);
 
-    @Query("select p from Project p where p.member.id = :memberId and p.deletedAt is null")
+    @Query("select p from Project p where p.member.id = :memberId and p.deletedAt is null and p.submitAt is NOT null")
     Page<Project> listOfProjectBoxHost(@Param("memberId") Long memberId, Pageable pageable);
 
     @Query("select p from Project p where p.member.id = :memberId and p.deletedAt is null")

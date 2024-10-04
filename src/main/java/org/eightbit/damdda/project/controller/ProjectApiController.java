@@ -54,7 +54,7 @@ public class ProjectApiController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) Long memberId,
-            @RequestParam(defaultValue = "all") String category,
+            @RequestParam(defaultValue = "전체") String category,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String progress,
             @RequestParam(required = false) String[] sort,

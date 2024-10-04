@@ -135,9 +135,11 @@ public class ProjectServiceImpl implements ProjectService {
 //            int start = (int) pageable.getOffset();
 //            int end = Math.min((start + pageable.getPageSize()), sortProjects.size());
             projects = new PageImpl<>(sortProjects, pageable, sortProjects.size());
+            log.info("1번!" + projects);
         } else {
             // 그 외의 경우
             projects = projectRepository.findProjects(memberId, category, search, progress, sortConditions, pageable);
+             log.info("2번!" + projects);
         }
 
 //                Page<Project> projects = projectRepository.findProjects(memberId, category, search, progress, sortConditions, pageable);
@@ -187,6 +189,8 @@ public class ProjectServiceImpl implements ProjectService {
         int start = (page - 1) * size;
         int end = Math.min(start + size, dtoList.size());
         List<ProjectBoxDTO> paginatedList = dtoList.subList(start, end);
+
+        log.info(search + "이거!" + paginatedList);
 
 // PageResponseDTO로 반환
         return PageResponseDTO.<ProjectBoxDTO>withAll()
