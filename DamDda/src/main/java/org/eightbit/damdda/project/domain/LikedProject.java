@@ -3,6 +3,7 @@ package org.eightbit.damdda.project.domain;
 import lombok.*;
 import org.eightbit.damdda.common.domain.BaseEntity;
 import org.eightbit.damdda.member.domain.Member;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,8 +20,11 @@ import java.time.LocalDateTime;
 public class LikedProject extends BaseEntity {
     @ManyToOne
     private Member member;
+
     @ManyToOne
     private Project project;
 
+    @CreatedDate
+    @Column(updatable = true)
     private Timestamp likedAt;
 }

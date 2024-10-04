@@ -12,8 +12,9 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Category extends BaseEntity {
+public class Category {
 
+    @Id
     private String name;
 
 }

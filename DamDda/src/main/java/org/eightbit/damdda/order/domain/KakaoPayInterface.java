@@ -17,6 +17,7 @@ public class KakaoPayInterface {
     private Long kakaopayInterfaceId;
 
     @ManyToOne
+    @JoinColumn(name = "payment_id")
     private Payment payment;
 }
 
