@@ -6,16 +6,23 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.domain.QProject;
+import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Repository
@@ -151,5 +158,68 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
 
         return orderSpecifiers.toArray(new OrderSpecifier<?>[0]);
+    }
+
+    @Value("${recommendation.url}")
+    private String recommendationUrl;
+
+    public Page<Project> getProjectByRecommendOrder(Long memberId, String category, String search, String progress, List<String> sortConditions, Pageable pageable) {
+        if (memberId == null) {
+            return findProjects(memberId, category, search, progress, Arrays.asList("likeCnt"), pageable);
+        }
+
+
+        try {
+            URL url = new URL(recommendationUrl + "api/recommend/" + memberId);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode == 200) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                //JSON parsing
+                JSONArray jsonArray = new JSONArray(response.toString());
+                log.info("RECOMMENDATION ORDER : " + jsonArray.toString());
+
+                if (jsonArray.isEmpty()) {
+                    return findProjects(memberId, category, search, progress, Arrays.asList("likeCnt"), pageable);
+                } else {
+                    QProject project = QProject.project;
+                    List<Project> content = jsonArray
+                            .toList()
+                            .stream()
+                            .map(id -> {
+                                        Long projectId = Long.valueOf((Integer)id);
+                                        BooleanBuilder builder = new BooleanBuilder();
+                                        builder.and(project.id.eq(projectId));
+                                        return queryFactory
+                                                .select(project)
+                                                .from(project)
+                                                .where(builder)
+                                                .fetch().get(0);
+                                    }
+                            ).collect(Collectors.toList());
+                    return new PageImpl<>(content, pageable, jsonArray.length());
+                }
+
+            } else {
+                log.info("GET Request failed, response code is " + responseCode);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return null;
     }
 }

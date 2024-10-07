@@ -136,6 +136,9 @@ public class ProjectServiceImpl implements ProjectService {
 //            int end = Math.min((start + pageable.getPageSize()), sortProjects.size());
             projects = new PageImpl<>(sortProjects, pageable, sortProjects.size());
             log.info("1번!" + projects);
+        } else if (!sortConditions.isEmpty() && "recommend".equals(sortConditions.get(0))) {
+            projects = projectRepository.getProjectByRecommendOrder(memberId, category, search, progress, sortConditions, pageable);
+
         } else {
             // 그 외의 경우
             projects = projectRepository.findProjects(memberId, category, search, progress, sortConditions, pageable);
