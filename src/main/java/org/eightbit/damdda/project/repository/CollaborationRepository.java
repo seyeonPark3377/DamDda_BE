@@ -25,5 +25,8 @@ public interface CollaborationRepository extends JpaRepository<Collaboration, Lo
     @Query("update Collaboration c set c.approval =:approval where c.id in :idList")
     void changeApproval(@Param("approval") String approval, @Param("idList") List<Long> idList);
 
+    @Query("SELECT c FROM Collaboration  c WHERE c.id in :cnoList")
+    List<Collaboration> findByIdList(@Param("cnoList")List<Long> cnoList);
+
 
 }

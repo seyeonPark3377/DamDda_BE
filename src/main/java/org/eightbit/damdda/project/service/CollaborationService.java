@@ -24,7 +24,7 @@ public interface CollaborationService {
     CollaborationDetailDTO readDetail(Long rno) throws JsonProcessingException;
     PageResponseDTO<CollaborationDTO> readReceive(PageRequestDTO pageRequestDTO,String userId);
     PageResponseDTO<CollaborationDTO> readRequest(PageRequestDTO pageRequestDTO,String userId);
-    int delete(long id, String user_id) throws JsonProcessingException;
+    int delete(List<Long> cnoList, String user_id) throws JsonProcessingException;
     void approvalRequest(List<Long> idList);
     void rejectRequest(List<Long> idList);
 

@@ -45,7 +45,7 @@ public class Collaboration {
     private String approval="대기";
 
     private String collaborationText;
-    private String name;
+    private String name; //프로젝트 제목. -> 나중에 바꾸기.
     private String email;
     private String phoneNumber;
 

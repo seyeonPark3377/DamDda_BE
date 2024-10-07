@@ -155,22 +155,26 @@ public class CollaborationServiceImpl implements CollaborationService{
     //협업 삭제하기
     @Override
     @Transactional
-    public int delete(long id, String user_id) throws JsonProcessingException {
-        Collaboration collaboration = collaborationRepository.findById(id).orElseThrow();
-        if(collaboration.getUserId().equals(user_id)){ //협업 제안자가 삭제를 한다면
-            // 연관된 파일 삭제
-            log.info("협업 제안자가 삭제중");
-            collaboration.addSenderDeletedAt();
-            for(String collabDoc :collaboration.getCollabDocList() ) {
-                deleteFile(collabDoc); //ncp에서 제거.
+    public int delete(List<Long> cnoList, String user_id) throws JsonProcessingException {
+        List<Collaboration> collaborationList = collaborationRepository.findByIdList(cnoList);
+        collaborationList.forEach(collaboration->{
+            if(collaboration.getUserId().equals(user_id)){ //협업 제안자가 삭제를 한다면
+                // 연관된 파일 삭제
+                log.info("협업 제안자가 삭제중");
+                collaboration.addSenderDeletedAt();
+                try {
+                    for(String collabDoc :collaboration.getCollabDocList() ) {
+                        deleteFile(collabDoc); //ncp에서 제거.
+                    }
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+                collaboration.removeCollabDocList();
+            }else{ //협업 제안을 받은 사람이 삭제를 한다면 > 게시판에서만 삭제됨.
+                log.info("협업 제안 받은 자가 삭제중");
+                collaboration.addReceiverDeletedAt();
             }
-            collaboration.removeCollabDocList();
-        }else{ //협업 제안을 받은 사람이 삭제를 한다면 > 게시판에서만 삭제됨.
-            log.info("협업 제안 받은 자가 삭제중");
-            collaboration.addReceiverDeletedAt();
-        }
-
-
+        });
         return 1;
     }
 
