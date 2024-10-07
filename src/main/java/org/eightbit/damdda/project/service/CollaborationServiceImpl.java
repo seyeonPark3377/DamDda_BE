@@ -144,7 +144,6 @@ public class CollaborationServiceImpl implements CollaborationService{
             return collabEntityToDtoList(collaboration);
         }).collect(Collectors.toList());
 
-        log.info("난예뻐"+dtoListRequest);
 
         return PageResponseDTO.<CollaborationDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)

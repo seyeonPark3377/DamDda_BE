@@ -10,6 +10,7 @@ import org.eightbit.damdda.member.domain.Member;
 @NoArgsConstructor
 @ToString
 public class MemberDTO {
+    private Long id;
     private String loginId;
     private String password;
     private String nickname;
@@ -23,6 +24,7 @@ public class MemberDTO {
 
     public static MemberDTO of(Member member) {
         return MemberDTO.builder()
+                .id(member.getId())
                 .loginId(member.getLoginId())
                 .password(member.getPassword())
                 .nickname(member.getNickname())

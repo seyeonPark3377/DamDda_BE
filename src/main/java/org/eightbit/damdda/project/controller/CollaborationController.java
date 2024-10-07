@@ -82,8 +82,8 @@ public class CollaborationController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody List<Long> cnoList,@RequestParam String user_id) throws JsonProcessingException {
-        Integer response = collaborationService.delete(cnoList,user_id);
+    public ResponseEntity<?> delete(@RequestBody List<Long> cno,@RequestParam String user_id) throws JsonProcessingException {
+        Integer response = collaborationService.delete(cno,user_id);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
