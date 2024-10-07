@@ -28,7 +28,7 @@ public class CollaborationDetailDTO {
 
     private CollaborationDTO collaborationDTO;
 
-    private Long user_id;
+    private String user_id;
 
     private List<Object> collabDocList;
 

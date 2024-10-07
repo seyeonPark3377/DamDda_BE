@@ -33,7 +33,7 @@ public class Collaboration {
     private LocalDate receiverDeletedAt;
 
     // 굳이 member와 연동할 필요가 있나?
-    private Long userId;
+    private String userId;
 
     @OneToOne
     @JoinColumn(name="projectId")

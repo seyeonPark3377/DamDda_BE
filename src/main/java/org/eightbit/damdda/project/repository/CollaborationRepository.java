@@ -15,11 +15,15 @@ import java.util.Optional;
 @Repository
 public interface CollaborationRepository extends JpaRepository<Collaboration, Long> {
 
-    @Query("SELECT c FROM Collaboration c WHERE c.receiverDeletedAt IS NULL")
-    Page<Collaboration> findAllWhereReceiverDeletedAtIsNull(Pageable pageable);
+    @Query("SELECT c FROM Collaboration c WHERE c.receiverDeletedAt IS NULL AND (c.userId = :userId OR c.project.member.id = :userId)")
+    Page<Collaboration> findCollaborationReceive(Pageable pageable, @Param("userId") String userId);
+
+    @Query("SELECT c FROM Collaboration c WHERE c.receiverDeletedAt IS NULL AND (c.userId = :userId OR c.project.member.id = :userId)")
+    Page<Collaboration> findCollaborationRequest(Pageable pageable, @Param("userId") String userId);
 
     @Modifying
     @Query("update Collaboration c set c.approval =:approval where c.id in :idList")
     void changeApproval(@Param("approval") String approval, @Param("idList") List<Long> idList);
+
 
 }

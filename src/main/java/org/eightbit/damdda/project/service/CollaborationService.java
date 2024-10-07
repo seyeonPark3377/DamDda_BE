@@ -22,8 +22,9 @@ public interface CollaborationService {
     void deleteFile(String fileName);
     void register(CollaborationDetailDTO collab,Long project_id) throws JsonProcessingException;
     CollaborationDetailDTO readDetail(Long rno) throws JsonProcessingException;
-    PageResponseDTO<CollaborationDTO> read(PageRequestDTO pageRequestDTO);
-    int delete(long id, Long user_id) throws JsonProcessingException;
+    PageResponseDTO<CollaborationDTO> readReceive(PageRequestDTO pageRequestDTO,String userId);
+    PageResponseDTO<CollaborationDTO> readRequest(PageRequestDTO pageRequestDTO,String userId);
+    int delete(long id, String user_id) throws JsonProcessingException;
     void approvalRequest(List<Long> idList);
     void rejectRequest(List<Long> idList);
 

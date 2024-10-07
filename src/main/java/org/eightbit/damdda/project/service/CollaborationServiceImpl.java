@@ -78,7 +78,7 @@ public class CollaborationServiceImpl implements CollaborationService{
     @Override
     @Transactional
     public void register(@Valid CollaborationDetailDTO collab, Long project_id) throws JsonProcessingException {
-        log.info(collab);
+        log.info("여기"+collab);
         //project_id를 이용해서 project 객체를 찾아냄.
         Project project = projectRepository.findById(project_id).orElseThrow(()->new EntityNotFoundException("project not found")); //long 타입으로 바꿔야 한다.
         //매핑 collaborationdto -> collaboration
@@ -109,32 +109,54 @@ public class CollaborationServiceImpl implements CollaborationService{
         return collaborationDetailDTO;
     }
 
-    //협업 리스트 보기
+    //협업 리스트 보기 ->요청받은
     @Override
     @Transactional
-    public PageResponseDTO<CollaborationDTO> read(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<CollaborationDTO> readReceive(PageRequestDTO pageRequestDTO,String userId) {
         Pageable pageable = pageRequestDTO.getPageable("id");
 
-        Page<Collaboration> collaborationPage = collaborationRepository.findAllWhereReceiverDeletedAtIsNull(pageable);
+        Page<Collaboration> collaborationPageReceive = collaborationRepository.findCollaborationReceive(pageable,userId);
 
         //엔티티를 dto로 변환.
-        List<CollaborationDTO> dtoList = collaborationPage.stream().map(collaboration-> {
+        //협업을 요청한 리스트
+        List<CollaborationDTO> dtoListReceive = collaborationPageReceive.stream().map(collaboration-> {
             return collabEntityToDtoList(collaboration);
-        }).collect(Collectors.toList());
+        }).filter(collab -> !collab.getName().equals(userId)).collect(Collectors.toList());
 
         return PageResponseDTO.<CollaborationDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
-                .dtoList(dtoList)
-                .total((int)collaborationPage.getTotalElements())
+                .dtoList(dtoListReceive)
+                .total((int)collaborationPageReceive.getTotalElements())
                 .build();
     }
 
+    //협업 리스트 조회 -> 요청한
+
+    @Override
+    @Transactional
+    public PageResponseDTO<CollaborationDTO> readRequest(PageRequestDTO pageRequestDTO,String userId) {
+        Pageable pageable = pageRequestDTO.getPageable("id");
+
+        Page<Collaboration> collaborationPageRequest = collaborationRepository.findCollaborationRequest(pageable,userId);
+
+        //엔티티를 dto로 변환.
+        //협업을 요청한 리스트
+        List<CollaborationDTO> dtoListRequest = collaborationPageRequest.stream().map(collaboration-> {
+            return collabEntityToDtoList(collaboration);
+        }).filter(collab -> collab.getName().equals(userId)).collect(Collectors.toList());
+
+
+        return PageResponseDTO.<CollaborationDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoListRequest)
+                .total((int)collaborationPageRequest.getTotalElements())
+                .build();
+    }
     //협업 삭제하기
     @Override
     @Transactional
-    public int delete(long id, Long user_id) throws JsonProcessingException {
-        Optional<Collaboration> collaborationOpt = collaborationRepository.findById(id);
-        Collaboration collaboration = collaborationOpt.orElseThrow();
+    public int delete(long id, String user_id) throws JsonProcessingException {
+        Collaboration collaboration = collaborationRepository.findById(id).orElseThrow();
         if(collaboration.getUserId() == user_id){ //협업 제안자가 삭제를 한다면
             // 연관된 파일 삭제
             collaboration.addSenderDeletedAt();

@@ -47,13 +47,13 @@ public class CollaborationController {
         return new ResponseEntity<>(bytes,headers,HttpStatus.OK);
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register/{projectId}")
     public ResponseEntity<?> register( @RequestParam("jsonData") String jsonDataStr,
                                        @RequestParam("collabDocList") List<MultipartFile> collabDocList,
                                        @RequestParam Long project_id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         CollaborationDetailDTO collaborationDetailDTO = mapper.registerModule(new JavaTimeModule()).readValue(jsonDataStr, CollaborationDetailDTO.class);
-
+        log.info("여기"+collaborationDetailDTO);
         collaborationDetailDTO.setCollabDocList(convertToObjectList(collabDocList));
 
         collaborationService.register(collaborationDetailDTO,project_id);
@@ -67,15 +67,22 @@ public class CollaborationController {
         return new ResponseEntity<>(detailDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/readList")
-    public ResponseEntity<?> read(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+    @GetMapping("/readListReceive")
+    public ResponseEntity<?> readReceive(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, String userId) {
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(page).size(size).build();
-        PageResponseDTO<CollaborationDTO> collaborationDTOPageResponseDTO = collaborationService.read(pageRequestDTO);
+        PageResponseDTO<CollaborationDTO> collaborationDTOPageResponseDTO = collaborationService.readReceive(pageRequestDTO,userId);
+        return new ResponseEntity<>(collaborationDTOPageResponseDTO,HttpStatus.OK);
+    }
+
+    @GetMapping("/readListRequest")
+    public ResponseEntity<?> readRequest(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, String userId) {
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(page).size(size).build();
+        PageResponseDTO<CollaborationDTO> collaborationDTOPageResponseDTO = collaborationService.readRequest(pageRequestDTO,userId);
         return new ResponseEntity<>(collaborationDTOPageResponseDTO,HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@RequestParam Long cno,@RequestParam Long user_id) throws JsonProcessingException {
+    public ResponseEntity<?> delete(@RequestParam Long cno,@RequestParam String user_id) throws JsonProcessingException {
         Integer response = collaborationService.delete(cno,user_id);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }

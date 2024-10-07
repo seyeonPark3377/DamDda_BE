@@ -32,6 +32,7 @@ public class CollaborationDTO {
     @JsonProperty("CollaborateDate")
     private LocalDate CollaborateDate;
 
+    //제안자의 이름.
     @NotBlank(message="이름은 필수 값입니다.")
     private String name;
 }
