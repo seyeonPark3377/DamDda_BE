@@ -48,15 +48,15 @@ public class CollaborationController {
     }
 
     @PostMapping("/register/{projectId}")
-    public ResponseEntity<?> register( @RequestParam("jsonData") String jsonDataStr,
-                                       @RequestParam("collabDocList") List<MultipartFile> collabDocList,
-                                       @RequestParam Long project_id) throws JsonProcessingException {
+    public ResponseEntity<?> register( @RequestPart("jsonData") String jsonDataStr,
+                                       @RequestPart("collabDocList") List<MultipartFile> collabDocList,
+                                    @PathVariable Long projectId) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         CollaborationDetailDTO collaborationDetailDTO = mapper.registerModule(new JavaTimeModule()).readValue(jsonDataStr, CollaborationDetailDTO.class);
-        log.info("여기"+collaborationDetailDTO);
+        log.info("여기여기여기여기"+collaborationDetailDTO);
         collaborationDetailDTO.setCollabDocList(convertToObjectList(collabDocList));
 
-        collaborationService.register(collaborationDetailDTO,project_id);
+        collaborationService.register(collaborationDetailDTO,projectId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

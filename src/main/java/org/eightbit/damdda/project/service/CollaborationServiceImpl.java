@@ -78,7 +78,6 @@ public class CollaborationServiceImpl implements CollaborationService{
     @Override
     @Transactional
     public void register(@Valid CollaborationDetailDTO collab, Long project_id) throws JsonProcessingException {
-        log.info("여기"+collab);
         //project_id를 이용해서 project 객체를 찾아냄.
         Project project = projectRepository.findById(project_id).orElseThrow(()->new EntityNotFoundException("project not found")); //long 타입으로 바꿔야 한다.
         //매핑 collaborationdto -> collaboration
@@ -121,7 +120,7 @@ public class CollaborationServiceImpl implements CollaborationService{
         //협업을 요청한 리스트
         List<CollaborationDTO> dtoListReceive = collaborationPageReceive.stream().map(collaboration-> {
             return collabEntityToDtoList(collaboration);
-        }).filter(collab -> !collab.getName().equals(userId)).collect(Collectors.toList());
+        }).collect(Collectors.toList());
 
         return PageResponseDTO.<CollaborationDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
@@ -143,8 +142,9 @@ public class CollaborationServiceImpl implements CollaborationService{
         //협업을 요청한 리스트
         List<CollaborationDTO> dtoListRequest = collaborationPageRequest.stream().map(collaboration-> {
             return collabEntityToDtoList(collaboration);
-        }).filter(collab -> collab.getName().equals(userId)).collect(Collectors.toList());
+        }).collect(Collectors.toList());
 
+        log.info("난예뻐"+dtoListRequest);
 
         return PageResponseDTO.<CollaborationDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
@@ -157,18 +157,20 @@ public class CollaborationServiceImpl implements CollaborationService{
     @Transactional
     public int delete(long id, String user_id) throws JsonProcessingException {
         Collaboration collaboration = collaborationRepository.findById(id).orElseThrow();
-        if(collaboration.getUserId() == user_id){ //협업 제안자가 삭제를 한다면
+        if(collaboration.getUserId().equals(user_id)){ //협업 제안자가 삭제를 한다면
             // 연관된 파일 삭제
+            log.info("협업 제안자가 삭제중");
             collaboration.addSenderDeletedAt();
             for(String collabDoc :collaboration.getCollabDocList() ) {
                 deleteFile(collabDoc); //ncp에서 제거.
             }
             collaboration.removeCollabDocList();
         }else{ //협업 제안을 받은 사람이 삭제를 한다면 > 게시판에서만 삭제됨.
+            log.info("협업 제안 받은 자가 삭제중");
             collaboration.addReceiverDeletedAt();
         }
 
-        collaborationRepository.deleteById(id);
+
         return 1;
     }
 
