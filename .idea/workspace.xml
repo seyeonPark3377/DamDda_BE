@@ -4,27 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c1bb7eb2-f9aa-4fc9-80a7-29a723583fa7" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/config/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/domain/AccountCredentials.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/domain/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/except/AuthEntryPoint.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/filter/AuthenticationFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/JwtService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/UserDetailsServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/controller/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/domain/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/domain/Member.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/dto/LoginDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/dto/LoginDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/dto/RegisterDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/dto/RegisterDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/repository/LoginRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/repository/LoginRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/LoginService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/LoginService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/LoginServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/LoginServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/RegisterServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/RegisterServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-    </list>
+    <list default="true" id="c1bb7eb2-f9aa-4fc9-80a7-29a723583fa7" name="변경" comment="feat: 시큐리티 로그인 기능 구현" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -156,12 +136,25 @@
       <workItem from="1727951529729" duration="187000" />
       <workItem from="1728004742897" duration="3704000" />
       <workItem from="1728260559492" duration="15819000" />
-      <workItem from="1728366844606" duration="12287000" />
+      <workItem from="1728366844606" duration="12674000" />
     </task>
+    <task id="LOCAL-00001" summary="feat: 시큐리티 로그인 기능 구현">
+      <option name="closed" value="true" />
+      <created>1728382986530</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1728382986530</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: 시큐리티 로그인 기능 구현" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: 시큐리티 로그인 기능 구현" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
