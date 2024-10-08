@@ -3,6 +3,7 @@ package org.eightbit.damdda.member.controller;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.member.dto.LoginDTO;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.dto.RegisterDTO;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.UUID;
 
+@Log4j2
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
@@ -94,10 +96,16 @@ public class MemberController {
         }
     }
 
-//    @PutMapping("/profile/Photo")
-//    public ResponseEntity<String> updateProfilePhoto (@RequestBody MemberDTO memberDTO, HttpSession session){
-//        memberService.uploadFile();
-//    }
+    @PutMapping("/profile/Photo")
+    public ResponseEntity<String> updateProfilePhoto (@RequestBody MultipartFile imageUrl, HttpSession session) throws IOException {
+        try {
+
+            String fileName = memberService.uploadFile(imageUrl);
+            return ResponseEntity.ok(fileName);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
 //
 //    @Transactional
 //    @PutMapping("/profile")

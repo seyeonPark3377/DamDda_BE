@@ -1,6 +1,7 @@
 package org.eightbit.damdda.member.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -34,10 +35,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public String uploadFile(MultipartFile file) throws IOException {
-        String fileName = "profile/"+ UUID.randomUUID()+"_"+file.getOriginalFilename();
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,fileName,file.getInputStream(),null);
+
+        String fileName = "profile/"+file.getOriginalFilename();
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,fileName,file.getInputStream(),null).withCannedAcl(CannedAccessControlList.PublicRead);
         amazonS3.putObject(putObjectRequest);
-        return fileName;
+        return amazonS3.getUrl(bucketName,fileName).toString();
 
     }
 
