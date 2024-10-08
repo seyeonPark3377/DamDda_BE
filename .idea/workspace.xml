@@ -55,33 +55,48 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.Build DamDda_BE.executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;Spring Boot.DamDdaApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/collabNPackage&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+
+
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.Build DamDda_BE.executor": "Run",
+    "Gradle.C:/Users/aiass/Documents/GitHub/DamDda_BE/build.gradle.executor": "Run",
+    "Gradle.DamDda_BE 빌드.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.DamDdaApplication.executor": "Run",
+    "git-widget-placeholder": "develop",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/ijuhyeon/juhyeon/computer/git/DamDda_BE",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "vue.rearranger.settings.migration": "true"
+
   },
   &quot;keyToStringList&quot;: {
     &quot;DatabaseDriversLRU&quot;: [
       &quot;mariadb&quot;
     ]
   }
-}</component>
+
+}]]></component>
+  
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\aiass\Documents\GitHub\DamDda_BE\src\main\java\org\eightbit\damdda\member" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.eightbit.damdda.project.dto" />
+    </key>
+  </component>
+
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="DamDda.main" />
@@ -120,10 +135,22 @@
       <created>1728033039652</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
+
       <updated>1728033039652</updated>
       <workItem from="1728033041214" duration="394000" />
       <workItem from="1728282084647" duration="17264000" />
       <workItem from="1728349052575" duration="5573000" />
+
+      <updated>1726455745756</updated>
+      <workItem from="1726455747229" duration="17000" />
+      <workItem from="1727837533004" duration="168000" />
+      <workItem from="1727837707801" duration="15727000" />
+      <workItem from="1727860478789" duration="5148000" />
+      <workItem from="1727945444611" duration="3406000" />
+      <workItem from="1727951529729" duration="187000" />
+
+      <workItem from="1728004742897" duration="3704000" />
+
     </task>
     <servers />
   </component>
