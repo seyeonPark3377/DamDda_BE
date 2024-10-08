@@ -5,12 +5,11 @@ import org.eightbit.damdda.member.domain.Member;
 //import org.springframework.security.core.GrantedAuthority;
 //import org.springframework.security.core.userdetails.User;
 
+import java.util.Collection;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class LoginDTO {
 
     private String loginId;
@@ -25,5 +24,13 @@ public class LoginDTO {
                 .name(name)
                 .email(email)
                 .build();
+    }
+
+    @Builder
+    public LoginDTO(String loginId, String password, String name, String email) {
+        this.loginId = loginId;
+        this.password = password;
+        this.name = name;
+        this.email = email;
     }
 }

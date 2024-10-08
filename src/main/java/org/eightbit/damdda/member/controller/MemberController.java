@@ -1,16 +1,24 @@
 package org.eightbit.damdda.member.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.eightbit.damdda.member.domain.AccountCredentials;
+import org.eightbit.damdda.member.domain.User;
 import org.eightbit.damdda.member.dto.LoginDTO;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.dto.RegisterDTO;
+import org.eightbit.damdda.member.service.JwtService;
 import org.eightbit.damdda.member.service.LoginService;
 import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.member.service.RegisterService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -19,8 +27,9 @@ import javax.servlet.http.HttpSession;
 public class MemberController {
 
     private final RegisterService registerService;
-    private final LoginService loginService;
     private final MemberService memberService;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     @PostMapping("/profile")
     public String insertMember (@RequestBody RegisterDTO registerDTO){
@@ -58,19 +67,34 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login (@RequestBody LoginDTO loginDTO, HttpSession session){
+    public ResponseEntity<?> login (@RequestBody AccountCredentials credentials){
         try {
-            MemberDTO memberDTO = loginService.login(loginDTO, session);
-            return ResponseEntity.ok(memberDTO.getNickname() +" "+ memberDTO.getLoginId());
+            UsernamePasswordAuthenticationToken creds =
+                    new UsernamePasswordAuthenticationToken(
+                            credentials.getLoginId(),
+                            credentials.getPassword()
+                    );
+
+            Authentication auth = authenticationManager.authenticate(creds);
+
+            String currentUserNickname = ((User) auth.getPrincipal()).getNickname();
+
+            String jwts = jwtService.getToken(auth.getName());
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
+                    .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
+                    .header("X-Nickname", currentUserNickname)
+                    .build();
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
+
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpSession session){
-        loginService.logout(session);
+    public ResponseEntity<?> logout(HttpServletRequest request){
         return ResponseEntity.ok("logout");
     }
 

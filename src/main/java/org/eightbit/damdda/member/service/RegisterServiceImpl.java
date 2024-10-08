@@ -1,15 +1,14 @@
 package org.eightbit.damdda.member.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.member.dto.RegisterDTO;
 import org.eightbit.damdda.member.repository.MemberRepository;
 import org.eightbit.damdda.member.repository.RegisterRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-@Log4j2
 public class RegisterServiceImpl implements RegisterService {
 
     private final RegisterRepository registerRepository;
@@ -17,7 +16,9 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public void insertMember(RegisterDTO request) {
-        log.info("여기"+request.toEntity());
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        request.setPassword(encoder.encode(request.getPassword()));
         registerRepository.save(request.toEntity());
     }
 
@@ -30,6 +31,5 @@ public class RegisterServiceImpl implements RegisterService {
     public boolean checkNickname(String nickname) {
         return registerRepository.findByNickname(nickname).isPresent();
     }
-
 
 }
