@@ -6,11 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="0f50a50f-90dd-4be1-93f4-bfa034340bfd" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/controller/MemberController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/domain/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/domain/Member.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/dto/MemberDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/dto/MemberDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/MemberServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/MemberServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/dto/CollaborationDetailDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/dto/CollaborationDetailDTO.java" afterDir="false" />
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,6 +81,7 @@
     "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
     "vue.rearranger.settings.migration": "true"
 
+
   },
   &quot;keyToStringList&quot;: {
     &quot;DatabaseDriversLRU&quot;: [
@@ -86,8 +89,10 @@
     ]
   }
 
+
 }]]></component>
   
+
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\aiass\Documents\GitHub\DamDda_BE\src\main\java\org\eightbit\damdda\member" />
@@ -148,9 +153,7 @@
       <workItem from="1727860478789" duration="5148000" />
       <workItem from="1727945444611" duration="3406000" />
       <workItem from="1727951529729" duration="187000" />
-
       <workItem from="1728004742897" duration="3704000" />
-
     </task>
     <servers />
   </component>

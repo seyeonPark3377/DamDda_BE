@@ -136,6 +136,9 @@ public class ProjectServiceImpl implements ProjectService {
 //            int end = Math.min((start + pageable.getPageSize()), sortProjects.size());
             projects = new PageImpl<>(sortProjects, pageable, sortProjects.size());
             log.info("1번!" + projects);
+        } else if (!sortConditions.isEmpty() && "recommend".equals(sortConditions.get(0))) {
+            projects = projectRepository.getProjectByRecommendOrder(memberId, category, search, progress, sortConditions, pageable);
+
         } else {
             // 그 외의 경우
             projects = projectRepository.findProjects(memberId, category, search, progress, sortConditions, pageable);
@@ -295,7 +298,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         Page<LikedProject> likedProjects = likedProjectRepository.findAllByMember_Id(memberId, pageable);
-
+        log.info("dldldldldl" + likedProjects.getSize());
         List<AdminApproval> approvedAdminApprovals = adminApprovalService.findAllByApproval(1);
 
         // 3. approval이 1인 프로젝트 ID 목록 생성
@@ -320,11 +323,12 @@ public class ProjectServiceImpl implements ProjectService {
                         .build())
                 .collect(Collectors.toList());
 
-
+        log.info("dldldldldl" + dtoList.size());
         return PageResponseDTO.<ProjectBoxDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
-                .total(dtoList.size())
+                .total((int) likedProjects.getTotalElements())
+//                .total(dtoList.size())
                 .build();
 
     }
