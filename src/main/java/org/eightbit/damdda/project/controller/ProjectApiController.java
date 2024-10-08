@@ -179,6 +179,8 @@ public class ProjectApiController {
                               @RequestPart(value = "productImages", required = false) List<MultipartFile> productImages,
                               @RequestPart(value = "descriptionImages", required = false) List<MultipartFile> descriptionImages,
                               @RequestPart(value = "docs", required = false) List<MultipartFile> docs,
+                              @RequestPart(value = "delImage", required = false) List<String> delImage,
+                              @RequestPart(value = "delDocs", required = false) List<String> delDocs,
                               @Valid @RequestPart("projectDetailDTO") ProjectDetailDTO projectDetailDTO,
                               String submit,
                               BindingResult bindingResult,
@@ -201,9 +203,9 @@ public class ProjectApiController {
         log.info(projectDetailDTO + "projectRegistDTO!!------==============================");
         // submit 값에 따른 처리
         if (submit.equals("저장")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImages, descriptionImages, docs);
+            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImages, descriptionImages, docs, delImage, delDocs);
         } else if (submit.equals("제출")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImages, descriptionImages, docs);
+            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImages, descriptionImages, docs, delImage, delDocs);
         } else {
             redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
             return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동

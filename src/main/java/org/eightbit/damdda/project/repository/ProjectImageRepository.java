@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface ProjectImageRepository extends JpaRepository<ProjectImage, Long> {
 
-    public List<ProjectImage> findAllByProjectId(Long projectId);
-    public List<ProjectImage> findAllByProjectIdOrderByOrd(Long projectId);
+    List<ProjectImage> findAllByProjectId(Long projectId);
+    List<ProjectImage> findAllByProjectIdOrderByOrd(Long projectId);
+    void deleteByUrlIn(List<String> urls);
 
 }

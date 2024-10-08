@@ -32,5 +32,8 @@ public interface ProjectService {
                        boolean submit,
                        List<MultipartFile> productImages,
                        List<MultipartFile> descriptionImages,
-                       List<MultipartFile> docs);
+                       List<MultipartFile> docs,
+                       List<String> delImages,
+                       List<String> delDocs
+                       );
 }

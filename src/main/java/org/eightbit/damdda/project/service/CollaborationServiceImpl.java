@@ -62,6 +62,7 @@ public class CollaborationServiceImpl implements CollaborationService{
     @Transactional
     public S3ObjectInputStream downloadFIle(String fileName){
         GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, fileName);
+        log.info("111111111111111111111111111111!!!11111111");
         S3Object s3Object = amazonS3.getObject(getObjectRequest);
         return s3Object.getObjectContent();
     }

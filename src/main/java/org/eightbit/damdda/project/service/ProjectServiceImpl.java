@@ -710,7 +710,10 @@ public class ProjectServiceImpl implements ProjectService {
                               boolean submit,
                               List<MultipartFile> productImages,
                               List<MultipartFile> descriptionImages,
-                              List<MultipartFile> docs) {
+                              List<MultipartFile> docs,
+                              List<String> delImages,
+                              List<String> delDocs
+                              ) {
 
 
         Project project = projectRepository.findById(projectId)
@@ -720,14 +723,48 @@ public class ProjectServiceImpl implements ProjectService {
 //        Category newCategory = categoryService.registerCategory(projectDetailDTO.getCategory());
 //        Category newCategory = categoryService.addProjectToCategory(projectId, projectDetailDTO.getCategory());
 
+
+
         List<Tag> delTags = tagService.delProjectFromTags(project);
 //        List<Tag> newTags = tagService.registerTags(projectDetailDTO.getTags());
         List<Tag> newTags = tagService.addProjectToTags(projectDetailDTO.getTags(), projectId);
 
-        Boolean delImg = imgService.deleteImageFiles(projectImageRepository.findAllByProjectId(projectId));
+        projectImageRepository.deleteByUrlIn(delImages);
+        projectDocumentRepository.deleteByUrlIn(delDocs);
+
+
+
+        log.info(productImages);
+        log.info(descriptionImages);
+        log.info(docs);
+        if ((productImages != null && !productImages.isEmpty()) && (descriptionImages != null && !descriptionImages.isEmpty())) {
+            // productImages나 descriptionImages 중 하나라도 null이 아니고 빈 배열이 아닌 경우에만 실행
+            imgService.saveImages(project, productImages, descriptionImages);
+        }
+//        imgService.saveImages(project, productImages, descriptionImages);
+        if (docs != null && !docs.isEmpty()) {
+            docService.saveDocs(project, docs);
+        }
+
+
+        List<ProjectImage> projectImages = projectImageRepository.findAllByProjectIdOrderByOrd(projectId);
+
+        if (!projectImages.isEmpty()) {  // 리스트가 비어있지 않은지 체크
+            String newThumbnailUrl = delImages.contains(project.getThumbnailUrl())
+                    ? projectImages.get(0).getUrl()  // 썸네일이 삭제 목록에 포함된 경우 첫 번째 이미지로 교체
+                    : project.getThumbnailUrl();     // 그렇지 않으면 기존 썸네일 유지
+
+            project.setThumbnailUrl(newThumbnailUrl);
+        }
+
+
+
+
+
+        //Boolean delImg = imgService.deleteImageFiles(projectImageRepository.findAllByProjectId(projectId));
         project.setThumbnailUrl(null);
 
-        docService.deleteDocFiles(projectDocumentRepository.findAllByProjectId(projectId));
+        //docService.deleteDocFiles(projectDocumentRepository.findAllByProjectId(projectId));
 
         project.setTags(newTags);
 //        project.setCategory(newCategory);
@@ -745,17 +782,7 @@ public class ProjectServiceImpl implements ProjectService {
 //        project.setThumbnailUrl("");  // 기본값은 빈 문자열로 설정
         project.setSubmitAt(submit ? Timestamp.valueOf(LocalDateTime.now()) : null);  // 제출 시간 설정
 
-        log.info(productImages);
-        log.info(descriptionImages);
-        log.info(docs);
-        if ((productImages != null && !productImages.isEmpty()) && (descriptionImages != null && !descriptionImages.isEmpty())) {
-            // productImages나 descriptionImages 중 하나라도 null이 아니고 빈 배열이 아닌 경우에만 실행
-            imgService.saveImages(project, productImages, descriptionImages);
-        }
-//        imgService.saveImages(project, productImages, descriptionImages);
-        if (docs != null && !docs.isEmpty()) {
-            docService.saveDocs(project, docs);
-        }
+
 
         // 5. 최종 프로젝트 저장
         return project.getId();
