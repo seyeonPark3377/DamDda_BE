@@ -708,54 +708,51 @@ public class ProjectServiceImpl implements ProjectService {
     public Long updateProject(ProjectDetailDTO projectDetailDTO,
                               Long projectId,
                               boolean submit,
-                              List<MultipartFile> productImages,
-                              List<MultipartFile> descriptionImages,
-                              List<MultipartFile> docs,
-                              List<String> delImages,
-                              List<String> delDocs
+                              List<FileDTO> productImages,
+                              List<FileDTO> descriptionImages,
+                              List<FileDTO> docs,
+                              List<FileDTO> updateProductImage,
+                              List<FileDTO> updateDescriptionImage,
+                              List<FileDTO> updateDocs
                               ) {
 
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-//        Category delCategory = categoryService.delProjectFromCategory(projectId, project.getCategory().getName());
-//        Category newCategory = categoryService.registerCategory(projectDetailDTO.getCategory());
-//        Category newCategory = categoryService.addProjectToCategory(projectId, projectDetailDTO.getCategory());
-
-
-
         List<Tag> delTags = tagService.delProjectFromTags(project);
-//        List<Tag> newTags = tagService.registerTags(projectDetailDTO.getTags());
         List<Tag> newTags = tagService.addProjectToTags(projectDetailDTO.getTags(), projectId);
 
-        projectImageRepository.deleteByUrlIn(delImages);
-        projectDocumentRepository.deleteByUrlIn(delDocs);
+
+//        여기부터 파일
+//
+//        projectImageRepository.deleteByUrlIn(delImages);
+//        projectDocumentRepository.deleteByUrlIn(delDocs);
 
 
 
-        log.info(productImages);
-        log.info(descriptionImages);
-        log.info(docs);
-        if ((productImages != null && !productImages.isEmpty()) && (descriptionImages != null && !descriptionImages.isEmpty())) {
-            // productImages나 descriptionImages 중 하나라도 null이 아니고 빈 배열이 아닌 경우에만 실행
-            imgService.saveImages(project, productImages, descriptionImages);
-        }
-//        imgService.saveImages(project, productImages, descriptionImages);
-        if (docs != null && !docs.isEmpty()) {
-            docService.saveDocs(project, docs);
-        }
-
-
-        List<ProjectImage> projectImages = projectImageRepository.findAllByProjectIdOrderByOrd(projectId);
-
-        if (!projectImages.isEmpty()) {  // 리스트가 비어있지 않은지 체크
-            String newThumbnailUrl = delImages.contains(project.getThumbnailUrl())
-                    ? projectImages.get(0).getUrl()  // 썸네일이 삭제 목록에 포함된 경우 첫 번째 이미지로 교체
-                    : project.getThumbnailUrl();     // 그렇지 않으면 기존 썸네일 유지
-
-            project.setThumbnailUrl(newThumbnailUrl);
-        }
+//        log.info(productImages);
+//        log.info(descriptionImages);
+//        log.info(docs);
+//        if ((productImages != null && !productImages.isEmpty()) && (descriptionImages != null && !descriptionImages.isEmpty())) {
+//            // productImages나 descriptionImages 중 하나라도 null이 아니고 빈 배열이 아닌 경우에만 실행
+//            imgService.saveImages(project, productImages, descriptionImages);
+//        }
+////        imgService.saveImages(project, productImages, descriptionImages);
+//        if (docs != null && !docs.isEmpty()) {
+//            docService.saveDocs(project, docs);
+//        }
+//
+//
+//        List<ProjectImage> projectImages = projectImageRepository.findAllByProjectIdOrderByOrd(projectId);
+//
+//        if (!projectImages.isEmpty()) {  // 리스트가 비어있지 않은지 체크
+//            String newThumbnailUrl = delImages.contains(project.getThumbnailUrl())
+//                    ? projectImages.get(0).getUrl()  // 썸네일이 삭제 목록에 포함된 경우 첫 번째 이미지로 교체
+//                    : project.getThumbnailUrl();     // 그렇지 않으면 기존 썸네일 유지
+//
+//            project.setThumbnailUrl(newThumbnailUrl);
+//        }
 
 
 

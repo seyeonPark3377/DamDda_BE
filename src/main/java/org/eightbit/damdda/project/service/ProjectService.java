@@ -30,10 +30,11 @@ public interface ProjectService {
     Long updateProject(ProjectDetailDTO projectDetailDTO,
                        Long projectId,
                        boolean submit,
-                       List<MultipartFile> productImages,
-                       List<MultipartFile> descriptionImages,
-                       List<MultipartFile> docs,
-                       List<String> delImages,
-                       List<String> delDocs
+                       List<FileDTO> productImages,
+                       List<FileDTO> descriptionImages,
+                       List<FileDTO> docs,
+                       List<FileDTO> updateProductImage,
+                       List<FileDTO> updateDescriptionImage,
+                       List<FileDTO> updateDocs
                        );
 }
