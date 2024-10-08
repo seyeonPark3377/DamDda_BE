@@ -33,7 +33,7 @@ public class Collaboration {
     private LocalDate receiverDeletedAt;
 
     // 굳이 member와 연동할 필요가 있나?
-    private Long userId;
+    private String userId;
 
     @OneToOne
     @JoinColumn(name="projectId")
@@ -45,7 +45,7 @@ public class Collaboration {
     private String approval="대기";
 
     private String collaborationText;
-    private String name;
+    private String name; //프로젝트 제목. -> 나중에 바꾸기.
     private String email;
     private String phoneNumber;
 
