@@ -119,11 +119,15 @@ public class ProjectApiController {
 
     }
 
+
     @PutMapping("/register/{projectId}")
     public String registerPut(@PathVariable Long projectId,
-                              @RequestPart(value = "productImages", required = false) List<FileDTO> productImages,
-                              @RequestPart(value = "descriptionImages", required = false) List<FileDTO> descriptionImages,
-                              @RequestPart(value = "docs", required = false) List<FileDTO> docs,
+                              @RequestPart(value = "productImagesMeta", required = false) List<FileDTO> productImagesMeta,
+                              @RequestPart(value = "descriptionImagesMeta", required = false) List<FileDTO> descriptionImagesMeta,
+                              @RequestPart(value = "docsMeta", required = false) List<FileDTO> docsMeta,
+                              @RequestPart(value = "productImages", required = false) List<MultipartFile> productImages,
+                              @RequestPart(value = "descriptionImages", required = false) List<MultipartFile> descriptionImages,
+                              @RequestPart(value = "docs", required = false) List<MultipartFile> docs,
                               @RequestPart(value = "updateProductImage", required = false) List<FileDTO> updateProductImage,
                               @RequestPart(value = "updateDescriptionImage", required = false) List<FileDTO> updateDescriptionImage,
                               @RequestPart(value = "updateDocs", required = false) List<FileDTO> updateDocs,
@@ -136,11 +140,13 @@ public class ProjectApiController {
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "error";  // 유효성 검증 실패 시 에러 페이지로 이동
         }
+
+
         // submit 값에 따른 처리
         if (submit.equals("저장")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
+            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImagesMeta, descriptionImagesMeta, descriptionImagesMeta, productImages, descriptionImages, descriptionImages, updateProductImage, updateDescriptionImage, updateDocs);
         } else if (submit.equals("제출")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
+            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, descriptionImages, updateProductImage, updateDescriptionImage, updateDocs);
         } else {
             redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
             return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동

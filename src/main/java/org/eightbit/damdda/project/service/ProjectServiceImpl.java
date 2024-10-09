@@ -508,18 +508,44 @@ public class ProjectServiceImpl implements ProjectService {
         return deleteList;
     }
 
+
+    protected List<FileDTO> fileInputMeta(List<FileDTO> filesMeta, List<MultipartFile> files) {
+        // productImagesMeta와 productImages 리스트가 동일한 크기인지 확인
+        if (filesMeta.size() == files.size()) {
+            // 각 FileDTO 객체의 file 필드에 같은 인덱스의 MultipartFile을 할당
+            for (int i = 0; i < filesMeta.size(); i++) {
+                FileDTO fileDTO = filesMeta.get(i);
+                MultipartFile multipartFile = files.get(i);
+
+                // FileDTO의 file 필드에 MultipartFile을 설정
+                fileDTO.setFile(multipartFile);
+            }
+        } else {
+            // 크기가 다르면 오류 처리
+            throw new IllegalArgumentException("File metadata and actual file list sizes do not match");
+        }
+        return filesMeta;
+
+    }
+
     @Override
     public Long updateProject(ProjectDetailDTO projectDetailDTO,
                               Long projectId,
                               boolean submit,
-                              List<FileDTO> productImages,
-                              List<FileDTO> descriptionImages,
-                              List<FileDTO> docs,
+                              List<FileDTO> productImagesMeta,
+                              List<FileDTO> descriptionImagesMeta,
+                              List<FileDTO> docsMeta,
+                              List<MultipartFile> productImages,
+                              List<MultipartFile> descriptionImages,
+                              List<MultipartFile> docs,
                               List<FileDTO> updateProductImage,
                               List<FileDTO> updateDescriptionImage,
                               List<FileDTO> updateDocs
                               ) {
 
+        productImagesMeta = fileInputMeta(productImagesMeta, productImages);
+        descriptionImagesMeta = fileInputMeta(descriptionImagesMeta, descriptionImages);
+        docsMeta = fileInputMeta(docsMeta, docs);
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
@@ -549,10 +575,19 @@ public class ProjectServiceImpl implements ProjectService {
         imgService.deleteImageFiles(delDescriptionImages);
         docService.deleteDocFiles(delDocs);
 
-        imgService.saveImages(project, productImages, descriptionImages);
+        log.info(productImagesMeta);
+        if(productImagesMeta != null && productImagesMeta.size() > 0 && descriptionImagesMeta != null && descriptionImagesMeta.size() > 0) {
+            imgService.saveImages(project, productImagesMeta, descriptionImagesMeta);
+        }
+
         ProjectImage thumbnailImage = projectImageRepository.findByProject_IdAndOrdAndImageType_Id(projectId, 1, 2L);
-        project.setThumbnailUrl(imgService.saveThumbnailImages(projectId, thumbnailImage));
-        docService.saveDocs(project, docs);
+        if(thumbnailImage != null) {
+            project.setThumbnailUrl(imgService.saveThumbnailImages(projectId, thumbnailImage));
+        }
+
+        if(docsMeta != null && docsMeta.size() > 0) {
+            docService.saveDocs(project, docsMeta);
+        }
 
         project.setTags(newTags);
         project.setCategory(categoryRepository.findByName(projectDetailDTO.getCategory()));
