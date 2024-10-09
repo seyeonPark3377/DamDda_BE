@@ -56,8 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         request.setAttribute("memberId", memberId);
         request.setAttribute("username", username);
 
-
-        System.out.println(memberId + " " + username);
+//        System.out.println(memberId + " " + username);
         filterChain.doFilter(request, response);
     }
 }

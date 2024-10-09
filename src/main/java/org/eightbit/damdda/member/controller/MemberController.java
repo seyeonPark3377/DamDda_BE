@@ -6,32 +6,33 @@ import org.eightbit.damdda.member.domain.User;
 import org.eightbit.damdda.member.dto.LoginDTO;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.dto.RegisterDTO;
-import org.eightbit.damdda.member.service.JwtService;
-import org.eightbit.damdda.member.service.LoginService;
-import org.eightbit.damdda.member.service.MemberService;
-import org.eightbit.damdda.member.service.RegisterService;
+import org.eightbit.damdda.member.service.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/members")
+@RequestMapping("/member") // member로 변경하는게 적절
 public class MemberController {
 
     private final RegisterService registerService;
     private final MemberService memberService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final LoginService loginService;
 
-    @PostMapping("/profile")
+    @PostMapping
     public String insertMember (@RequestBody RegisterDTO registerDTO){
 
         try {
@@ -42,7 +43,7 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/profile/idcheck")
+    @GetMapping("/check/id")
     public ResponseEntity<String> checkLoginId(@RequestParam("loginId") String loginId){
         try {
             if (registerService.checkLoginId(loginId)){
@@ -54,7 +55,7 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/profile/nickname")
+    @GetMapping("/check/nickname")
     public ResponseEntity<String> checkNickname(@RequestParam("nickname") String nickname){
         try {
             if (registerService.checkNickname(nickname)){
@@ -69,7 +70,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<?> login (@RequestBody AccountCredentials credentials){
         try {
-            UsernamePasswordAuthenticationToken creds =
+            UsernamePasswordAuthenticationToken creds =         // 인증 아직 안됨
                     new UsernamePasswordAuthenticationToken(
                             credentials.getLoginId(),
                             credentials.getPassword()
@@ -84,8 +85,7 @@ public class MemberController {
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
                     .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
-                    .header("X-Nickname", currentUserNickname)
-                    .build();
+                    .body(Map.of("X-Nickname", currentUserNickname));
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
@@ -105,6 +105,17 @@ public class MemberController {
             return ResponseEntity.ok(memberDTO);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @GetMapping("/findid")
+    public ResponseEntity<String> findId(String name, String email){
+        try {
+            return ResponseEntity.ok(loginService.findId(name, email));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 

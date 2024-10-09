@@ -39,19 +39,10 @@ public class LoginServiceImpl implements LoginService {
 
 
 
-//    @Override
-//    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-//        throw new UnsupportedOperationException("Use loadUserByLoginIdAndPassword instead");
-//    }
-//
-//    @Override
-//    public void logout(HttpSession session) {
-//        session.invalidate();
-//    }
-
     @Override
-    public void searchId() {
-
+    public String findId(String name, String email) {
+        Optional<Member> findMember = loginRepository.findByNameAndEmail(name, email);
+        Member member = findMember.orElseThrow();
+        return member.getLoginId();
     }
-
 }

@@ -11,6 +11,6 @@ public interface LoginService{
 //    MemberDTO login(LoginDTO loginDTO, HttpSession session);
 //    UserDetails loadUserByLoginIdAndPassword(String loginId, String password);
 //    void logout(HttpSession session);
-    void searchId();
+    String findId(String name, String email);
 //    UserDetails loadUserByUsername(String loginId);
 }
