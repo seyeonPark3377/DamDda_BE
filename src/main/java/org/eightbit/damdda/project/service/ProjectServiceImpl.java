@@ -509,22 +509,24 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
 
-    protected List<FileDTO> fileInputMeta(List<FileDTO> filesMeta, List<MultipartFile> files) {
+    protected List<FileDTO> fileInputMeta(List<MetaDTO> filesMeta, List<MultipartFile> files) {
+
+        List<FileDTO> result = new ArrayList<>();
         // productImagesMeta와 productImages 리스트가 동일한 크기인지 확인
         if (filesMeta.size() == files.size()) {
             // 각 FileDTO 객체의 file 필드에 같은 인덱스의 MultipartFile을 할당
             for (int i = 0; i < filesMeta.size(); i++) {
-                FileDTO fileDTO = filesMeta.get(i);
-                MultipartFile multipartFile = files.get(i);
-
+                FileDTO fileDTO = new FileDTO();
                 // FileDTO의 file 필드에 MultipartFile을 설정
-                fileDTO.setFile(multipartFile);
+                fileDTO.setFile(files.get(i));
+                fileDTO.setUrl(filesMeta.get(i).getUrl());
+                fileDTO.setOrd(filesMeta.get(i).getOrd());
             }
         } else {
             // 크기가 다르면 오류 처리
             throw new IllegalArgumentException("File metadata and actual file list sizes do not match");
         }
-        return filesMeta;
+        return result;
 
     }
 
@@ -532,9 +534,9 @@ public class ProjectServiceImpl implements ProjectService {
     public Long updateProject(ProjectDetailDTO projectDetailDTO,
                               Long projectId,
                               boolean submit,
-                              List<FileDTO> productImagesMeta,
-                              List<FileDTO> descriptionImagesMeta,
-                              List<FileDTO> docsMeta,
+                              List<MetaDTO> productImagesMeta,
+                              List<MetaDTO> descriptionImagesMeta,
+                              List<MetaDTO> docsMeta,
                               List<MultipartFile> productImages,
                               List<MultipartFile> descriptionImages,
                               List<MultipartFile> docs,
@@ -543,9 +545,9 @@ public class ProjectServiceImpl implements ProjectService {
                               List<FileDTO> updateDocs
                               ) {
 
-        productImagesMeta = fileInputMeta(productImagesMeta, productImages);
-        descriptionImagesMeta = fileInputMeta(descriptionImagesMeta, descriptionImages);
-        docsMeta = fileInputMeta(docsMeta, docs);
+        List<FileDTO> productImagesFile = fileInputMeta(productImagesMeta, productImages);
+        List<FileDTO> descriptionImagesFile = fileInputMeta(descriptionImagesMeta, descriptionImages);
+        List<FileDTO> docsFile = fileInputMeta(docsMeta, docs);
 
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
@@ -575,9 +577,9 @@ public class ProjectServiceImpl implements ProjectService {
         imgService.deleteImageFiles(delDescriptionImages);
         docService.deleteDocFiles(delDocs);
 
-        log.info(productImagesMeta);
-        if(productImagesMeta != null && productImagesMeta.size() > 0 && descriptionImagesMeta != null && descriptionImagesMeta.size() > 0) {
-            imgService.saveImages(project, productImagesMeta, descriptionImagesMeta);
+        log.info(productImagesFile);
+        if(productImagesFile != null && productImagesFile.size() > 0 && descriptionImagesFile != null && descriptionImagesFile.size() > 0) {
+            imgService.saveImages(project, productImagesFile, descriptionImagesFile);
         }
 
         ProjectImage thumbnailImage = projectImageRepository.findByProject_IdAndOrdAndImageType_Id(projectId, 1, 2L);
@@ -585,8 +587,8 @@ public class ProjectServiceImpl implements ProjectService {
             project.setThumbnailUrl(imgService.saveThumbnailImages(projectId, thumbnailImage));
         }
 
-        if(docsMeta != null && docsMeta.size() > 0) {
-            docService.saveDocs(project, docsMeta);
+        if(docsFile != null && docsFile.size() > 0) {
+            docService.saveDocs(project, docsFile);
         }
 
         project.setTags(newTags);

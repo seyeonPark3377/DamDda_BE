@@ -122,9 +122,9 @@ public class ProjectApiController {
 
     @PutMapping("/register/{projectId}")
     public String registerPut(@PathVariable Long projectId,
-                              @RequestPart(value = "productImagesMeta", required = false) List<FileDTO> productImagesMeta,
-                              @RequestPart(value = "descriptionImagesMeta", required = false) List<FileDTO> descriptionImagesMeta,
-                              @RequestPart(value = "docsMeta", required = false) List<FileDTO> docsMeta,
+                              @RequestPart(value = "productImagesMeta", required = false) List<MetaDTO> productImagesMeta,
+                              @RequestPart(value = "descriptionImagesMeta", required = false) List<MetaDTO> descriptionImagesMeta,
+                              @RequestPart(value = "docsMeta", required = false) List<MetaDTO> docsMeta,
                               @RequestPart(value = "productImages", required = false) List<MultipartFile> productImages,
                               @RequestPart(value = "descriptionImages", required = false) List<MultipartFile> descriptionImages,
                               @RequestPart(value = "docs", required = false) List<MultipartFile> docs,
