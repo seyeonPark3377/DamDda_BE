@@ -10,5 +10,5 @@ import java.util.List;
 public interface ImgService {
     boolean deleteImageFiles(List<ProjectImage> images);
     String saveThumbnailImages(Long projectId, ProjectImage thumbnailImage);
-    void saveImages(Project project, List<FileDTO> productImages, List<FileDTO> descriptionImages);
+    void saveImages(Project project, List<FileDTO> productImages, Long ImageTypeId);
 }

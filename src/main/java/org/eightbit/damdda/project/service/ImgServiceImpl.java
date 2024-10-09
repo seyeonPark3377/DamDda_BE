@@ -131,6 +131,8 @@ public class ImgServiceImpl implements ImgService {
         try {
             // ProjectImage 엔티티에서 이미지 파일 경로(URL)를 가져옴
             String imageUrl = thumbnailImage.getUrl();
+            imageUrl = basePath + imageUrl.replace("files", "");
+            log.info("imageUrl: " + imageUrl);
             File originalImageFile = new File(imageUrl);
 
             if (!originalImageFile.exists()) {
@@ -166,18 +168,19 @@ public class ImgServiceImpl implements ImgService {
 
 
     @Override
-    public void saveImages(Project project, List<FileDTO> productImages, List<FileDTO> descriptionImages) {
+    public void saveImages(Project project, List<FileDTO> Images, Long ImageTypeId) {
 
         String uploadDirectory = basePath + "/projects/" + project.getId();
         File uploadDir = new File(uploadDirectory);
+
 
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();  // 경로 없으면 생성
         }
 
-        for (int i = 0; i < productImages.size(); i++) {
+        for (FileDTO image : Images) {
             try {
-                MultipartFile file = productImages.get(i).getFile();
+                MultipartFile file = image.getFile();
                 String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
                 File destinationFile = new File(uploadDirectory + "/" + fileName);
 
@@ -185,17 +188,17 @@ public class ImgServiceImpl implements ImgService {
                 file.transferTo(destinationFile);
 
                 // 이미지 타입 설정 (썸네일과 일반 이미지)
-                ProjectImageType imageType = projectImageTypeRepository.findById(2L).orElse(null);
+                ProjectImageType imageType = projectImageTypeRepository.findById(ImageTypeId).orElse(null);
 
                 // 이미지 엔티티 저장
                 ProjectImage projectImage = ProjectImage.builder()
                         .project(project)
                         .url("files/projects/" + project.getId() + "/" + fileName)
                         .fileName(fileName)
-                        .ord(productImages.get(i).getOrd())
+                        .ord(image.getOrd())
                         .imageType(imageType)
                         .build();
-
+                log.info("projectImage : " + projectImage);
                 projectImageRepository.save(projectImage);
 
             } catch (IOException e) {
@@ -203,37 +206,6 @@ public class ImgServiceImpl implements ImgService {
                 e.printStackTrace();
             }
 
-
-        }
-
-
-        for (int i = 0; i < descriptionImages.size(); i++) {
-            try {
-                MultipartFile file = descriptionImages.get(i).getFile();
-                String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                File destinationFile = new File(uploadDirectory + "/" + fileName);
-
-                // 파일 저장
-                file.transferTo(destinationFile);
-
-                // 이미지 타입 설정 (썸네일과 일반 이미지)
-                ProjectImageType imageType = projectImageTypeRepository.findById(3L).orElse(null);
-
-                // 이미지 엔티티 저장
-                ProjectImage projectImage = ProjectImage.builder()
-                        .project(project)
-                        .url("files/projects/" + project.getId() + "/" + fileName)
-                        .fileName(fileName)
-                        .ord(descriptionImages.get(i).getOrd())
-                        .imageType(imageType)
-                        .build();
-
-                projectImageRepository.save(projectImage);
-
-            } catch (IOException e) {
-                // 예외 처리 로직 작성 (로그 기록 또는 사용자에게 알림 등)
-                e.printStackTrace();
-            }
 
         }
 

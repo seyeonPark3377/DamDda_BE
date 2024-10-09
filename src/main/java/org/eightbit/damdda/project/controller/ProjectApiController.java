@@ -144,9 +144,9 @@ public class ProjectApiController {
 
         // submit 값에 따른 처리
         if (submit.equals("저장")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImagesMeta, descriptionImagesMeta, descriptionImagesMeta, productImages, descriptionImages, descriptionImages, updateProductImage, updateDescriptionImage, updateDocs);
+            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
         } else if (submit.equals("제출")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, descriptionImages, updateProductImage, updateDescriptionImage, updateDocs);
+            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
         } else {
             redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
             return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동

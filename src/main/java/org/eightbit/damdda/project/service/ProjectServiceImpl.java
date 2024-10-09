@@ -484,9 +484,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     // T를 제너릭 타입으로 선언하고, 그 타입은 getUrl() 메서드를 가진 객체로 제한
     protected <T> int isObjectInUpdateFiles(List<FileDTO> files, T object, Function<T, String> urlGetter) {
-        for (FileDTO file : files) {
-            if (file.getUrl().equals(urlGetter.apply(object))) {  // 제너릭으로 받아온 객체의 URL과 비교
-                return file.getOrd();
+        if (files != null) {
+            for (FileDTO file : files) {
+                if (file.getUrl().equals(urlGetter.apply(object))) {  // 제너릭으로 받아온 객체의 URL과 비교
+                    return file.getOrd();
+                }
             }
         }
         return -1;
@@ -497,12 +499,14 @@ public class ProjectServiceImpl implements ProjectService {
                                       Function<T, String> urlGetter,
                                       BiConsumer<T, Integer> ordSetter) {
         List<T> deleteList = new ArrayList<>();
-        for (T object : objects) {
-            int isObjInUpdateFiles = isObjectInUpdateFiles(files, object, urlGetter);
-            if (isObjInUpdateFiles != -1) {
-                ordSetter.accept(object, isObjInUpdateFiles);  // ordSetter가 이제 두 개의 파라미터를 받음
-            } else {
-                deleteList.add(object);
+        if (objects != null) {
+            for (T object : objects) {
+                int isObjInUpdateFiles = isObjectInUpdateFiles(files, object, urlGetter);
+                if (isObjInUpdateFiles != -1) {
+                    ordSetter.accept(object, isObjInUpdateFiles);  // ordSetter가 이제 두 개의 파라미터를 받음
+                } else {
+                    deleteList.add(object);
+                }
             }
         }
         return deleteList;
@@ -510,6 +514,9 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     protected List<FileDTO> fileInputMeta(List<MetaDTO> filesMeta, List<MultipartFile> files) {
+        if(filesMeta == null) {
+            return null;
+        }
 
         List<FileDTO> result = new ArrayList<>();
         // productImagesMeta와 productImages 리스트가 동일한 크기인지 확인
@@ -521,6 +528,7 @@ public class ProjectServiceImpl implements ProjectService {
                 fileDTO.setFile(files.get(i));
                 fileDTO.setUrl(filesMeta.get(i).getUrl());
                 fileDTO.setOrd(filesMeta.get(i).getOrd());
+                result.add(fileDTO);
             }
         } else {
             // 크기가 다르면 오류 처리
@@ -549,6 +557,11 @@ public class ProjectServiceImpl implements ProjectService {
         List<FileDTO> descriptionImagesFile = fileInputMeta(descriptionImagesMeta, descriptionImages);
         List<FileDTO> docsFile = fileInputMeta(docsMeta, docs);
 
+
+        log.info("productImagesFile" + productImagesFile);
+        log.info("productImagesMeta" + productImagesFile);
+
+
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
@@ -566,6 +579,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .filter(image -> image.getImageType().getImageType().equals("description"))
                 .collect(Collectors.toList());
 
+
         List<ProjectImage> delProductImages = updateFiles(updateProductImage, projectProductImages, ProjectImage::getUrl, (projectImage, ord) -> projectImage.setOrd(ord));
         List<ProjectImage> delDescriptionImages = updateFiles(updateDescriptionImage, projectDescriptionImages, ProjectImage::getUrl, (projectImage, ord) -> projectImage.setOrd(ord));
 
@@ -577,12 +591,17 @@ public class ProjectServiceImpl implements ProjectService {
         imgService.deleteImageFiles(delDescriptionImages);
         docService.deleteDocFiles(delDocs);
 
-        log.info(productImagesFile);
-        if(productImagesFile != null && productImagesFile.size() > 0 && descriptionImagesFile != null && descriptionImagesFile.size() > 0) {
-            imgService.saveImages(project, productImagesFile, descriptionImagesFile);
+        log.info("check productImagesFile files : " + productImagesFile);
+        log.info("check productImagesFile files : " + productImagesFile);
+        if(productImagesFile != null && productImagesFile.size() > 0) {
+            imgService.saveImages(project, productImagesFile, 1L);
         }
 
-        ProjectImage thumbnailImage = projectImageRepository.findByProject_IdAndOrdAndImageType_Id(projectId, 1, 2L);
+        if(descriptionImagesFile != null && descriptionImagesFile.size() > 0) {
+            imgService.saveImages(project, descriptionImagesFile, 3L);
+        }
+
+        ProjectImage thumbnailImage = projectImageRepository.findByProject_IdAndOrdAndImageType_Id(projectId, 1, 1L);
         if(thumbnailImage != null) {
             project.setThumbnailUrl(imgService.saveThumbnailImages(projectId, thumbnailImage));
         }
