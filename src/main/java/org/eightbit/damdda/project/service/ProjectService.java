@@ -36,8 +36,8 @@ public interface ProjectService {
                        List<MultipartFile> productImages,
                        List<MultipartFile> descriptionImages,
                        List<MultipartFile> docs,
-                       List<FileDTO> updateProductImage,
-                       List<FileDTO> updateDescriptionImage,
-                       List<FileDTO> updateDocs
+                       List<MetaDTO> updateProductImage,
+                       List<MetaDTO> updateDescriptionImage,
+                       List<MetaDTO> updateDocs
                        );
 }

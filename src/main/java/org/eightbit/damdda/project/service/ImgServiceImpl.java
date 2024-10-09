@@ -122,8 +122,8 @@ public class ImgServiceImpl implements ImgService {
 //    }
 
     @Override
-    public String saveThumbnailImages(Long projectId, ProjectImage thumbnailImage) {
-        String uploadDirectory = basePath + "/projects/" + projectId;
+    public String saveThumbnailImages(Project project, ProjectImage thumbnailImage) {
+        String uploadDirectory = basePath + "/projects/" + project.getId();
         File uploadDir = new File(uploadDirectory);
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();  // 경로 없으면 생성
@@ -150,14 +150,23 @@ public class ImgServiceImpl implements ImgService {
                     .outputQuality(0.8)  // 압축 품질 설정
                     .toFile(thumbnailFile);  // 압축된 썸네일 파일 저장
 
-            // 썸네일 이미지의 URL을 ProjectImage 엔티티에 저장
-            thumbnailImage.setUrl(thumbnailFile.getAbsolutePath());  // 썸네일 이미지 경로 저장
-            thumbnailImage.setFileName(thumbnailFileName);  // 썸네일 파일명 저장
-            thumbnailImage.setOrd(1);
+            ProjectImageType imageType = projectImageTypeRepository.findById(2L).orElse(null);
+
+            // 이미지 엔티티 저장
+            ProjectImage newThumbnailImage = ProjectImage.builder()
+                    .project(project)
+                    .url("files/projects/" + project.getId() + "/" + thumbnailFileName)
+                    .fileName(thumbnailFileName)
+                    .ord(0)
+                    .imageType(imageType)
+                    .build();
+            log.info("projectImage : " + newThumbnailImage);
+            projectImageRepository.save(newThumbnailImage);
+
 
             // 이후 repository를 통해 projectImage를 저장 가능
-             projectImageRepository.save(thumbnailImage);
-             return thumbnailFile.getAbsolutePath();
+             projectImageRepository.save(newThumbnailImage);
+             return newThumbnailImage.getUrl();
         } catch (IOException e) {
             // 예외 처리 로직 작성 (로그 기록 또는 사용자에게 알림 등)
             e.printStackTrace();

@@ -53,12 +53,12 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectImage> projectImages = projectImageRepository.findAllByProjectIdOrderByOrd(projectId);
         List<String> productImages = projectImages.stream()
                 .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))
-                .map(projectImage -> "http://localhost:9000/" + projectImage.getUrl())  // URL에 "http://files/projects/" 추가
+                .map(projectImage -> projectImage.getUrl())  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
 
         List<String> descriptionImages = projectImages.stream()
                 .filter(projectImage -> projectImage.getImageType().getImageType().equals("description"))
-                .map(projectImage -> "http://localhost:9000/" + projectImage.getUrl())  // URL에 "http://files/projects/" 추가
+                .map(projectImage -> projectImage.getUrl())  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
 
         List<ProjectDocument> projectDocs = projectDocumentRepository.findAllByProjectIdOrderByOrd(projectId);
@@ -67,13 +67,13 @@ public class ProjectServiceImpl implements ProjectService {
                 .filter(projectDoc -> projectDoc.getFileName().contains("[인증]"))
 //                .filter(projectDoc -> projectDoc.getFileName().length() >= 5 && projectDoc.getFileName().substring(0, 4).equals("[인증]"))
 //                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 18).equals("[인증]"))
-                .map(ProjectDocument -> "http://localhost:9000/" + ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
+                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
         List<String> reqDocs = projectDocs.stream()
                 .filter(projectDoc -> projectDoc.getFileName().contains("[진행자]"))
 //                .filter(projectDoc -> projectDoc.getFileName().length() >= 6 && projectDoc.getFileName().substring(0, 5).equals("[진행자]"))
 //                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 19).equals("[진행자]"))
-                .map(ProjectDocument -> "http://localhost:9000/" + ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
+                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
 
         List<Tag> tags = project.getTags();
@@ -483,9 +483,9 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     // T를 제너릭 타입으로 선언하고, 그 타입은 getUrl() 메서드를 가진 객체로 제한
-    protected <T> int isObjectInUpdateFiles(List<FileDTO> files, T object, Function<T, String> urlGetter) {
+    protected <T> int isObjectInUpdateFiles(List<MetaDTO> files, T object, Function<T, String> urlGetter) {
         if (files != null) {
-            for (FileDTO file : files) {
+            for (MetaDTO file : files) {
                 if (file.getUrl().equals(urlGetter.apply(object))) {  // 제너릭으로 받아온 객체의 URL과 비교
                     return file.getOrd();
                 }
@@ -495,7 +495,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     // 제너릭 타입 T를 사용하도록 수정 (BiConsumer로 변경)
-    protected <T> List<T> updateFiles(List<FileDTO> files, List<T> objects,
+    protected <T> List<T> updateFiles(List<MetaDTO> files, List<T> objects,
                                       Function<T, String> urlGetter,
                                       BiConsumer<T, Integer> ordSetter) {
         List<T> deleteList = new ArrayList<>();
@@ -514,7 +514,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     protected List<FileDTO> fileInputMeta(List<MetaDTO> filesMeta, List<MultipartFile> files) {
-        if(filesMeta == null) {
+        if(filesMeta == null || files == null) {
             return null;
         }
 
@@ -548,9 +548,9 @@ public class ProjectServiceImpl implements ProjectService {
                               List<MultipartFile> productImages,
                               List<MultipartFile> descriptionImages,
                               List<MultipartFile> docs,
-                              List<FileDTO> updateProductImage,
-                              List<FileDTO> updateDescriptionImage,
-                              List<FileDTO> updateDocs
+                              List<MetaDTO> updateProductImage,
+                              List<MetaDTO> updateDescriptionImage,
+                              List<MetaDTO> updateDocs
                               ) {
 
         List<FileDTO> productImagesFile = fileInputMeta(productImagesMeta, productImages);
@@ -603,7 +603,8 @@ public class ProjectServiceImpl implements ProjectService {
 
         ProjectImage thumbnailImage = projectImageRepository.findByProject_IdAndOrdAndImageType_Id(projectId, 1, 1L);
         if(thumbnailImage != null) {
-            project.setThumbnailUrl(imgService.saveThumbnailImages(projectId, thumbnailImage));
+            log.info("thumbnailImage : " + thumbnailImage);
+            project.setThumbnailUrl(imgService.saveThumbnailImages(project, thumbnailImage));
         }
 
         if(docsFile != null && docsFile.size() > 0) {
