@@ -63,18 +63,18 @@ public class ProjectServiceImpl implements ProjectService {
 
         List<ProjectDocument> projectDocs = projectDocumentRepository.findAllByProjectIdOrderByOrd(projectId);
 
-        List<String> certDocs = projectDocs.stream()
-                .filter(projectDoc -> projectDoc.getFileName().contains("[인증]"))
-//                .filter(projectDoc -> projectDoc.getFileName().length() >= 5 && projectDoc.getFileName().substring(0, 4).equals("[인증]"))
-//                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 18).equals("[인증]"))
-                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
-                .collect(Collectors.toList());
-        List<String> reqDocs = projectDocs.stream()
-                .filter(projectDoc -> projectDoc.getFileName().contains("[진행자]"))
-//                .filter(projectDoc -> projectDoc.getFileName().length() >= 6 && projectDoc.getFileName().substring(0, 5).equals("[진행자]"))
-//                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 19).equals("[진행자]"))
-                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
-                .collect(Collectors.toList());
+//        List<String> certDocs = projectDocs.stream()
+//                .filter(projectDoc -> projectDoc.getFileName().contains("[인증]"))
+////                .filter(projectDoc -> projectDoc.getFileName().length() >= 5 && projectDoc.getFileName().substring(0, 4).equals("[인증]"))
+////                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 18).equals("[인증]"))
+//                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
+//                .collect(Collectors.toList());
+//        List<String> reqDocs = projectDocs.stream()
+//                .filter(projectDoc -> projectDoc.getFileName().contains("[진행자]"))
+////                .filter(projectDoc -> projectDoc.getFileName().length() >= 6 && projectDoc.getFileName().substring(0, 5).equals("[진행자]"))
+////                .filter(projectDoc -> projectDoc.getFileName().length() >= 19 && projectDoc.getFileName().substring(14, 19).equals("[진행자]"))
+//                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
+//                .collect(Collectors.toList());
 
         List<String> docs = projectDocs.stream()
                 .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
