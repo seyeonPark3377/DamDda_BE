@@ -5,11 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c1bb7eb2-f9aa-4fc9-80a7-29a723583fa7" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/dto/FileDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/data/liked_projects.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/controller/ProjectApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/controller/ProjectApiController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/domain/ProjectDocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/domain/ProjectDocument.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/domain/ProjectImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/domain/ProjectImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/repository/ProjectImageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/repository/ProjectImageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/DocService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/DocService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/DocServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/DocServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ImgService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ImgService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ImgServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ImgServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/project/service/ProjectServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/approval.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/approval.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data/projects.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data/projects.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,6 +104,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/data" />
       <recent name="C:\Users\aiass\Documents\GitHub\DamDda_BE\src\main\java\org\eightbit\damdda\member" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -127,14 +137,15 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.20224.419" />
-        <option value="bundled-js-predefined-d6986cc7102b-410509235cf1-JavaScript-IU-242.20224.419" />
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
       </set>
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
+      <changelist id="c1bb7eb2-f9aa-4fc9-80a7-29a723583fa7" name="변경" comment="" />
       <created>1728033039652</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -150,6 +161,7 @@
       <workItem from="1727951529729" duration="187000" />
       <workItem from="1728004742897" duration="3704000" />
       <workItem from="1728367410066" duration="9236000" />
+      <workItem from="1728450368322" duration="6858000" />
     </task>
     <servers />
   </component>

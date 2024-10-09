@@ -11,6 +11,7 @@ import java.util.List;
 @Table(name = "project_images")
 @Getter
 @Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = "project")
