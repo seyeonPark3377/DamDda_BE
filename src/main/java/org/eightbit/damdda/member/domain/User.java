@@ -12,8 +12,11 @@ public class User implements UserDetails {
     private final Member member;
 
     public User(Member member) {
-
         this.member = member;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     public String getNickname(){

@@ -79,7 +79,7 @@ public class MemberController {
 
             String currentUserNickname = ((User) auth.getPrincipal()).getNickname();
 
-            String jwts = jwtService.getToken(auth.getName());
+            String jwts = jwtService.getToken(((User) auth.getPrincipal()).getMember().getId(), auth.getName());
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
