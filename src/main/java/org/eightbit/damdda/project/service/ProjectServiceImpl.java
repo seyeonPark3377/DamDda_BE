@@ -76,10 +76,16 @@ public class ProjectServiceImpl implements ProjectService {
                 .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
 
+        List<String> docs = projectDocs.stream()
+                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
+                .collect(Collectors.toList());
+
+
         List<Tag> tags = project.getTags();
         List<String> tagDTOs = tags.stream()
                 .map(Tag::getName)
                 .collect(Collectors.toList());
+        log.info("tagDTOs" + tagDTOs);
 
 
         ProjectRegisterDetailDTO dto = ProjectRegisterDetailDTO.builder()
@@ -93,8 +99,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .category(project.getCategory() == null ? null : project.getCategory().getName())
                 .productImages(productImages)
                 .descriptionImages(descriptionImages)
-                .reqDocs(reqDocs)
-                .certDocs(certDocs)
+                .docs(docs)
                 .tags(tagDTOs)
                 .build();
 
