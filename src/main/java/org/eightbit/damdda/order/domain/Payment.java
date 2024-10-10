@@ -13,11 +13,10 @@ import javax.persistence.*;
 @ToString
 public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
 
     private String paymentStatus;
     private String paymentMethod;
-    private String paymentPrice;
 }
 

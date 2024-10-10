@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c1bb7eb2-f9aa-4fc9-80a7-29a723583fa7" name="변경" comment="">
+
       <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/client/AIContentGenerationClient.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/config/WebClientConfig.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/config/WebSecurityConfig.java" afterDir="false" />
@@ -13,6 +14,7 @@
       <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/service/GenerativeAIServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +36,23 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="DamDda" type="f1a62948:ProjectNode" />
               </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="DamDda" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="DamDda" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="DamDda" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="other" type="c8890929:TasksNode$1" />
+              </path>
             </expand>
             <select />
           </tree_state>
@@ -51,6 +70,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;hwangjiyoung02&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/DamDda/DamDda_BE.git&quot;,
+    &quot;accountId&quot;: &quot;a19cc500-a1a0-4244-9daa-9dee7418ac60&quot;
+  }
+}</component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -98,15 +129,18 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+
       <recent name="C:\Users\bitcamp\Desktop\1\DamDda_BE\src\main\java\org\eightbit\damdda" />
       <recent name="$PROJECT_DIR$/src/main/resources/data" />
       <recent name="C:\Users\aiass\Documents\GitHub\DamDda_BE\src\main\java\org\eightbit\damdda\member" />
+
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="org.eightbit.damdda.project.dto" />
     </key>
   </component>
   <component name="RunManager">
+
     <configuration default="true" type="JetRunConfigurationType">
       <module name="DamDda.main" />
       <method v="2">
@@ -128,6 +162,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -160,6 +195,7 @@
       <workItem from="1728519714637" duration="5987000" />
       <workItem from="1728538796591" duration="1614000" />
       <workItem from="1728544118386" duration="357000" />
+
     </task>
     <servers />
   </component>

@@ -22,11 +22,9 @@ public class  SupportingPackage {
     @JoinColumn(name = "supporting_project_id")
     private SupportingProject supportingProject;
 
-    @ManyToOne
-    @JoinColumn(name = "supporting_package_id")
-    private ProjectPackage supportingPackage;
-
-    private Integer packageCount;
+    private String packageName;
+    private String packagePrice;
+    private String packageCount;
 
 
 }

@@ -6,7 +6,6 @@ import org.eightbit.damdda.project.domain.Project;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "supporting_projects")
 @Data
@@ -17,24 +16,24 @@ import java.time.LocalDateTime;
 public class SupportingProject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long SupportingProjectId;
+    private Long supportingProjectId;
 
     private LocalDateTime supportedAt; // 후원 시간
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "delivery_id")
+    private Delivery delivery;
     @ManyToOne
-    @JoinColumn(name = "user_id")  // 외래 키로 참조할 필드
+    @JoinColumn(name = "user_id", referencedColumnName = "id")  // Member의 기본 키인 id를 참조
     private Member user;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @ManyToOne
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
 
-    @ManyToOne
-    @JoinColumn(name = "delivery_id")
-    private Delivery delivery;
+
 }
-

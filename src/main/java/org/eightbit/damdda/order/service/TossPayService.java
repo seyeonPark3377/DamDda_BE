@@ -1,9 +1,9 @@
 package org.eightbit.damdda.order.service;
-
 import lombok.RequiredArgsConstructor;
-import org.eightbit.damdda.order.dto.TossRequest;
-import org.eightbit.damdda.order.dto.TossResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.eightbit.damdda.order.dto.TossRequest;
+
+import org.eightbit.damdda.order.dto.TossResponse;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +27,7 @@ public class TossPayService {
     @Value("${TOSS_SECRET_KEY}")
     private String TOSS_SECRET_KEY;
 
-//    private TossResponse tossResponse;
+    private TossResponse tossResponse;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -37,6 +37,7 @@ public class TossPayService {
 
         // HTTP 헤더 설정
         HttpHeaders headers = new HttpHeaders();
+
         headers.setBasicAuth(TOSS_SECRET_KEY, "");
         headers.add("Content-Type", "application/json");
 

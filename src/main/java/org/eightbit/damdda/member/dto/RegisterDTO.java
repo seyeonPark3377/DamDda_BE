@@ -1,15 +1,10 @@
 package org.eightbit.damdda.member.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.eightbit.damdda.member.domain.Member;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class RegisterDTO {
     private String loginId;
     private String password;
@@ -33,5 +28,18 @@ public class RegisterDTO {
                 .detailedAddress(detailedAddress)
                 .postCode(postCode)
                 .build();
+    }
+
+    @Builder
+    public RegisterDTO(String loginId, String password, String nickname, String name, String email, String phoneNumber, String address, String detailedAddress, int postCode) {
+        this.loginId = loginId;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.detailedAddress = detailedAddress;
+        this.postCode = postCode;
     }
 }

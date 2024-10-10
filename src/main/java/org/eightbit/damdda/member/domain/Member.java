@@ -4,18 +4,19 @@ import lombok.*;
 import org.eightbit.damdda.common.domain.DateEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "members")
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Member extends DateEntity {
+//public class Member extends DateEntity {
+public class Member {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, unique = true, updatable = false)
     private String loginId;
@@ -38,15 +39,28 @@ public class Member extends DateEntity {
 
     private String imageUrl;
 
-
     @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
     private String detailedAddress;
 
-    @Column(nullable = false)
     private int postCode;
 
+    @Builder
+    public Member(String loginId, String password, String nickname, String name, String email, String phoneNumber, String imageUrl, String address, String detailedAddress, int postCode) {
+        this.loginId = loginId;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.imageUrl = imageUrl;
+        this.address = address;
+        this.detailedAddress = detailedAddress;
+        this.postCode = postCode;
+    }
+
 }
+
+
 
