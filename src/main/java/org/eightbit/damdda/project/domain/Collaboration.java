@@ -35,7 +35,7 @@ public class Collaboration {
     // 굳이 member와 연동할 필요가 있나?
     private String userId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="projectId")
     private Project project;
 
