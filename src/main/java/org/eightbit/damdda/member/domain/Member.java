@@ -2,6 +2,7 @@ package org.eightbit.damdda.member.domain;
 
 import lombok.*;
 import org.eightbit.damdda.common.domain.DateEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 
@@ -20,6 +21,7 @@ public class Member {
     @Column(nullable = false, unique = true, updatable = false)
     private String loginId;
 
+
     @Column(nullable = false)
     private String password;
 
@@ -37,6 +39,7 @@ public class Member {
 
     private String imageUrl;
 
+    @Column(nullable = false)
     private String address;
 
     private String detailedAddress;

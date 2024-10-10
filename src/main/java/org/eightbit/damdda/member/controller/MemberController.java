@@ -1,6 +1,9 @@
 package org.eightbit.damdda.member.controller;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
+
 import org.eightbit.damdda.member.domain.AccountCredentials;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.domain.User;
@@ -15,13 +18,34 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import lombok.extern.log4j.Log4j2;
+import org.eightbit.damdda.member.dto.LoginDTO;
+import org.eightbit.damdda.member.dto.MemberDTO;
+import org.eightbit.damdda.member.dto.RegisterDTO;
+import org.eightbit.damdda.member.service.LoginService;
+import org.eightbit.damdda.member.service.MemberService;
+import org.eightbit.damdda.member.service.RegisterService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import java.io.IOException;
+import java.util.UUID;
+
+
+@Log4j2
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member") // member로 변경하는게 적절
@@ -39,7 +63,13 @@ public class MemberController {
     }
 
 
-    @PostMapping
+
+//     @PostMapping
+
+
+
+    @PostMapping("/profile")
+
     public String insertMember (@RequestBody RegisterDTO registerDTO){
 
         try {
@@ -77,6 +107,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<?> login (@RequestBody AccountCredentials credentials){
         try {
+
             UsernamePasswordAuthenticationToken creds =         // 인증 아직 안됨
                     new UsernamePasswordAuthenticationToken(
                             credentials.getLoginId(),
@@ -93,6 +124,7 @@ public class MemberController {
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
                     .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
                     .body(Map.of("X-Nickname", currentUserNickname));
+
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
@@ -113,6 +145,7 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
 
     @GetMapping("/findid")
     public ResponseEntity<String> findId(String name, String email){
@@ -139,6 +172,18 @@ public class MemberController {
 //    public ResponseEntity<?> confirmPassword (@RequestBody String password){
 //        try {
 //            String loginId = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+
+    @PutMapping("/profile/Photo")
+    public ResponseEntity<String> updateProfilePhoto (@RequestBody MultipartFile imageUrl, HttpSession session) throws IOException {
+        try {
+
+            String fileName = memberService.uploadFile(imageUrl);
+            return ResponseEntity.ok(fileName);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
 //
 //            MemberDTO memberDTO = memberService.confirmPw(loginId, password);
 //
