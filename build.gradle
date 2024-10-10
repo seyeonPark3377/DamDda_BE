@@ -91,8 +91,16 @@ dependencies {
 
     implementation 'org.springdoc:springdoc-openapi-ui:1.5.13'
 
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     // 지영님 추가
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+
+    // 태욱
+    implementation 'org.json:json:20210307'
 }
 
 tasks.named('test') {

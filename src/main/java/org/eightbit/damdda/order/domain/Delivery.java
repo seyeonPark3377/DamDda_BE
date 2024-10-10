@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class Delivery {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long deliveryId;
 
     private String deliveryName;
@@ -22,7 +22,7 @@ public class Delivery {
     private String deliveryEmail;
     private String deliveryAddress;
     private String deliveryDetailedAddress;
-    private String deliveryPostcode;
+    private Integer deliveryPostCode;
     private String deliveryMessage;
 }
 

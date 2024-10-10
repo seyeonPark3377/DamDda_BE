@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 // pr완료
-@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000", "http://127.0.0.1:3000",  "http://223.130.156.95", "http://223.130.156.95"})
+@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000", "http://127.0.0.1:3000", "http://223.130.156.95", "http://223.130.156.95"})
 @RestController
 @RequestMapping("/api/projects")
 @Log4j2
@@ -30,25 +30,6 @@ public class ProjectApiController {
     private final LikedProjectService likedProjectService;
 
 
-//    @GetMapping("/index")
-//    public String index(Model model) {
-//        return "This is the project index page.";
-//    }
-
-
-//    @GetMapping("")
-//    public PageResponseDTO<ProjectBoxDTO> getSort(@RequestParam("memberId") Long memberId,
-//                                                  @RequestParam("sortConditions") List<String> sortConditions,
-//                                                  PageRequestDTO pageRequestDTO){
-//        PageResponseDTO<ProjectBoxDTO> sortedProjects;
-//        if(sortConditions.get(0).equals("fundsReceive")){
-//            sortedProjects =  projectService.getProjectsSortedByFundingRatio(memberId, pageRequestDTO);
-//        } else{
-//            sortedProjects =  projectService.findSortedProjects(memberId, pageRequestDTO, sortConditions);
-//        }
-//        return sortedProjects;
-//    }
-
     @GetMapping("/projects")
     public PageResponseDTO<ProjectBoxDTO> getProjects(
             @RequestParam(defaultValue = "1") int page,
@@ -58,30 +39,15 @@ public class ProjectApiController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String progress,
             @RequestParam(required = false) String[] sort,
-            PageRequestDTO pageRequestDTO
-    ) {
+            PageRequestDTO pageRequestDTO) {
         List<String> sortConditions = sort != null ? Arrays.asList(sort) : List.of();
-
         PageResponseDTO<ProjectBoxDTO> sortedProjects = projectService.getProjects(pageRequestDTO, memberId, page, size, category, search, progress, sortConditions);
-//        PageResponseDTO<ProjectBoxDTO> sortedProjects;
-//        if (!sortConditions.isEmpty() && "fundsReceive".equals(sortConditions.get(0))) {
-//            // sort 조건 중 첫 번째가 "fundsReceive"일 때
-//            sortedProjects = projectService.getProjectsSortedByFundingRatio(category, search, progress,  memberId, pageRequestDTO);
-//        } else {
-//            // 그 외의 경우
-//            sortedProjects = projectService.getProjects(pageRequestDTO, memberId, page, size, category, search, progress, sortConditions);
-//        }
-
-        log.info("getProjects" + progress);
-        log.info(sortedProjects);
-
         return sortedProjects;
     }
 
     @GetMapping("/write/{projectId}")
     public ProjectRegisterDetailDTO getWriteProject(@PathVariable Long projectId) {
         ProjectRegisterDetailDTO dto = projectService.getProjectDetail(projectId);
-        log.info("getWriteProject : " + projectId + dto);
         return dto;
     }
 
@@ -92,20 +58,15 @@ public class ProjectApiController {
 
     @GetMapping("/like")
     public PageResponseDTO<ProjectBoxDTO> getLikedProjectList(@RequestParam("memberId") Long memberId,
-                                                      PageRequestDTO pageRequestDTO) {
+                                                              PageRequestDTO pageRequestDTO) {
         PageResponseDTO<ProjectBoxDTO> projectBoxDTO = projectService.getListProjectBoxLikeDTO(memberId, pageRequestDTO);
-
         return projectBoxDTO;
     }
 
     @GetMapping(value = "/myproject")
     public PageResponseDTO<ProjectBoxHostDTO> getMyProjectList(@RequestParam("memberId") Long memberId,
-//                                                               @RequestParam("page") int page, // 페이지 번호 직접 받기
-//                                                               @RequestParam("size") int size){  // 페이지 크기 직접 받기
                                                                PageRequestDTO pageRequestDTO) {
-//        PageRequestDTO pageRequestDTO = new PageRequestDTO(page, size, null, null, null); // type, keyword, link를 null로 설정
         PageResponseDTO<ProjectBoxHostDTO> projectBoxHostDTO = projectService.getListProjectBoxHostDTO(memberId, pageRequestDTO);
-        log.info(projectBoxHostDTO + "11111111111111111111111111111111111111111111111111");
         return projectBoxHostDTO;
     }
 
@@ -113,10 +74,7 @@ public class ProjectApiController {
     @GetMapping("/{projectId}")
     public ProjectResponseDetailDTO readProjectDetail(@RequestParam("memberId") Long memberId,
                                                       @PathVariable Long projectId) {
-
-        log.info("readProjectDetail"+projectId);
         ProjectResponseDetailDTO projectResponseDetailDTO = projectService.readProjectDetail(projectId, memberId);
-        log.info("readProjectDetail"+projectResponseDetailDTO);
         return projectResponseDetailDTO;
     }
 
@@ -128,87 +86,71 @@ public class ProjectApiController {
 
     @PostMapping("/like")
     public Long registerLikedProject(@RequestParam Long memberId,
-                                                      @RequestParam Long projectId) {
+                                     @RequestParam Long projectId) {
         return likedProjectService.insertLikedProject(projectId, memberId);
     }
 
     @DeleteMapping("/like")
     public void deleteLikedProject(@RequestParam Long memberId,
-                                     @RequestParam Long projectId) {
+                                   @RequestParam Long projectId) {
         likedProjectService.deleteLikedProject(projectId, memberId);
     }
 
 
     //@PostMapping("/register")
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Long registerPost(@RequestParam("memberId")  Long memberId,
-                               @RequestPart("projectDetailDTO")  ProjectDetailDTO projectDetailDTO,
-                               @RequestParam(value = "submit", required = false) String submit,
-                               @RequestPart(value = "productImages", required = false) List<MultipartFile> productImages,
-                               @RequestPart(value = "descriptionImages", required = false) List<MultipartFile> descriptionImages,
-                               @RequestPart(value = "docs", required = false) List<MultipartFile> docs,
-                               BindingResult bindingResult,
-                               RedirectAttributes redirectAttributes) {
-    // 유효성 검사 실패 시 처리
-//    if (bindingResult.hasErrors()) {
-//        log.info("has errors..........");
-//        redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-//        return "error";  // 유효성 검증 실패 시 에러 페이지로 이동
-//    }
-    // 프로젝트 ID 변수 선언
-    Long projectId = null;
-    log.info(submit + "submit!!----------------------------------------------------------");
-    log.info(projectDetailDTO + "projectRegistDTO!!------==============================");
-    // submit 값에 따른 처리
-    if (submit.equals("저장")) {
-        projectId = projectService.register(memberId, projectDetailDTO, false, productImages, descriptionImages, docs);
-    } else if (submit.equals("제출")) {
-        projectId = projectService.register(memberId, projectDetailDTO, true, productImages, descriptionImages, docs);
-    } else {
-        redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
-//        return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
-    }
-
-    // projectId 리턴
-    return projectId;
+    public Long registerPost(@RequestParam("memberId") Long memberId,
+                             @RequestPart("projectDetailDTO") ProjectDetailDTO projectDetailDTO,
+                             @RequestParam(value = "submit", required = false) String submit,
+                             @RequestPart(value = "productImages", required = false) List<MultipartFile> productImages,
+                             @RequestPart(value = "descriptionImages", required = false) List<MultipartFile> descriptionImages,
+                             @RequestPart(value = "docs", required = false) List<MultipartFile> docs,
+                             BindingResult bindingResult,
+                             RedirectAttributes redirectAttributes) {
+        Long projectId = null;
+        if (submit.equals("저장")) {
+            projectId = projectService.register(memberId, projectDetailDTO, false, productImages, descriptionImages, docs);
+        } else if (submit.equals("제출")) {
+            projectId = projectService.register(memberId, projectDetailDTO, true, productImages, descriptionImages, docs);
+        } else {
+            redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
+        }
+        return projectId;
 
     }
+
 
     @PutMapping("/register/{projectId}")
     public String registerPut(@PathVariable Long projectId,
+                              @RequestPart(value = "productImagesMeta", required = false) List<MetaDTO> productImagesMeta,
+                              @RequestPart(value = "descriptionImagesMeta", required = false) List<MetaDTO> descriptionImagesMeta,
+                              @RequestPart(value = "docsMeta", required = false) List<MetaDTO> docsMeta,
                               @RequestPart(value = "productImages", required = false) List<MultipartFile> productImages,
                               @RequestPart(value = "descriptionImages", required = false) List<MultipartFile> descriptionImages,
                               @RequestPart(value = "docs", required = false) List<MultipartFile> docs,
+                              @RequestPart(value = "updateProductImages", required = false) List<MetaDTO> updateProductImage,
+                              @RequestPart(value = "updateDescriptionImages", required = false) List<MetaDTO> updateDescriptionImage,
+                              @RequestPart(value = "updateDocs", required = false) List<MetaDTO> updateDocs,
                               @Valid @RequestPart("projectDetailDTO") ProjectDetailDTO projectDetailDTO,
                               String submit,
                               BindingResult bindingResult,
                               RedirectAttributes redirectAttributes) {
-
-        log.info("projectId : " +  projectId);
-        log.info("productImages : " +  productImages);
-        log.info("descriptionImages : " +  descriptionImages);
-        log.info("docs : " +  docs);
-        log.info("projectDetailDTO : " +  projectDetailDTO);
-        log.info("submit : " +  submit);
-
-        // 유효성 검사 실패 시 처리
         if (bindingResult.hasErrors()) {
             log.info("has errors..........");
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "error";  // 유효성 검증 실패 시 에러 페이지로 이동
         }
-        log.info(submit + "submit!!----------------------------------------------------------");
-        log.info(projectDetailDTO + "projectRegistDTO!!------==============================");
+
+
         // submit 값에 따른 처리
         if (submit.equals("저장")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImages, descriptionImages, docs);
+            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
         } else if (submit.equals("제출")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImages, descriptionImages, docs);
+            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
         } else {
             redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
             return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
         }
-
         // projectId 리턴
         return "projectId: " + projectId + "\n" + projectService.findById(projectId);
     }
@@ -227,50 +169,5 @@ public class ProjectApiController {
         }
 
     }
-
-
-//
-//    private final BoardService boardService;
-//
-//    // /board/list
-//    @GetMapping("/list")
-//    public void list(PageRequestDTO pageRequestDTO, Model model){
-//        //PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
-//
-//        //PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
-//
-//        PageResponseDTO<BoardListAllDTO> responseDTO = boardService.listWithAll(pageRequestDTO);
-//
-//        log.info(responseDTO);
-//
-//        model.addAttribute("responseDTO", responseDTO);
-//    }
-//
-//    @GetMapping("/register")
-//    public void registerGET(){
-//    }
-
-
-//    @PostMapping("/register")
-//    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult,
-//                               RedirectAttributes redirectAttributes){
-//        log.info("board POST register.....");
-//
-//        // @Valid처리를 통해 BoardDTO의 제약사항에 위배되면
-//        // 아래 에러가 발생한다.
-//        if(bindingResult.hasErrors()){
-//            log.info("has errors..........");
-//            // redirect전송 시 처음 1번 "errors"값을 꺼내도록 전송한다.
-//            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-//            return "redirect:/board/register";
-//        }
-//
-//        log.info(boardDTO);
-//
-//        Long bno = boardService.register(boardDTO);
-//        redirectAttributes.addFlashAttribute("result", bno);
-//
-//        return "redirect:/board/list";
-//    }
 
 }

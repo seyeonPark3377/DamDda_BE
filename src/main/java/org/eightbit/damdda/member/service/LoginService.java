@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import javax.servlet.http.HttpSession;
 
 public interface LoginService{
-//    MemberDTO login(LoginDTO loginDTO, HttpSession session);
+    //    MemberDTO login(LoginDTO loginDTO, HttpSession session);
 //    UserDetails loadUserByLoginIdAndPassword(String loginId, String password);
 //    void logout(HttpSession session);
     String findId(String name, String email);

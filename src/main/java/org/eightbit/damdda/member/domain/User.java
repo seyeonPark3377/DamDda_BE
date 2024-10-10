@@ -1,6 +1,5 @@
 package org.eightbit.damdda.member.domain;
 
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

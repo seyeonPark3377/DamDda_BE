@@ -5,6 +5,8 @@ import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.repository.MemberRepository;
+import org.eightbit.damdda.member.repository.RegisterRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,6 +19,8 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final RegisterRepository registerRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Optional<Member> findById(Long memberId){
@@ -39,10 +43,27 @@ public class MemberServiceImpl implements MemberService {
     }
 
 //    @Override
-//    public MemberDTO updateMember(String loginId, MemberDTO updateMemberDTO) {
-//        Member member = memberRepository.findByLoginId(loginId)
-//                .orElseThrow(() -> new IllegalArgumentException("not Found"));
-//        member.updateInfo(updateMemberDTO.toEntity());
+//    public MemberDTO confirmPw(String loginId, String password) {
+//        Optional<Member> optionalMember = memberRepository.findByLoginId(loginId);
+//        System.out.println("박세연" + optionalMember);
+//        System.out.println(2 + optionalMember.get().getPassword());
+//        System.out.println(3 + passwordEncoder.encode(password));
+//        if(optionalMember.isPresent()) {
+//            Member member = optionalMember.get();
+//            if(passwordEncoder.matches(password, member.getPassword())) {
+//                return MemberDTO.of(member);
+//            }
+//        }
+//        return null;
+//    }
+
+//    @Override
+//    public MemberDTO updateMember(MemberDTO memberDTO) {
+//        String userId = SecurityContextHolder.getPrincipal().getLoginId();
+//
+//        Optional<Member> member = memberRepository.findByLoginId(loginId);
+//
+//
 //        return null;
 //    }
 

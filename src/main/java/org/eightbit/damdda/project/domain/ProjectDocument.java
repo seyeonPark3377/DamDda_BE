@@ -11,6 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "project_documents")
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

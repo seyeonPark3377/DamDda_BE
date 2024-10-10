@@ -2,6 +2,7 @@ package org.eightbit.damdda.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.member.domain.AccountCredentials;
+import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.domain.User;
 import org.eightbit.damdda.member.dto.LoginDTO;
 import org.eightbit.damdda.member.dto.MemberDTO;
@@ -13,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,12 @@ public class MemberController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final LoginService loginService;
+
+    @PostMapping("/test1")
+    public ResponseEntity<?> test1(HttpServletRequest request){
+        return ResponseEntity.ok("test1");
+    }
+
 
     @PostMapping
     public String insertMember (@RequestBody RegisterDTO registerDTO){
@@ -101,8 +108,7 @@ public class MemberController {
     @GetMapping("/profile")
     public ResponseEntity<MemberDTO> getProfile (@RequestParam("loginId") String loginId){
         try {
-            MemberDTO memberDTO = memberService.getMember(loginId);
-            return ResponseEntity.ok(memberDTO);
+            return ResponseEntity.ok(memberService.getMember(loginId));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
@@ -119,15 +125,31 @@ public class MemberController {
         }
     }
 
-//    @PutMapping("/profile/Photo")
-//    public ResponseEntity<String> updateProfilePhoto (@RequestBody MemberDTO memberDTO, HttpSession session){
-//
-//    }
-//
-//    @Transactional
+
 //    @PutMapping("/profile")
-//    public ResponseEntity<String> updateProfile (@RequestBody MemberDTO memberDTO, HttpSession session){
+//    public ResponseEntity<MemberDTO> updateProfile (@RequestBody MemberDTO memberDTO){
+//        try {
+//            return ResponseEntity.ok(memberService.updateMember(memberDTO));
+//        } catch (IllegalArgumentException e) {
+//            return null;
+//        }
+//    }
+
+//    @PostMapping("/confirmpw")
+//    public ResponseEntity<?> confirmPassword (@RequestBody String password){
+//        try {
+//            String loginId = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
 //
+//            MemberDTO memberDTO = memberService.confirmPw(loginId, password);
+//
+//            if(memberDTO != null){
+//                return ResponseEntity.ok(memberDTO);
+//            } else {
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+//            }
+//        } catch (IllegalArgumentException e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed");
+//        }
 //    }
 }
 

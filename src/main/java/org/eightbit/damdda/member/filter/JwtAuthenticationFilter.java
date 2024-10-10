@@ -4,7 +4,6 @@ import org.eightbit.damdda.member.domain.User;
 import org.eightbit.damdda.member.service.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -56,7 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         request.setAttribute("memberId", memberId);
         request.setAttribute("username", username);
 
-//        System.out.println(memberId + " " + username);
+        System.out.println("Request Info: " + memberId + ", " + username);
         filterChain.doFilter(request, response);
     }
 }

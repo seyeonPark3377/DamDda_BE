@@ -51,8 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/member/findid").permitAll()
-                .antMatchers(HttpMethod.POST, "/member", "/member/login").permitAll()
+                .antMatchers(HttpMethod.PUT, "/member/profile").permitAll()
+                .antMatchers(HttpMethod.GET, "/member/findid", "/member/profile").permitAll()
+                .antMatchers(HttpMethod.POST, "/member", "/member/login", "/member/confirmpw").permitAll()
                 .anyRequest().authenticated().and()
                 .logout()
                 .logoutUrl("/member/logout")
@@ -68,6 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("http://localhost:3000"); // 프론트엔드 주소
         config.setAllowedOrigins(List.of("*"));
         config.setAllowedMethods(List.of("*"));
         config.setAllowCredentials(true);

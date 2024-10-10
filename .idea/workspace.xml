@@ -4,14 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c1bb7eb2-f9aa-4fc9-80a7-29a723583fa7" name="변경" comment="feat: 토큰 내 memberId 추가 및 요청 데이터에 memberId와 loginId 저장 로직 구현">
+    <list default="true" id="c1bb7eb2-f9aa-4fc9-80a7-29a723583fa7" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/config/SecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/domain/AccountCredentials.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/domain/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/except/AuthEntryPoint.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/filter/JwtAuthenticationFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/filter/LoginFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/JwtService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/UserDetailsServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/generativeai/config/WebSecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/controller/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/filter/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/filter/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/domain/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/domain/Member.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/dto/LoginDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/dto/LoginDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/dto/MemberDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/dto/MemberDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/dto/RegisterDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/dto/RegisterDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/repository/LoginRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/repository/LoginRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/LoginService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/LoginService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/LoginServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/LoginServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/MemberService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/MemberServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/MemberServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/RegisterServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/eightbit/damdda/member/service/RegisterServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/eightbit/damdda/noticeandqna/repository/NoticeRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/eightbit/damdda/noticeandqna/repository/NoticeRepositoryTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +47,29 @@
         </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="DamDda" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="DamDda" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="DamDda" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="DamDda" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="other" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -48,14 +86,27 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;hwangjiyoung02&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/DamDda/DamDda_BE.git&quot;,
+    &quot;accountId&quot;: &quot;a19cc500-a1a0-4244-9daa-9dee7418ac60&quot;
+  }
+}</component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
 }</component>
   <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 2
 }</component>
-  <component name="ProjectId" id="2m8QVEic99Z9tfnlDrT4tryq3kj" />
+  <component name="ProjectId" id="2mxzVTqfY97p5C2YK9ZEuGVigEX" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -71,53 +122,132 @@
     &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;Spring Boot.DamDdaApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/membershipManagement&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/aiaas/Documents/GitHub/DamDda_BE&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/ijuhyeon/juhyeon/computer/git/DamDda_BE&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+
+
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mariadb&quot;
+  &amp;quot;keyToStringList&amp;quot;: {
+    &amp;quot;DatabaseDriversLRU&amp;quot;: [
+      &amp;quot;mariadb&amp;quot;
     ]
   }
+
+
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\aiass\Documents\GitHub\DamDda_BE\src\main\java\org\eightbit\damdda\member" />
+      <recent name="C:\Users\aiaas\Desktop\1\DamDda_BE - 복사본\src\main\java\org\eightbit\damdda\member" />
+      <recent name="C:\Users\aiaas\Desktop\1\DamDda_BE - 복사본\src\main\java\org\eightbit\damdda\member\service" />
+      <recent name="C:\Users\aiaas\Desktop\1\DamDda_BE - 복사본\src\main\java\org\eightbit\damdda\member\domain" />
+      <recent name="C:\Users\bitcamp\Desktop\1\DamDda_BE\src\main\java\org\eightbit\damdda" />
+      <recent name="$PROJECT_DIR$/src/main/resources/data" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="org.eightbit.damdda.member.filter" />
       <recent name="org.eightbit.damdda.project.dto" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration name="DamDdaApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Spring Boot.DamDdaApplication">
+    <configuration name="DamDda_BE - 복사본 [compileJava]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="compileJava" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="DamDda_BE [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="DamDda_BE [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="DamDda.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="DamDda.main" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DamDdaApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-      <module name="org.eightbit.DamDda.main" />
+      <module name="DamDda.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="org.eightbit.damdda.DamDdaApplication" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.eightbit.damdda.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.DamDdaApplication" />
+        <item itemvalue="Gradle.DamDda_BE [build]" />
+        <item itemvalue="Gradle.DamDda_BE [clean]" />
+        <item itemvalue="Gradle.DamDda_BE - 복사본 [compileJava]" />
       </list>
     </recent_temporary>
   </component>
@@ -129,14 +259,17 @@
       </set>
     </attachedChunks>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="디폴트 작업">
+    <task active="true" id="Default" summary="Default task">
       <changelist id="c1bb7eb2-f9aa-4fc9-80a7-29a723583fa7" name="변경" comment="" />
-      <created>1726455745756</created>
+      <created>1728033039652</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1726455745756</updated>
+      <workItem from="1728033041214" duration="394000" />
+      <workItem from="1728282084647" duration="17264000" />
+      <workItem from="1728349052575" duration="5573000" />
       <workItem from="1726455747229" duration="17000" />
       <workItem from="1727837533004" duration="168000" />
       <workItem from="1727837707801" duration="15727000" />
@@ -144,38 +277,17 @@
       <workItem from="1727945444611" duration="3406000" />
       <workItem from="1727951529729" duration="187000" />
       <workItem from="1728004742897" duration="3704000" />
-      <workItem from="1728260559492" duration="15819000" />
-      <workItem from="1728366844606" duration="12674000" />
-      <workItem from="1728390663687" duration="332000" />
-      <workItem from="1728451102341" duration="7760000" />
-      <workItem from="1728463881972" duration="2129000" />
+      <workItem from="1728367410066" duration="9236000" />
+      <workItem from="1728450368322" duration="24498000" />
+      <workItem from="1728519714637" duration="5987000" />
+      <workItem from="1728538796591" duration="1614000" />
+      <workItem from="1728544118386" duration="357000" />
+      <workItem from="1728551609331" duration="2836000" />
     </task>
-    <task id="LOCAL-00001" summary="feat: 시큐리티 로그인 기능 구현">
-      <option name="closed" value="true" />
-      <created>1728382986530</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1728382986530</updated>
-    </task>
-    <task id="LOCAL-00002" summary="feat: 토큰 내 memberId 추가 및 요청 데이터에 memberId와 loginId 저장 로직 구현">
-      <option name="closed" value="true" />
-      <created>1728451878033</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1728451878033</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: 시큐리티 로그인 기능 구현" />
-    <MESSAGE value="feat: 토큰 내 memberId 추가 및 요청 데이터에 memberId와 loginId 저장 로직 구현" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: 토큰 내 memberId 추가 및 요청 데이터에 memberId와 loginId 저장 로직 구현" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

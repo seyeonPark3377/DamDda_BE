@@ -2,19 +2,25 @@ package org.eightbit.damdda.order.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.order.domain.Order;
+import org.eightbit.damdda.order.domain.SupportingProject;
 import org.eightbit.damdda.order.dto.OrderDTO;
+import org.eightbit.damdda.order.dto.ProjectStatisticsDTO;
 import org.eightbit.damdda.order.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 @SessionAttributes("supportingPackage")
 
 @RequestMapping("/order")
@@ -23,61 +29,126 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    // 주문 생성 컨트롤러
+    //주문 생성
+//    @CrossOrigin(origins = "http://localhost:3000") // 특정 도메인에서만 허용
     @PostMapping("/create")
-    public ResponseEntity<Map<String, Long>> createOrder(@RequestBody OrderDTO orderDTO) {
-        // 데이터 잘 넘어오는지 확인
+    public ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO){
+        //데이터 잘 넘어오는지 확인
         System.out.println(orderDTO.toString());
-
-        // 서비스 레이어에서 주문 생성 처리
         Order createdOrder = orderService.createOrder(orderDTO);
-
-        // 생성된 주문의 ID를 응답으로 반환
-        Map<String, Long> response = new HashMap<>();
-        response.put("orderId", createdOrder.getOrderId());
-
-        // HTTP 상태 코드를 200 OK로 설정
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
-    @PutMapping("/{orderId}/update-status")
-    public ResponseEntity<Order> updatePaymentStatus(
-            @PathVariable Long orderId,
-            @RequestBody Map<String, String> request) {
 
-        // Payment status 값 가져오기
-        String newStatus = request.get("paymentStatus");
+    // 결제 성공창 - 결제 정보 불러오기
+    @GetMapping("/details/{orderId}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId) {
+        Optional<OrderDTO> orderDTOOptional = orderService.getOrderById(orderId);
+        System.out.println(orderId);
 
-        // 서비스 레이어를 통해 결제 상태 업데이트 처리
-        Order updatedOrder = orderService.updatePaymentStatus(orderId, newStatus);
+        if (!orderDTOOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
-        if (updatedOrder != null) {
-            return ResponseEntity.ok(updatedOrder); // 성공적으로 업데이트된 주문 반환
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 주문을 찾지 못한 경우
+        return new ResponseEntity<>(orderDTOOptional.get(), HttpStatus.OK);
+    }
+    //SupportedProjects - 주문 정보들 모두 가져오기
+    @GetMapping("/supportingprojects")
+    public List<OrderDTO> getOrdersByUserId(@RequestParam Long userId) {
+        System.out.println(userId);
+        return orderService.getOrdersWithPaymentByUserId(userId);
+    }
+
+    //SupportedProjects - orderId 정보들 모두 가져오기
+//    @GetMapping("/getOrderId")
+//    public List<OrderDTO> getOrdersByUserId(@RequestParam Long userId) {
+//        System.out.println(userId);
+//        return orderService.getOrdersWithPaymentByUserId(userId);
+//    }
+
+/////////********order테이블 조회
+//    @GetMapping("/order/details/{orderId}")
+//    public ResponseEntity<Order> getOrderDetails(@PathVariable Long orderId) {
+//        return orderRepository.findById(orderId)
+//                .map(order -> ResponseEntity.ok(order))
+//                .orElse(ResponseEntity.notFound().build());
+//    }
+
+    // PaymentSuccess.jsx - 결제 완료
+    @CrossOrigin(origins = "http://localhost:3000") // 특정 도메인에서만 허용
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<String> updatePaymentStatus(@PathVariable Long orderId, @RequestBody Map<String, String> requestBody) {
+        try {
+            String status = requestBody.get("paymentStatus");
+            System.out.println("결제 완료" + orderId + " " + status);
+            orderService.updateOrderStatus(orderId, status);
+            return ResponseEntity.ok("Payment status updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update payment status");
         }
     }
 
-    // 주문 상세 가져오기
-    @GetMapping("/details/{orderId}")
-    public ResponseEntity<OrderDTO> getOrderDetails(@PathVariable Long orderId) {
-        OrderDTO orderDTO = orderService.getOrderDetails(orderId);
-        return ResponseEntity.ok(orderDTO);
-    }
-
-    // 주문 목록 가져오기
-    @GetMapping("/my-orders/{userId}")
-    public ResponseEntity<List<OrderDTO>> getMyOrders(@PathVariable Long userId) {
-        List<OrderDTO> orders = orderService.getMyOrders(userId);
-        return ResponseEntity.ok(orders);
-    }
 
 
-    //주문 취소
-//    @GetMapping("/details/{orderId}")
-//    public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable String orderId, @RequestParam String status){
-//        OrderDTO updatedorder=new OrderDTO();
-//        return ResponseEntity.ok(updatedorder);
+    // PaymentDeliveryInfo - 결제 취소
+//    @PutMapping("/{orderId}/cancel")
+//    public ResponseEntity<OrderDTO> cancelOrder(@PathVariable Long orderId, @RequestParam String status) {
+//        // 주문 상태 업데이트
+//        System.out.println("결제 취소"+orderId+status);
+//        OrderDTO updatedOrder = orderService.updateOrderStatus(orderId, status);
+//        System.out.println(updatedOrder);
+//        return ResponseEntity.ok(updatedOrder); // 업데이트된 주문 정보 반환
 //    }
 
 
+    @PutMapping("/{paymentId}/cancel")
+    public ResponseEntity<String> cancelPayment(@PathVariable Long paymentId,@RequestBody Map<String, Object> requestBody) {
+        try {
+            String status = (String) requestBody.get("paymentStatus");
+
+            // 서비스에서 결제 상태 취소 처리**********
+            String message=orderService.cancelPayment(paymentId, status);
+            System.out.println(message);
+
+            return ResponseEntity.ok("Payment canceled successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel payment");
+        }
+    }
+
+
+
+    // Supporting 모든 주문 정보 - 모든 주문 정보를 가져오는 API 엔드포인트
+    @GetMapping("/all")
+        public ResponseEntity<List<OrderDTO>> getAllOrders() {
+            List<OrderDTO> orders = orderService.getAllOrders();
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        }
+
+
+    //프로젝트 id 가져오기
+    @GetMapping("/user/project")
+    public ResponseEntity<Long> getUserProject(@RequestParam Long memberId) {
+        System.out.println(memberId);
+        Long projectId = orderService.getUserProjectId(memberId);
+        if (projectId != null) {
+            return new ResponseEntity<>(projectId, HttpStatus.OK); // projectId만 반환
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 프로젝트가 없을 경우 404 반환
+        }
+    }
+    // ProjectStatistics 후원 프로젝트의 시작일, 마감일, 달성률, 총 후원 금액, 후원자 수, 남은 기간을 가져옴
+    @GetMapping("/statistics/{projectId}")
+    public ResponseEntity<ProjectStatisticsDTO> getProjectStatistics(@PathVariable Long projectId) {
+        System.out.println(projectId+"********");
+        ProjectStatisticsDTO statistics = orderService.getProjectStatistics(projectId);
+        return new ResponseEntity<>(statistics, HttpStatus.OK);
+    }
+
+
+
+
 }
+
+
+
+
