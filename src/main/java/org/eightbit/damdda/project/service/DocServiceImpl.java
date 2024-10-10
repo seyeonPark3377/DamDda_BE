@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.domain.ProjectDocument;
+import org.eightbit.damdda.project.dto.FileDTO;
 import org.eightbit.damdda.project.repository.ProjectDocumentRepository;
 import org.eightbit.damdda.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,7 +56,7 @@ public class DocServiceImpl implements DocService {
         return result;  // 파일이 존재하지 않으면 false 반환
     }
 
-    public void saveDocs(Project project, List<MultipartFile> docs){
+    public void saveDocs(Project project, List<FileDTO> docs){
         String uploadDirectory = basePath + "/projects/" + project.getId();
         File uploadDir = new File(uploadDirectory);
 
@@ -65,7 +66,7 @@ public class DocServiceImpl implements DocService {
 
         for (int i = 0; i < docs.size(); i++) {
             try {
-                MultipartFile file = docs.get(i);
+                MultipartFile file = docs.get(i).getFile();
                 String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
                 File destinationFile = new File(uploadDirectory + "/" + fileName);
 
@@ -77,7 +78,7 @@ public class DocServiceImpl implements DocService {
                         .project(project)
                         .url("files/projects/" + project.getId() + "/" + fileName)
                         .fileName(fileName)
-                        .ord(i)
+                        .ord(docs.get(i).getOrd())
                         .build();
 
                 projectDocumentRepository.save(projectDocument);

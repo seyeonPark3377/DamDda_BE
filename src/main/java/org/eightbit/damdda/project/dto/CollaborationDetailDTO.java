@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
 import java.util.List;
 @Builder
 @Data
@@ -28,8 +29,9 @@ public class CollaborationDetailDTO {
 
     private CollaborationDTO collaborationDTO;
 
-    private Long user_id;
+    private String user_id;
 
-    private List<Object> collabDocList;
+    @Builder.Default
+    private List<Object> collabDocList=new ArrayList<>();
 
 }

@@ -93,6 +93,9 @@ dependencies {
 
     // 지영님 추가
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+
+    // 태욱
+    implementation 'org.json:json:20210307'
 }
 
 tasks.named('test') {

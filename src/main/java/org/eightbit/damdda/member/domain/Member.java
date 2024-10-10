@@ -2,6 +2,7 @@ package org.eightbit.damdda.member.domain;
 
 import lombok.*;
 import org.eightbit.damdda.common.domain.DateEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,7 @@ public class Member extends DateEntity {
     @Column(nullable = false, unique = true, updatable = false)
     private String loginId;
 
+
     @Column(nullable = false)
     private String password;
 
@@ -35,6 +37,7 @@ public class Member extends DateEntity {
     private String phoneNumber;
 
     private String imageUrl;
+
 
     @Column(nullable = false)
     private String address;
