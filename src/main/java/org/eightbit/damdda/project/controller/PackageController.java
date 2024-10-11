@@ -21,11 +21,7 @@ public class PackageController {
     @Autowired
     PackageService packageService;
 
-    @GetMapping("/test")
-    public ResponseEntity<?> getProject() {
-        // 프로젝트 조회 로직
-        return ResponseEntity.ok("Imok");
-    }
+
     //package 등록
     @PostMapping("/register/{projectId}")
     public ResponseEntity<?> registerPackage(@Valid @RequestBody PackageDTO packageDTO, @PathVariable("projectId") Long projectId){

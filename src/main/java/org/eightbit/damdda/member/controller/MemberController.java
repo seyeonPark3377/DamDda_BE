@@ -65,21 +65,8 @@ public class MemberController {
         return ResponseEntity.ok().body(userInfo);
     }
 
-    @PostMapping("/test1")
-    public ResponseEntity<?> test1(HttpServletRequest request){
-        return ResponseEntity.ok("test1");
-    }
-
-
-
-//     @PostMapping
-
-
-
     @PostMapping("/profile")
-
     public String insertMember (@RequestBody RegisterDTO registerDTO){
-
         try {
             registerService.insertMember(registerDTO);
             return "success";
@@ -115,7 +102,6 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<?> login (@RequestBody AccountCredentials credentials){
         try {
-
             UsernamePasswordAuthenticationToken creds =         // 인증 아직 안됨
                     new UsernamePasswordAuthenticationToken(
                             credentials.getLoginId(),
@@ -123,37 +109,32 @@ public class MemberController {
                     );
 
             Authentication auth = authenticationManager.authenticate(creds);
-
             String currentUserNickname = ((User) auth.getPrincipal()).getNickname();
-
             String jwts = jwtService.getToken(((User) auth.getPrincipal()).getMember().getId(), auth.getName());
-
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwts)
                     .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
                     .body(Map.of("X-Nickname", currentUserNickname));
-
-
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
-
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request){
         return ResponseEntity.ok("logout");
     }
 
+
     @GetMapping("/profile")
-    public ResponseEntity<MemberDTO> getProfile (@RequestParam("loginId") String loginId){
+    public ResponseEntity<MemberDTO> getProfile (@AuthenticationPrincipal User user){
         try {
+            String loginId = user.getLoginId();
             return ResponseEntity.ok(memberService.getMember(loginId));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-
 
     @GetMapping("/findid")
     public ResponseEntity<String> findId(String name, String email){

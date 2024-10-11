@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,15 +42,17 @@ public interface CollaborationService {
     }
 
     default CollaborationDetailDTO collabEntityToDto(Collaboration collaboration) throws JsonProcessingException {
+        List collabDocList = collaboration.getCollabDocList()==null ? new ArrayList() : collaboration.getCollabDocList().stream().map(String.class::cast).collect(Collectors.toList());
         return CollaborationDetailDTO.builder()
                 .collaborationDTO(CollaborationDTO.builder().id(collaboration.getId()).title(collaboration.getProject().getTitle()).approval(collaboration.getApproval()).CollaborateDate(collaboration.getSavedAt()).name(collaboration.getName()).build())
                 .phoneNumber(collaboration.getPhoneNumber())
                 .email(collaboration.getEmail())
-                .collabDocList(collaboration.getCollabDocList().stream().map(String.class::cast).collect(Collectors.toList()))
+                .collabDocList(collabDocList)
                 .content(collaboration.getCollaborationText())
                 .user_id(collaboration.getUserId())
                 .build();
     }
+
 
     default CollaborationDTO collabEntityToDtoList(Collaboration collaboration){
         return CollaborationDTO.builder()
