@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.PUT, "/member/profile").permitAll()
+                .antMatchers(HttpMethod.PUT, "/member/profile", "/member/findpw").permitAll()
                 .antMatchers(HttpMethod.GET, "/member/findid", "/member/profile").permitAll()
                 .antMatchers(HttpMethod.POST, "/member", "/member/login", "/member/confirmpw").permitAll()
                 .anyRequest().authenticated().and()

@@ -6,6 +6,7 @@ import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.domain.User;
 import org.eightbit.damdda.member.dto.LoginDTO;
 import org.eightbit.damdda.member.dto.MemberDTO;
+import org.eightbit.damdda.member.dto.PasswordModifyDTO;
 import org.eightbit.damdda.member.dto.RegisterDTO;
 import org.eightbit.damdda.member.service.*;
 import org.springframework.http.HttpHeaders;
@@ -33,20 +34,14 @@ public class MemberController {
     private final AuthenticationManager authenticationManager;
     private final LoginService loginService;
 
-    @PostMapping("/test1")
-    public ResponseEntity<?> test1(HttpServletRequest request){
-        return ResponseEntity.ok("test1");
-    }
-
-
     @PostMapping
-    public String insertMember (@RequestBody RegisterDTO registerDTO){
+    public ResponseEntity<String> insertMember (@RequestBody RegisterDTO registerDTO){
 
         try {
             registerService.insertMember(registerDTO);
-            return "success";
+            return ResponseEntity.ok("success");
         } catch (IllegalArgumentException e){
-            return "error";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -100,12 +95,12 @@ public class MemberController {
     }
 
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request){
         return ResponseEntity.ok("logout");
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/profile/{id}")
     public ResponseEntity<MemberDTO> getProfile (@RequestParam("loginId") String loginId){
         try {
             return ResponseEntity.ok(memberService.getMember(loginId));
@@ -125,31 +120,52 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/confirmpw")
+    public ResponseEntity<?> confirmPassword (@RequestParam String password){
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String loginId = user.getMember().getLoginId();
+            System.out.println(loginId + " " + password);
+            MemberDTO memberDTO = memberService.confirmPw(loginId, password);
 
-//    @PutMapping("/profile")
-//    public ResponseEntity<MemberDTO> updateProfile (@RequestBody MemberDTO memberDTO){
-//        try {
-//            return ResponseEntity.ok(memberService.updateMember(memberDTO));
-//        } catch (IllegalArgumentException e) {
-//            return null;
-//        }
-//    }
+            if(memberDTO != null){
+                return ResponseEntity.ok(memberDTO);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed");
+        }
+    }
 
-//    @PostMapping("/confirmpw")
-//    public ResponseEntity<?> confirmPassword (@RequestBody String password){
-//        try {
-//            String loginId = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-//
-//            MemberDTO memberDTO = memberService.confirmPw(loginId, password);
-//
-//            if(memberDTO != null){
-//                return ResponseEntity.ok(memberDTO);
-//            } else {
-//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-//            }
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed");
-//        }
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<MemberDTO> updateProfile (@RequestBody MemberDTO memberDTO){
+        try {
+            return ResponseEntity.ok(memberService.updateMember(memberDTO));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostMapping("/findpw")
+    public ResponseEntity<String> findPassword (@RequestBody PasswordModifyDTO passwordModifyDTO){
+        try {
+            return null;
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    @PutMapping("/findpw")
+    public ResponseEntity<String> modifyPassword (@RequestBody PasswordModifyDTO passwordModifyDTO){
+        try {
+            System.out.println(passwordModifyDTO);
+            return null;
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
 }
 

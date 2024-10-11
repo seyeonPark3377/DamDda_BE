@@ -1,18 +1,21 @@
 package org.eightbit.damdda.member.domain;
 
 import lombok.*;
-import org.eightbit.damdda.common.domain.DateEntity;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "members")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
-//public class Member extends DateEntity {
+@Builder
+@EntityListeners(value={AuditingEntityListener.class})
 public class Member {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,19 +46,12 @@ public class Member {
 
     private int postCode;
 
-    @Builder
-    public Member(String loginId, String password, String nickname, String name, String email, String phoneNumber, String imageUrl, String address, String detailedAddress, int postCode) {
-        this.loginId = loginId;
-        this.password = password;
-        this.nickname = nickname;
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.imageUrl = imageUrl;
-        this.address = address;
-        this.detailedAddress = detailedAddress;
-        this.postCode = postCode;
-    }
+    @CreatedDate
+    @Column(updatable = false)
+    private Timestamp createdAt;
+
+    private Timestamp deletedAt;
+
 
 }
 

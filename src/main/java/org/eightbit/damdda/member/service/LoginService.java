@@ -13,4 +13,5 @@ public interface LoginService{
 //    void logout(HttpSession session);
     String findId(String name, String email);
 //    UserDetails loadUserByUsername(String loginId);
+
 }
