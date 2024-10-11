@@ -35,7 +35,7 @@ public class OrderController {
 //    @CrossOrigin(origins = "http://localhost:3000") // 특정 도메인에서만 허용
     @PostMapping("/create")
     public ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO, @AuthenticationPrincipal User user){
-        orderDTO.getSupportingProject().setUser(user.getMember());
+        orderDTO.getSupportingProject().getUser().setId(user.getMemberId());
         //데이터 잘 넘어오는지 확인
         System.out.println(orderDTO.toString());
         Order createdOrder = orderService.createOrder(orderDTO);

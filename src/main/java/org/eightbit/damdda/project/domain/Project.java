@@ -1,5 +1,6 @@
 package org.eightbit.damdda.project.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.eightbit.damdda.common.domain.DateEntity;
 import org.eightbit.damdda.member.domain.Member;
@@ -28,6 +29,7 @@ public class Project extends DateEntity {
     private Category category;
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "project_tag",
             joinColumns = @JoinColumn(name = "project_id"),
@@ -37,6 +39,9 @@ public class Project extends DateEntity {
 
     private String title;
     private String description;
+
+//    @Column(length = 3000)
+    @Column(columnDefinition = "TEXT")
     private String descriptionDetail;
     private Timestamp startDate;
     private Timestamp endDate;
