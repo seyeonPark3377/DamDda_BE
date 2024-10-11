@@ -124,14 +124,19 @@ public class ProjectApiController {
                              RedirectAttributes redirectAttributes) {
         Long memberId = user.getMemberId();
 
-        Long projectId = null;
-        if (submit.equals("저장")) {
-            projectId = projectService.register(memberId, projectDetailDTO, false, productImages, descriptionImages, docs);
-        } else if (submit.equals("제출")) {
-            projectId = projectService.register(memberId, projectDetailDTO, true, productImages, descriptionImages, docs);
-        } else {
-            redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
-        }
+
+//        Long projectId = null;
+
+        Long projectId = projectService.register(memberId, projectDetailDTO, submit.equals("제출"), productImages, descriptionImages, docs);
+
+
+//        if (submit.equals("저장")) {
+//            projectId = projectService.register(memberId, projectDetailDTO, false, productImages, descriptionImages, docs);
+//        } else if (submit.equals("제출")) {
+//            projectId = projectService.register(memberId, projectDetailDTO, true, productImages, descriptionImages, docs);
+//        } else {
+//            redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
+//        }
         return projectId;
 
     }
@@ -159,15 +164,20 @@ public class ProjectApiController {
         }
 
 
+        projectId = projectService.updateProject(projectDetailDTO, projectId,
+                submit.equals("제출"), productImagesMeta, descriptionImagesMeta, docsMeta,
+                productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
+
+
         // submit 값에 따른 처리
-        if (submit.equals("저장")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
-        } else if (submit.equals("제출")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
-        } else {
-            redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
-            return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
-        }
+//        if (submit.equals("저장")) {
+//            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
+//        } else if (submit.equals("제출")) {
+//            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
+//        } else {
+//            redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
+//            return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
+//        }
         // projectId 리턴
         return "projectId: " + projectId + "\n" + projectService.findById(projectId);
     }
