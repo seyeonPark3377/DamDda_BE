@@ -37,6 +37,13 @@ public class User implements UserDetails {
         return member.getLoginId();
     }
 
+    public String getLoginId() {
+        return member.getLoginId();
+    }
+    public Long getMemberId() {
+        return member.getId();
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

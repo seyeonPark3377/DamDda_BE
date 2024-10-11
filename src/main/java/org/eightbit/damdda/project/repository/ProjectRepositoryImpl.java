@@ -164,7 +164,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
     private String recommendationUrl;
 
     public Page<Project> getProjectByRecommendOrder(Long memberId, String category, String search, String progress, List<String> sortConditions, Pageable pageable) {
-        if (memberId == null) {
+        if (memberId == 0L) {
             return findProjects(memberId, category, search, progress, Arrays.asList("likeCnt"), pageable);
         }
 

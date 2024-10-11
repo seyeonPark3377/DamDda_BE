@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import lombok.extern.log4j.Log4j2;
@@ -56,6 +57,13 @@ public class MemberController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final LoginService loginService;
+
+    @GetMapping("/userinfo")
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal User user){
+        Long memberId = user.getMemberId();
+        Map userInfo = memberService.getUserInfo(memberId);
+        return ResponseEntity.ok().body(userInfo);
+    }
 
     @PostMapping("/test1")
     public ResponseEntity<?> test1(HttpServletRequest request){
