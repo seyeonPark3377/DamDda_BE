@@ -2,6 +2,7 @@ package org.eightbit.damdda.member.service;
 
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.dto.MemberDTO;
+import org.eightbit.damdda.member.dto.MemberSearchDTO;
 
 import java.util.Optional;
 
@@ -11,4 +12,5 @@ public interface MemberService {
     MemberDTO getMember(String loginId);
     MemberDTO updateMember(MemberDTO memberDTO);
     MemberDTO confirmPw(String loginId, String password);
+    Boolean deleteMember(Long id);
 }

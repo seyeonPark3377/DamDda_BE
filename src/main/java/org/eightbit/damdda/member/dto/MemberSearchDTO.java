@@ -8,17 +8,15 @@ import org.eightbit.damdda.member.domain.Member;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class PasswordModifyDTO {
+public class MemberSearchDTO {
 
     private String loginId;
-    private String password;
     private String name;
     private String email;
 
     public Member toEntity(){
         return Member.builder()
                 .loginId(loginId)
-                .password(password)
                 .name(name)
                 .email(email)
                 .build();

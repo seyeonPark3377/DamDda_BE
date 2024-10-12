@@ -5,7 +5,6 @@ import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.repository.MemberRepository;
-import org.eightbit.damdda.member.repository.RegisterRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final RegisterRepository registerRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
@@ -53,6 +51,12 @@ public class MemberServiceImpl implements MemberService {
         return null;
     }
 
+    @Override
+    public Boolean deleteMember(Long id) {
+//        memberRepository.
+        return null;
+    }
+
     @Transactional
     @Override
     public MemberDTO updateMember(MemberDTO memberDTO) {
@@ -67,6 +71,5 @@ public class MemberServiceImpl implements MemberService {
         this.memberRepository.save(memberDTO.toEntity());
         return memberDTO;
     }
-
 
 }

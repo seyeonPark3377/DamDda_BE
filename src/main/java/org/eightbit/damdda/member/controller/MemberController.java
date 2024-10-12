@@ -2,11 +2,10 @@ package org.eightbit.damdda.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.member.domain.AccountCredentials;
-import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.domain.User;
-import org.eightbit.damdda.member.dto.LoginDTO;
 import org.eightbit.damdda.member.dto.MemberDTO;
-import org.eightbit.damdda.member.dto.PasswordModifyDTO;
+import org.eightbit.damdda.member.dto.MemberSearchDTO;
+import org.eightbit.damdda.member.dto.PasswordDTO;
 import org.eightbit.damdda.member.dto.RegisterDTO;
 import org.eightbit.damdda.member.service.*;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -149,21 +147,46 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/findpw")
-    public ResponseEntity<String> findPassword (@RequestBody PasswordModifyDTO passwordModifyDTO){
+    @GetMapping("/check")
+    public ResponseEntity<Map<String, Long>> checkMemberDetails(MemberSearchDTO memberSearchDTO){
         try {
-            return null;
+            return ResponseEntity.ok(Map.of("id", loginService.checkMemberDetails(memberSearchDTO)));
         } catch (IllegalArgumentException e) {
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
-    @PutMapping("/findpw")
-    public ResponseEntity<String> modifyPassword (@RequestBody PasswordModifyDTO passwordModifyDTO){
+    @PutMapping("/{id}/password")
+    public ResponseEntity<Map<String, Boolean>> modifyPassword(
+            @PathVariable Long id,
+            @RequestBody PasswordDTO passwordDTO
+    ){
         try {
-            System.out.println(passwordModifyDTO);
+            boolean result = loginService.modifyPassword(id, passwordDTO.getPassword());
+            return ResponseEntity.ok(Map.of("isSuccess", result));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Boolean>> deleteMember(@PathVariable Long id){
+        try {
+
             return null;
         } catch (IllegalArgumentException e) {
+            return null;
+        } catch (NoSuchElementException e) {
+            return null;
+        } catch (Exception e) {
             return null;
         }
     }
