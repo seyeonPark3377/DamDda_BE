@@ -35,11 +35,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO getMember(String loginId) {
         Optional<Member> member = memberRepository.findByLoginId(loginId);
-        if (member.isPresent()) {
-            return MemberDTO.of(member.get());
-        }else {
-            return null;
-        }
+        return member.map(MemberDTO::of).orElse(null);
     }
 
     @Override
@@ -48,7 +44,6 @@ public class MemberServiceImpl implements MemberService {
         if(optionalMember.isPresent()) {
             Member member = optionalMember.get();
             String encodedPassword = member.getPassword();
-            System.out.println("passwordEncoder : " + passwordEncoder);
             if(passwordEncoder.matches(password, encodedPassword)) {
                 MemberDTO memberDTO = MemberDTO.of(member);
                 memberDTO.setPassword(null);
@@ -57,14 +52,11 @@ public class MemberServiceImpl implements MemberService {
         }
         return null;
     }
+
     @Transactional
     @Override
     public MemberDTO updateMember(MemberDTO memberDTO) {
-        Optional<Member> optionalMember = memberRepository.findByLoginId(memberDTO.getLoginId());
-        Member member = optionalMember.get();
-
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        memberDTO.setPassword(encoder.encode(memberDTO.getPassword()));
+        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
         memberDTO.setNickname(memberDTO.getNickname());
         memberDTO.setEmail(memberDTO.getEmail());
         memberDTO.setPhoneNumber(memberDTO.getPhoneNumber());
@@ -72,13 +64,7 @@ public class MemberServiceImpl implements MemberService {
         memberDTO.setDetailedAddress(memberDTO.getDetailedAddress());
         memberDTO.setPostCode(memberDTO.getPostCode());
 
-        System.out.println(member);
-        System.out.println(memberDTO.toEntity());
-
         this.memberRepository.save(memberDTO.toEntity());
-
-//        String userId = SecurityContextHolder.getPrincipal().getLoginId();
-
         return memberDTO;
     }
 
