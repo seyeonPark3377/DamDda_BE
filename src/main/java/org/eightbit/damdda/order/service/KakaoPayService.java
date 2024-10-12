@@ -29,7 +29,7 @@ public class KakaoPayService {
     private KakaoReadyResponse kakaoReady;
 
     // 결제 준비
-    public KakaoReadyResponse kakaoPayReady(Long orderId) {
+    public KakaoReadyResponse kakaoPayReady(Long orderId,String authorizationHeader) {
 
         // 카카오페이 요청 양식
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -46,7 +46,7 @@ public class KakaoPayService {
         parameters.add("fail_url", String.format("http://localhost:9000/payment/kakao/fail?orderId=%d", orderId));
 
         // 파라미터, 헤더
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters,this.getHeaders(authorizationHeader));
 
         // 외부에 보낼 url
         RestTemplate restTemplate = new RestTemplate();
@@ -60,7 +60,7 @@ public class KakaoPayService {
     }
 
     // 결제 승인
-    public KakaoApproveResponse approveResponse(String pgToken, Long orderId) {
+    public KakaoApproveResponse approveResponse(String pgToken, Long orderId,String authorizationHeader) {
         System.out.println("pg_token: " + pgToken);
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -70,7 +70,7 @@ public class KakaoPayService {
         parameters.add("partner_user_id", 0);
         parameters.add("pg_token", pgToken);
 
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders(authorizationHeader));
 
         RestTemplate restTemplate = new RestTemplate();
         KakaoApproveResponse approveResponse = restTemplate.postForObject(
@@ -84,39 +84,39 @@ public class KakaoPayService {
 
     /* * 결제 환불
      */
-    public KakaoCancelResponse kakaoCancel() {
-
-        // 카카오페이 요청
-        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-        parameters.add("cid", cid);
-        parameters.add("tid", kakaoReady.getTid());
-        parameters.add("cancel_amount", 10);
-        parameters.add("cancel_tax_free_amount", 0);
-        parameters.add("cancel_vat_amount", 0);
-
-        // 파라미터, 헤더
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
-
-        // 외부에 보낼 url
-        RestTemplate restTemplate = new RestTemplate();
-
-        KakaoCancelResponse cancelResponse = restTemplate.postForObject(
-                "https://kapi.kakao.com/v1/payment/cancel",
-                requestEntity,
-                KakaoCancelResponse.class);
-
-        return cancelResponse;
-    }
+//    public KakaoCancelResponse kakaoCancel() {
+//
+//        // 카카오페이 요청
+//        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
+//        parameters.add("cid", cid);
+//        parameters.add("tid", kakaoReady.getTid());
+//        parameters.add("cancel_amount", 10);
+//        parameters.add("cancel_tax_free_amount", 0);
+//        parameters.add("cancel_vat_amount", 0);
+//
+//        // 파라미터, 헤더
+//        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
+//
+//        // 외부에 보낼 url
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        KakaoCancelResponse cancelResponse = restTemplate.postForObject(
+//                "https://kapi.kakao.com/v1/payment/cancel",
+//                requestEntity,
+//                KakaoCancelResponse.class);
+//
+//        return cancelResponse;
+//    }
 
     /**
      * 카카오 요구 헤더값
      */
-    private HttpHeaders getHeaders() {
+    private HttpHeaders getHeaders(String damddaAuth) {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         String auth = "KakaoAK " + KAKAO_ADMIN_KEY;
-
         httpHeaders.set("Authorization", auth);
+        httpHeaders.set("x-damdda-authorization", damddaAuth);
         httpHeaders.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         return httpHeaders;

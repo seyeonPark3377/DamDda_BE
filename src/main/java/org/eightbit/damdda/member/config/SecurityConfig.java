@@ -5,6 +5,7 @@ import org.eightbit.damdda.member.except.AuthEntryPoint;
 import org.eightbit.damdda.member.filter.JwtAuthenticationFilter;
 import org.eightbit.damdda.member.filter.LoginFilter;
 import org.eightbit.damdda.member.service.JwtService;
+import org.eightbit.damdda.order.KakaoPayIpFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -46,11 +48,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         LoginFilter loginFilter = new LoginFilter(authenticationManagerBean(), jwtService); // 로그인 필터
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtService, userDetailsService); // JWT 인증 필터
+        KakaoPayIpFilter kakaoPayIpFilter = new KakaoPayIpFilter();
 
         http.csrf().disable()
                 .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+                .antMatchers("/payment/toss/success/**","/payment/kakao/success/**", "/payment/kakao/cancel/", "/payment/kakao/fail/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/member/{id}/password").permitAll()
                 .antMatchers(HttpMethod.GET, "/member/findid", "/member/profile", "/member/check", "/member/check/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/member", "/member/login", "/member/confirmpw").permitAll()
@@ -60,20 +64,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .logoutSuccessUrl("/members/login?logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID").and()
+                .addFilterBefore(kakaoPayIpFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class)  // 로그인 필터 추가
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // JWT 필터 추가
                 .exceptionHandling().authenticationEntryPoint(authEntryPoint);
     }
+
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("http://localhost:3000"); // 프론트엔드 주소
-        config.setAllowedOrigins(List.of("*"));
+//        config.setAllowedOrigins(List.of("*"));
         config.setAllowedMethods(List.of("*"));
+        config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
         config.applyPermitDefaultValues();
+        config.addExposedHeader("x-damdda-authorization");
 
         source.registerCorsConfiguration("/**", config);
         return source;

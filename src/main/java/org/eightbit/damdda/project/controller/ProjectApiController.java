@@ -3,12 +3,15 @@ package org.eightbit.damdda.project.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.eightbit.damdda.member.domain.Member;
+import org.eightbit.damdda.member.domain.User;
 import org.eightbit.damdda.project.dto.*;
 import org.eightbit.damdda.project.service.LikedProjectService;
 import org.eightbit.damdda.project.service.ProjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,12 +37,16 @@ public class ProjectApiController {
     public PageResponseDTO<ProjectBoxDTO> getProjects(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) Long memberId,
+            @AuthenticationPrincipal User user,
             @RequestParam(defaultValue = "전체") String category,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String progress,
             @RequestParam(required = false) String[] sort,
             PageRequestDTO pageRequestDTO) {
+
+
+        Long memberId = user == null ? 0L : user.getMemberId();
+
         List<String> sortConditions = sort != null ? Arrays.asList(sort) : List.of();
         PageResponseDTO<ProjectBoxDTO> sortedProjects = projectService.getProjects(pageRequestDTO, memberId, page, size, category, search, progress, sortConditions);
         return sortedProjects;
@@ -52,54 +59,62 @@ public class ProjectApiController {
     }
 
     @GetMapping("/write")
-    public List<WritingProjectDTO> getWritingProjects(Long memberId) {
+    public List<WritingProjectDTO> getWritingProjects(@AuthenticationPrincipal User user) {
+        Long memberId = user.getMemberId();
+
         return projectService.getWritingProjectDTO(memberId);
     }
 
     @GetMapping("/like")
-    public PageResponseDTO<ProjectBoxDTO> getLikedProjectList(@RequestParam("memberId") Long memberId,
+    public PageResponseDTO<ProjectBoxDTO> getLikedProjectList(@AuthenticationPrincipal User user,
                                                               PageRequestDTO pageRequestDTO) {
+        Long memberId = user.getMemberId();
         PageResponseDTO<ProjectBoxDTO> projectBoxDTO = projectService.getListProjectBoxLikeDTO(memberId, pageRequestDTO);
         return projectBoxDTO;
     }
 
     @GetMapping(value = "/myproject")
-    public PageResponseDTO<ProjectBoxHostDTO> getMyProjectList(@RequestParam("memberId") Long memberId,
+    public PageResponseDTO<ProjectBoxHostDTO> getMyProjectList(@AuthenticationPrincipal User user,
                                                                PageRequestDTO pageRequestDTO) {
+        Long memberId = user.getMemberId();
         PageResponseDTO<ProjectBoxHostDTO> projectBoxHostDTO = projectService.getListProjectBoxHostDTO(memberId, pageRequestDTO);
         return projectBoxHostDTO;
     }
 
 
     @GetMapping("/{projectId}")
-    public ProjectResponseDetailDTO readProjectDetail(@RequestParam("memberId") Long memberId,
+    public ProjectResponseDetailDTO readProjectDetail(@AuthenticationPrincipal User user,
                                                       @PathVariable Long projectId) {
+        Long memberId = user.getMemberId();
         ProjectResponseDetailDTO projectResponseDetailDTO = projectService.readProjectDetail(projectId, memberId);
         return projectResponseDetailDTO;
     }
 
     @GetMapping("/myproject/{projectId}")
-    public ProjectDetailHostDTO readProjectDetailHost(@RequestParam("memberId") Long memberId,
+    public ProjectDetailHostDTO readProjectDetailHost(@AuthenticationPrincipal User user,
                                                       @PathVariable Long projectId) {
+        Long memberId = user.getMemberId();
         return projectService.readProjectDetailHost(projectId, memberId);
     }
 
     @PostMapping("/like")
-    public Long registerLikedProject(@RequestParam Long memberId,
+    public Long registerLikedProject(@AuthenticationPrincipal User user,
                                      @RequestParam Long projectId) {
+        Long memberId = user.getMemberId();
         return likedProjectService.insertLikedProject(projectId, memberId);
     }
 
     @DeleteMapping("/like")
-    public void deleteLikedProject(@RequestParam Long memberId,
+    public void deleteLikedProject(@AuthenticationPrincipal User user,
                                    @RequestParam Long projectId) {
+        Long memberId = user.getMemberId();
         likedProjectService.deleteLikedProject(projectId, memberId);
     }
 
 
     //@PostMapping("/register")
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Long registerPost(@RequestParam("memberId") Long memberId,
+    public Long registerPost(@AuthenticationPrincipal User user,
                              @RequestPart("projectDetailDTO") ProjectDetailDTO projectDetailDTO,
                              @RequestParam(value = "submit", required = false) String submit,
                              @RequestPart(value = "productImages", required = false) List<MultipartFile> productImages,
@@ -107,14 +122,21 @@ public class ProjectApiController {
                              @RequestPart(value = "docs", required = false) List<MultipartFile> docs,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes) {
-        Long projectId = null;
-        if (submit.equals("저장")) {
-            projectId = projectService.register(memberId, projectDetailDTO, false, productImages, descriptionImages, docs);
-        } else if (submit.equals("제출")) {
-            projectId = projectService.register(memberId, projectDetailDTO, true, productImages, descriptionImages, docs);
-        } else {
-            redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
-        }
+        Long memberId = user.getMemberId();
+
+
+//        Long projectId = null;
+
+        Long projectId = projectService.register(memberId, projectDetailDTO, submit.equals("제출"), productImages, descriptionImages, docs);
+
+
+//        if (submit.equals("저장")) {
+//            projectId = projectService.register(memberId, projectDetailDTO, false, productImages, descriptionImages, docs);
+//        } else if (submit.equals("제출")) {
+//            projectId = projectService.register(memberId, projectDetailDTO, true, productImages, descriptionImages, docs);
+//        } else {
+//            redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
+//        }
         return projectId;
 
     }
@@ -142,15 +164,20 @@ public class ProjectApiController {
         }
 
 
+        projectId = projectService.updateProject(projectDetailDTO, projectId,
+                submit.equals("제출"), productImagesMeta, descriptionImagesMeta, docsMeta,
+                productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
+
+
         // submit 값에 따른 처리
-        if (submit.equals("저장")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
-        } else if (submit.equals("제출")) {
-            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
-        } else {
-            redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
-            return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
-        }
+//        if (submit.equals("저장")) {
+//            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
+//        } else if (submit.equals("제출")) {
+//            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
+//        } else {
+//            redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
+//            return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
+//        }
         // projectId 리턴
         return "projectId: " + projectId + "\n" + projectService.findById(projectId);
     }

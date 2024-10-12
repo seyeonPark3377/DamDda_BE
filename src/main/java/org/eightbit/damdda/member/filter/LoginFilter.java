@@ -46,7 +46,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         User user = (User) authResult.getPrincipal(); // UserDetails로 캐스팅
         String token = jwtService.getToken(user.getMember().getId(), user.getUsername());
 
-        response.setHeader("Authorization", "Bearer " + token);
+        response.setHeader("x-damdda-authorization", "Bearer " + token);
     }
 
     @Override

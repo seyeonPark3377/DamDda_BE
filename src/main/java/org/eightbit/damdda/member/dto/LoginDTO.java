@@ -17,20 +17,4 @@ public class LoginDTO {
     private String name;
     private String email;
 
-    public Member toEntity() {
-        return Member.builder()
-                .loginId(loginId)
-                .password(password)
-                .name(name)
-                .email(email)
-                .build();
-    }
-
-    @Builder
-    public LoginDTO(String loginId, String password, String name, String email) {
-        this.loginId = loginId;
-        this.password = password;
-        this.name = name;
-        this.email = email;
-    }
 }

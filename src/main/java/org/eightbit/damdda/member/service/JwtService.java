@@ -28,7 +28,7 @@ public class JwtService {
     }
 
     public String getAuthUser(HttpServletRequest request) {
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = request.getHeader("x-damdda-authorization");
 
         if (token != null && token.startsWith(PREFIX)) {
             System.out.println(token);

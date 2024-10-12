@@ -475,6 +475,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setTags(tags);  // 프로젝트에 태그 추가
 
 
+        if (submit) adminApprovalService.submitProject(project);
 //
 //        if ((productImages != null && !productImages.isEmpty()) && (descriptionImages != null && !descriptionImages.isEmpty())) {
 //            imgService.saveImages(project, productImages, descriptionImages);

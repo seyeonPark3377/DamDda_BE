@@ -1,6 +1,7 @@
 package org.eightbit.damdda.order.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.eightbit.damdda.member.domain.User;
 import org.eightbit.damdda.order.domain.Order;
 import org.eightbit.damdda.order.domain.SupportingProject;
 import org.eightbit.damdda.order.dto.OrderDTO;
@@ -9,6 +10,7 @@ import org.eightbit.damdda.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +34,8 @@ public class OrderController {
     //주문 생성
 //    @CrossOrigin(origins = "http://localhost:3000") // 특정 도메인에서만 허용
     @PostMapping("/create")
-    public ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO){
+    public ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO, @AuthenticationPrincipal User user){
+        orderDTO.getSupportingProject().getUser().setId(user.getMemberId());
         //데이터 잘 넘어오는지 확인
         System.out.println(orderDTO.toString());
         Order createdOrder = orderService.createOrder(orderDTO);
@@ -53,7 +56,8 @@ public class OrderController {
     }
     //SupportedProjects - 주문 정보들 모두 가져오기
     @GetMapping("/supportingprojects")
-    public List<OrderDTO> getOrdersByUserId(@RequestParam Long userId) {
+    public List<OrderDTO> getOrdersByUserId(@AuthenticationPrincipal User user) {
+        Long userId = user.getMemberId();
         System.out.println(userId);
         return orderService.getOrdersWithPaymentByUserId(userId);
     }
@@ -127,7 +131,8 @@ public class OrderController {
 
     //프로젝트 id 가져오기
     @GetMapping("/user/project")
-    public ResponseEntity<Long> getUserProject(@RequestParam Long memberId) {
+    public ResponseEntity<Long> getUserProject(@AuthenticationPrincipal User user) {
+        Long memberId = user.getMemberId();
         System.out.println(memberId);
         Long projectId = orderService.getUserProjectId(memberId);
         if (projectId != null) {
