@@ -1,4 +1,4 @@
-package org.eightbit.damdda.config;
+package org.eightbit.damdda.common.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

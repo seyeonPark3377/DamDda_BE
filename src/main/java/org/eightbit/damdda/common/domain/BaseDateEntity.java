@@ -10,6 +10,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.sql.Timestamp;
 
+// TODO: 삭제 필요.
 @Getter
 @MappedSuperclass
 @EntityListeners(value={AuditingEntityListener.class})
