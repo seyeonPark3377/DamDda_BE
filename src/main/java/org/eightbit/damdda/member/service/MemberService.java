@@ -17,4 +17,6 @@ public interface MemberService {
     MemberDTO getMember(String loginId);
     MemberDTO updateMember(MemberDTO memberDTO);
     MemberDTO confirmPw(String loginId, String password);
+    // 탈퇴 기능 추가
+    void deleteMember(Long memberId);
 }

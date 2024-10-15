@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -105,6 +106,27 @@ public class MemberServiceImpl implements MemberService {
             }
         }
         return null;
+    }
+
+    // 탈퇴 기능 추가
+    @Override
+    public void deleteMember(Long id) {
+        MemberDTO memberDTO = new MemberDTO();
+
+        memberDTO.setId(id);
+        memberDTO.setLoginId(null);
+        memberDTO.setPassword(null);
+        memberDTO.setName(null);
+        memberDTO.setNickname("(unknown)");
+        memberDTO.setEmail(null);
+        memberDTO.setPhoneNumber(null);
+        memberDTO.setAddress(null);
+        memberDTO.setDetailedAddress(null);
+        memberDTO.setPostCode(null);
+        memberDTO.setImageUrl(null);
+        memberDTO.setDeletedAt(new Timestamp(System.currentTimeMillis()));
+
+        this.memberRepository.save(memberDTO.toEntity());
     }
 
     @Transactional
