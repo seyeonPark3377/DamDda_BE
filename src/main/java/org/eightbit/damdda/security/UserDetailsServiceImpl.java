@@ -1,9 +1,8 @@
-package org.eightbit.damdda.member.service;
+package org.eightbit.damdda.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.member.domain.Member;
-import org.eightbit.damdda.member.domain.User;
 import org.eightbit.damdda.member.repository.LoginRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

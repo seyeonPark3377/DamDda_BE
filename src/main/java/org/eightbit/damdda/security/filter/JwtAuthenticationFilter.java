@@ -1,7 +1,7 @@
-package org.eightbit.damdda.member.filter;
+package org.eightbit.damdda.security.filter;
 
-import org.eightbit.damdda.member.domain.User;
-import org.eightbit.damdda.member.service.JwtService;
+import org.eightbit.damdda.security.User;
+import org.eightbit.damdda.security.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;

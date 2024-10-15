@@ -1,16 +1,12 @@
 package org.eightbit.damdda.member.controller;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 
-import org.eightbit.damdda.member.domain.AccountCredentials;
-import org.eightbit.damdda.member.domain.Member;
-import org.eightbit.damdda.member.domain.User;
-import org.eightbit.damdda.member.dto.LoginDTO;
+import org.eightbit.damdda.security.AccountCredentials;
+import org.eightbit.damdda.security.JwtService;
+import org.eightbit.damdda.security.User;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.dto.RegisterDTO;
-import org.eightbit.damdda.member.service.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,20 +14,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.member.dto.LoginDTO;
-import org.eightbit.damdda.member.dto.MemberDTO;
-import org.eightbit.damdda.member.dto.RegisterDTO;
 import org.eightbit.damdda.member.service.LoginService;
 import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.member.service.RegisterService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +30,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import java.io.IOException;
-import java.util.UUID;
 
 
 @Log4j2

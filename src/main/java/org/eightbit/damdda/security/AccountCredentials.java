@@ -1,5 +1,4 @@
-package org.eightbit.damdda.member.domain;
-
+package org.eightbit.damdda.security;
 
 import lombok.Data;
 
