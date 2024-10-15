@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.admin.domain.AdminApproval;
 import org.eightbit.damdda.admin.service.AdminApprovalService;
-import org.eightbit.damdda.common.domain.BaseDateEntity;
-import org.eightbit.damdda.common.domain.BaseDateEntity;
+import org.eightbit.damdda.common.domain.DateEntity;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.order.service.SupportingProjectService;
@@ -45,6 +44,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final LikedProjectRepository likedProjectRepository;
     private final ProjectImageRepository projectImageRepository;
     private final ProjectDocumentRepository projectDocumentRepository;
+    private final SupportingProjectService supportingProjectService;
 
     @Override
     public ProjectRegisterDetailDTO getProjectDetail(Long projectId){
@@ -315,7 +315,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .description(project.getDescription())
                 .fundsReceive(project.getFundsReceive())
                 .targetFunding(project.getTargetFunding())
-                .category(project.getCategory().getName())
+                .category(project.getCategory() == null ? null : project.getCategory().getName())
                 .nickName(project.getMember().getNickname())
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
@@ -380,8 +380,8 @@ public class ProjectServiceImpl implements ProjectService {
                     .descriptionDetail(project.getDescriptionDetail())
                     .fundsReceive(project.getFundsReceive())
                     .targetFunding(project.getTargetFunding())
-                    .category(project.getCategory().getName())
-                    .nickName(project.getMember().getNickname())
+                    .category(project.getCategory() == null ? null : project.getCategory().getName())
+                    .nickName(project.getMember() == null ? null : project.getMember().getNickname())
                     .startDate(project.getStartDate())
                     .endDate(project.getEndDate())
                     .supporterCnt(project.getSupporterCnt())
@@ -415,7 +415,7 @@ public class ProjectServiceImpl implements ProjectService {
 
             try {
                 // DateEntity 클래스에서 deletedAt 필드를 가져옴
-                Field deletedAtField = BaseDateEntity.class.getDeclaredField("deletedAt");
+                Field deletedAtField = DateEntity.class.getDeclaredField("deletedAt");
                 deletedAtField.setAccessible(true);  // private 필드에 접근 가능하도록 설정
 
                 // 현재 시간으로 deletedAt 필드 설정
@@ -476,7 +476,6 @@ public class ProjectServiceImpl implements ProjectService {
         project.setTags(tags);  // 프로젝트에 태그 추가
 
 
-        if (submit) adminApprovalService.submitProject(project);
 //
 //        if ((productImages != null && !productImages.isEmpty()) && (descriptionImages != null && !descriptionImages.isEmpty())) {
 //            imgService.saveImages(project, productImages, descriptionImages);
@@ -629,6 +628,10 @@ public class ProjectServiceImpl implements ProjectService {
         project.setSubmitAt(submit ? Timestamp.valueOf(LocalDateTime.now()) : null);  // 제출 시간 설정
 
 
+        if (submit) adminApprovalService.submitProject(project);
+
+
+
         return project.getId();
     }
 
@@ -640,5 +643,8 @@ public class ProjectServiceImpl implements ProjectService {
         return result.orElseThrow();
     }
 
-
+    @Override
+    public List<?> getDailySupportingByProjectId(Long projectId) {
+       return supportingProjectService.getDailySupportingByProjectId(projectId);
+    }
 }

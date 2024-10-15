@@ -1,6 +1,9 @@
 package org.eightbit.damdda.project.domain;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
+import org.eightbit.damdda.common.domain.BaseEntity;
 
 import javax.persistence.*;
 
@@ -10,7 +13,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PackageRewards {
+public class PackageRewards extends BaseEntity {
     /************************중요**************************/
     /*Package만의 id를 만드는 방법도 고려*/
     @Id

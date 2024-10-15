@@ -1,8 +1,11 @@
 package org.eightbit.damdda.project.domain;
 
 import lombok.*;
+import org.eightbit.damdda.common.domain.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "project_image_type")
@@ -11,11 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ProjectImageType {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class ProjectImageType extends BaseEntity {
 
     private String imageType;
 }

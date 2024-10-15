@@ -31,7 +31,7 @@ public class TossPayService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public TossResponse confirmPayment(String paymentKey, String orderId, String amount) {
+    public TossResponse confirmPayment(String paymentKey, String orderId, String amount,String authorizationHeader) {
         // Toss Payments 결제 승인 API 호출
         String tossApiUrl = "https://api.tosspayments.com/v1/payments/confirm";
 
@@ -39,7 +39,10 @@ public class TossPayService {
         HttpHeaders headers = new HttpHeaders();
 
         headers.setBasicAuth(TOSS_SECRET_KEY, "");
+        headers.set("x-damdda-authorization", authorizationHeader); // Custom 헤더 설정
         headers.add("Content-Type", "application/json");
+        System.out.println("tosspay service- authorizationHeader"+authorizationHeader);
+
 
         // 요청 DTO 생성
         TossRequest requestDTO = new TossRequest();

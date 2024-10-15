@@ -1,8 +1,12 @@
 package org.eightbit.damdda.project.domain;
 
 import lombok.*;
+import org.eightbit.damdda.common.domain.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "project_documents")
@@ -12,11 +16,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ProjectDocument {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class ProjectDocument extends BaseEntity {
 
     @ManyToOne
     private Project project;
