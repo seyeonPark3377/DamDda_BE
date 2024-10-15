@@ -27,20 +27,26 @@ public class LoggingAspect {
     public Object logAndHandleException(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis(); // 메서드 시작 시간 측정.
         try {
+            // 패키지 이름에서 'damdda.' 이후의 부분 추출
+            String packageName = joinPoint.getTarget().getClass().getPackageName();
+            String extractedPackageName = packageName.substring(packageName.indexOf("damdda.") + 7);
+
             // 메서드 호출 전 로그 기록.
-            log.info("Method {} called with arguments: {}", joinPoint.getSignature(), joinPoint.getArgs());
+            log.info("[{}] Method {} called with arguments: {}", extractedPackageName, joinPoint.getSignature(), joinPoint.getArgs());
 
             // 실제 메서드 실행.
             Object result = joinPoint.proceed();
 
             // 메서드 종료 후 실행 시간 계산 및 로그 기록.
             long endTime = System.currentTimeMillis();
-            log.info("Method {} executed successfully in {} ms", joinPoint.getSignature(), (endTime - startTime));
+            log.info("[{}] Method {} executed successfully in {} ms", extractedPackageName, joinPoint.getSignature(), (endTime - startTime));
 
             return result; // 실행 결과 반환.
         } catch (Exception e) {
             // 예외가 발생한 경우 예외 로그 기록.
-            log.error("Exception in method {}: {}", joinPoint.getSignature(), e.getMessage(), e);
+            String packageName = joinPoint.getTarget().getClass().getPackageName();
+            String extractedPackageName = packageName.substring(packageName.indexOf("damdda.") + 7);
+            log.error("[{}] Exception in method {}: {}", extractedPackageName, joinPoint.getSignature(), e.getMessage(), e);
             throw e; // 예외를 다시 던져 상위에서 처리 가능하도록 함.
         }
     }

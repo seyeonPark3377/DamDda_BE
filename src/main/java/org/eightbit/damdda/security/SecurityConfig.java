@@ -49,11 +49,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/member/check/id", "/member/check/nickname", "/member/findid","/packages/project/{projectId}", "/files/projects/**", "/api/projects/projects","/api/projects/{projectId}").permitAll()
-                .antMatchers(HttpMethod.POST, "/member/profile", "/member/login").permitAll()
+                .antMatchers(HttpMethod.PUT, "/member/{id}/password").permitAll()
+                .antMatchers(HttpMethod.GET,
+                        "/member/findid",
+                        "/member/profile",
+                        "/member/check",
+                        "/member/check/**",
+                        "/packages/project/{projectId}",
+                        "/files/projects/**",
+                        "/api/projects/projects",
+                        "/api/projects/{projectId}"
+                ).permitAll()
+
+                .antMatchers(HttpMethod.POST, "/member", "/member/login", "/member/confirmpw").permitAll()
                 .anyRequest().authenticated().and()
                 .logout()
-                .logoutUrl("/member/logout")
+//                .logoutUrl("/member/logout")
 //                .logoutSuccessUrl("/members/login?logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID").and()
@@ -61,7 +72,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // JWT 필터 추가
                 .exceptionHandling().authenticationEntryPoint(authEntryPoint);
     }
-
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

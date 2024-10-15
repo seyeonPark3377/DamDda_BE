@@ -15,6 +15,6 @@ public interface MemberService {
     Optional<Member> findById(Long memberId);
     Member getById(Long memberId);
     MemberDTO getMember(String loginId);
-//    MemberDTO updateMember(MemberDTO memberDTO);
-//    MemberDTO confirmPw(String loginId, String password);
+    MemberDTO updateMember(MemberDTO memberDTO);
+    MemberDTO confirmPw(String loginId, String password);
 }

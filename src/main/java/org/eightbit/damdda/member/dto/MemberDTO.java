@@ -21,8 +21,8 @@ public class MemberDTO {
     private String address;
     private String detailedAddress;
     private int postCode;
-    private MultipartFile imageUrl;
-
+    //    private MultipartFile imageUrl;
+    private String imageUrl;
 
     public static MemberDTO of(Member member) {
         return MemberDTO.builder()
@@ -36,7 +36,7 @@ public class MemberDTO {
                 .address(member.getAddress())
                 .detailedAddress(member.getDetailedAddress())
                 .postCode(member.getPostCode())
-//                .imageUrl(member.getImageUrl())
+                .imageUrl(member.getImageUrl())
                 .build();
     }
 

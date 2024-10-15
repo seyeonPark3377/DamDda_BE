@@ -1,16 +1,10 @@
 package org.eightbit.damdda.member.service;
 
-import org.eightbit.damdda.member.dto.LoginDTO;
-import org.eightbit.damdda.member.dto.MemberDTO;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-
-import javax.servlet.http.HttpSession;
+import org.eightbit.damdda.member.dto.MemberSearchDTO;
 
 public interface LoginService{
-    //    MemberDTO login(LoginDTO loginDTO, HttpSession session);
-//    UserDetails loadUserByLoginIdAndPassword(String loginId, String password);
-//    void logout(HttpSession session);
     String findId(String name, String email);
-//    UserDetails loadUserByUsername(String loginId);
+    Boolean modifyPassword(Long id, String password);
+    Long checkMemberDetails(MemberSearchDTO memberSearchDTO);
+
 }
