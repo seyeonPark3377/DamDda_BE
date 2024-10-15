@@ -38,7 +38,7 @@ import java.io.IOException;
 @Log4j2
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/dammdda/member") // member로 변경하는게 적절
+@RequestMapping("/damdda/member") // member로 변경하는게 적절
 public class MemberController {
 
     private final RegisterService registerService;

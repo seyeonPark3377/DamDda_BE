@@ -25,8 +25,8 @@ public class PackageController {
     //package 등록
     @PostMapping("/{projectId}")
     public ResponseEntity<?> registerPackage(@Valid @RequestBody PackageDTO packageDTO, @PathVariable("projectId") Long projectId){
-        packageService.registerPackage(packageDTO,projectId);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Long id = packageService.registerPackage(packageDTO,projectId);
+        return new ResponseEntity<>(id,HttpStatus.CREATED);
     }
 
     //특정 프로젝트의 PACKAGE 조회
@@ -53,8 +53,8 @@ public class PackageController {
     // Reward 등록
     @PostMapping("/rewards/{projectId}")
     public ResponseEntity<?> registerReward(@Valid @RequestBody RewardDTO rewardDTO,@PathVariable("projectId") Long projectId) throws JsonProcessingException {
-        packageService.registerReward(rewardDTO, projectId);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Reward registered successfully");
+        Long id = packageService.registerReward(rewardDTO, projectId);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
     @GetMapping("/rewards/package/{packageId}")
     public ResponseEntity<?> viewRewardByPackage(@PathVariable("packageId") Long packageId) {
