@@ -1,4 +1,4 @@
-//package org.eightbit.damdda.noticeandqna.service;
-//
-//public class QnaReplyServiceImpl {
-//}
+package org.eightbit.damdda.noticeandqna.service;
+
+public class QnaReplyServiceImpl {
+}
