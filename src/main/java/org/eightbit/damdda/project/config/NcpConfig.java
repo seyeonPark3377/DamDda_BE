@@ -12,10 +12,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class NcpConfig {
-    @Value("${cloud.aws.credentials.access-key}")
+    @Value("${CLOUD_AWS_ACCESS_KEY_MINHEE}")
     private String accessKey;
 
-    @Value("${cloud.aws.credentials.secret-key}")
+    @Value("${CLOUD_AWS_SECRET_KEY_MINHEE}")
     private String secretKey;
 
     @Value("${cloud.aws.region.static}")

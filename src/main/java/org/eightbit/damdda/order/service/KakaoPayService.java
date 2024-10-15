@@ -2,7 +2,6 @@ package org.eightbit.damdda.order.service;
 
 import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.order.dto.KakaoApproveResponse;
-import org.eightbit.damdda.order.dto.KakaoCancelResponse;
 import org.eightbit.damdda.order.dto.KakaoReadyResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -13,8 +12,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import javax.transaction.Transactional;
-
-@PropertySource("classpath:api.properties")
 
 @Service
 @RequiredArgsConstructor
