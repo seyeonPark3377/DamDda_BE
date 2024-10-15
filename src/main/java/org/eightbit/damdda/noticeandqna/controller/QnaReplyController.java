@@ -1,4 +1,4 @@
-//package org.eightbit.damdda.noticeandqna.controller;
-//
-//public class QnaReplyController {
-//}
+package org.eightbit.damdda.noticeandqna.controller;
+
+public class QnaReplyController {
+}

@@ -1,10 +1,9 @@
 package org.eightbit.damdda.project.controller;
 
 
-import com.amazonaws.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.security.User;
+import org.eightbit.damdda.security.user.User;
 import org.eightbit.damdda.project.dto.*;
 import org.eightbit.damdda.project.service.LikedProjectService;
 import org.eightbit.damdda.project.service.ProjectService;

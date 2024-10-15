@@ -1,7 +1,7 @@
 package org.eightbit.damdda.order.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.eightbit.damdda.security.User;
+import org.eightbit.damdda.security.user.User;
 import org.eightbit.damdda.order.domain.Order;
 import org.eightbit.damdda.order.dto.OrderDTO;
 import org.eightbit.damdda.order.dto.ProjectStatisticsDTO;

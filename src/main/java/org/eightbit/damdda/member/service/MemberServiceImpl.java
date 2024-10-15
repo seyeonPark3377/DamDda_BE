@@ -11,6 +11,7 @@ import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.repository.MemberRepository;
 
 import org.eightbit.damdda.member.repository.RegisterRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,8 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final RegisterRepository registerRepository;
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    // = new BCryptPasswordEncorder() 추가
 
     @Value("${cloud.aws.credentials.bucket}")
     private String bucketName;

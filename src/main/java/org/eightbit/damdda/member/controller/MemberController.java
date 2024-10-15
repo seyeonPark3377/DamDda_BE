@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 
 import org.eightbit.damdda.member.dto.MemberSearchDTO;
 import org.eightbit.damdda.member.dto.PasswordDTO;
-import org.eightbit.damdda.security.AccountCredentials;
-import org.eightbit.damdda.security.JwtService;
-import org.eightbit.damdda.security.User;
+import org.eightbit.damdda.security.user.AccountCredentials;
+import org.eightbit.damdda.security.jwt.JwtService;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.dto.RegisterDTO;
+import org.eightbit.damdda.security.user.User;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -116,7 +116,7 @@ public class MemberController {
         return ResponseEntity.ok("logout");
     }
 
-    @GetMapping("/profile/{id}")
+    @GetMapping("/profile")
     public ResponseEntity<MemberDTO> getProfile (@RequestParam("loginId") String loginId){
         try {
             return ResponseEntity.ok(memberService.getMember(loginId));
@@ -136,13 +136,15 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/confirmpw")
-    public ResponseEntity<?> confirmPassword (@RequestParam String password){
+    // GetMapping -> PostMapping으로 변경, 매개변수 @RequestParams String password -> @RequestBody PasswordDTO password로 변경
+    @PostMapping("/confirmpw")
+    public ResponseEntity<?> confirmPassword (@RequestBody PasswordDTO password){
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String loginId = user.getMember().getLoginId();
             System.out.println(loginId + " " + password);
-            MemberDTO memberDTO = memberService.confirmPw(loginId, password);
+            MemberDTO memberDTO = memberService.confirmPw(loginId, password.getPassword());
+            // password -> password.getPassword()로 변경
 
             if(memberDTO != null){
                 return ResponseEntity.ok(memberDTO);
@@ -206,5 +208,18 @@ public class MemberController {
         }
     }
 
-}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Boolean>> deleteMember(@AuthenticationPrincipal User user){
+        try{
+            System.out.println(user);
+            return null;
+        } catch (IllegalArgumentException e) {
+            return null;
+        } catch (NoSuchElementException e) {
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
+}
