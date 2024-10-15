@@ -2,8 +2,7 @@ package org.eightbit.damdda.project.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.eightbit.damdda.common.domain.BaseDateEntity;
-import org.eightbit.damdda.common.domain.BaseDateEntity;
+import org.eightbit.damdda.common.domain.DateEntity;
 import org.eightbit.damdda.member.domain.Member;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -21,11 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = {"category", "tags"})
-public class Project extends BaseDateEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Project extends DateEntity {
 
     @ManyToOne
     private Member member;
@@ -45,7 +40,7 @@ public class Project extends BaseDateEntity {
     private String title;
     private String description;
 
-//    @Column(length = 3000)
+//    @Column(length = 10000000)
     @Column(columnDefinition = "TEXT")
     private String descriptionDetail;
     private Timestamp startDate;

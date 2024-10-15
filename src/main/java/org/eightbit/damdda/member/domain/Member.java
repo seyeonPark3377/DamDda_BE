@@ -2,7 +2,7 @@ package org.eightbit.damdda.member.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.eightbit.damdda.common.domain.BaseDateEntity;
+import org.eightbit.damdda.common.domain.DateEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;

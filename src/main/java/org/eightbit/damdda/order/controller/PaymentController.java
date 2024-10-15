@@ -246,15 +246,17 @@ public ResponseEntity<TossResponse> tossSuccess(
         @RequestParam("paymentKey") String paymentKey,
         @RequestParam("orderId") String orderId,
         @RequestParam("amount") String amount,
+        @RequestHeader(value = "x-damdda-authorization", required = false) String authorizationHeader,
         HttpServletResponse response) throws IOException {
 
     // 결제 승인 처리 로그 출력
     System.out.println("Toss에서 받은 orderId: " + orderId);
     System.out.println("결제 키: " + paymentKey);
     System.out.println("결제 금액: " + amount);
+    System.out.println(authorizationHeader+"//////");
 
     // Toss 결제 승인 처리
-    TossResponse tossResponse = tossPayService.confirmPayment(paymentKey, orderId, amount);
+    TossResponse tossResponse = tossPayService.confirmPayment(paymentKey, orderId, amount,authorizationHeader);
 
     // 결제 성공 여부 확인
     try{if (tossResponse.getStatus().equals("DONE")) {
@@ -282,10 +284,12 @@ public ResponseEntity<TossResponse> tossSuccess(
 //        return ResponseEntity.ok(kakaoReadyResponse);
 //    }
     @PostMapping("/kakao/ready")
-    public ResponseEntity<KakaoReadyResponse> readyToKakaoPay(@RequestBody Map<String, Object> requestData) {
+    public ResponseEntity<KakaoReadyResponse> readyToKakaoPay(@RequestBody Map<String, Object> requestData,
+                                                              @RequestHeader(value = "x-damdda-authorization", required = false) String authorizationHeader) {
         Long orderId = Long.parseLong(requestData.get("orderId").toString());
+        System.out.println("x-damdda-authorization"+"//////");
         System.out.println(orderId+"************");
-        KakaoReadyResponse kakaoReadyResponse = kakaoPayService.kakaoPayReady(orderId);
+        KakaoReadyResponse kakaoReadyResponse = kakaoPayService.kakaoPayReady(orderId,"x-damdda-authorization");
         return ResponseEntity.ok(kakaoReadyResponse);
     }
 
@@ -311,12 +315,15 @@ public ResponseEntity<TossResponse> tossSuccess(
     public ResponseEntity<KakaoApproveResponse> afterPayRequest(
             @RequestParam("pg_token") String pgToken,
             @PathVariable("order_id") Long orderId,  // PathVariable로 order_id 받음
-            HttpServletResponse response) {
+            @RequestHeader(value = "x-damdda-authorization", required = false) String authorizationHeader, HttpServletResponse response) {
+
+
 
         System.out.println("결제 성공. Order ID: " + orderId + ", PG Token: " + pgToken);
+        System.out.println(authorizationHeader+"//////");
 
         // pg_token과 orderId를 사용하여 결제 승인 요청
-        KakaoApproveResponse kakaoApproveResponse = kakaoPayService.approveResponse(pgToken, orderId);
+        KakaoApproveResponse kakaoApproveResponse = kakaoPayService.approveResponse(pgToken, orderId,authorizationHeader);
 
         // 결제 성공 시 React의 결제 완료 페이지로 리다이렉트
         try {
@@ -333,13 +340,13 @@ public ResponseEntity<TossResponse> tossSuccess(
     /**
      * 환불요청
      */
-    @PostMapping("/kakao/refund")
-    public ResponseEntity refund() {
-
-        KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel();
-
-        return new ResponseEntity<>(kakaoCancelResponse, HttpStatus.OK);
-    }
+//    @PostMapping("/kakao/refund")
+//    public ResponseEntity refund() {
+//
+//        KakaoCancelResponse kakaoCancelResponse = kakaoPayService.kakaoCancel();
+//
+//        return new ResponseEntity<>(kakaoCancelResponse, HttpStatus.OK);
+//    }
 
     /**
      * 결제 진행 중 취소

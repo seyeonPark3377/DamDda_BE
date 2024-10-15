@@ -40,4 +40,5 @@ public interface ProjectService {
                        List<MetaDTO> updateDescriptionImage,
                        List<MetaDTO> updateDocs
                        );
+    List<?> getDailySupportingByProjectId(Long projectId);
 }
