@@ -5,7 +5,7 @@ import org.eightbit.damdda.noticeandqna.domain.QnaQuestion;
 import org.eightbit.damdda.noticeandqna.dto.QnaQuestionDTO;
 import org.eightbit.damdda.noticeandqna.exception.UnauthorizedAccessException;
 import org.eightbit.damdda.noticeandqna.repository.QnaQuestionRepository;
-import org.eightbit.damdda.noticeandqna.security.SecurityContextUtil;
+import org.eightbit.damdda.security.util.SecurityContextUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

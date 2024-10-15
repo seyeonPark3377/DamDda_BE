@@ -1,4 +1,4 @@
-package org.eightbit.damdda.noticeandqna.config;
+package org.eightbit.damdda.common.exception;
 
 import org.eightbit.damdda.noticeandqna.exception.UnauthenticatedMemberException;
 import org.eightbit.damdda.noticeandqna.exception.UnauthorizedAccessException;

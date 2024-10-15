@@ -16,8 +16,6 @@ import java.sql.Timestamp;
 @Builder
 @EntityListeners(value={AuditingEntityListener.class})
 public class Member {
-    // nullable 삭제
-
     @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +42,6 @@ public class Member {
 
     private String detailedAddress;
 
-    // int -> Integer로 변경
     private Integer postCode;
 
     @CreatedDate
