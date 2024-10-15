@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/qna/question")
+@RequestMapping("/dammdda/qna/question")
 @RequiredArgsConstructor
 @Tag(name = "Q&A Question API", description = "Q&A의 질문을 관리하는 API입니다.")
 public class QnaQuestionController {

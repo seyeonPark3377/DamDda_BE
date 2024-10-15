@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/collab")
+@RequestMapping("/damdda/collab")
 @RequiredArgsConstructor
 @Log4j2
 public class CollaborationController {
@@ -59,20 +59,20 @@ public class CollaborationController {
     }
 
 
-    @GetMapping("/readDetail/{cno}")
+    @GetMapping("/read/detail/{cno}")
     public ResponseEntity<?> readDetail(@PathVariable Long cno) throws JsonProcessingException {
         CollaborationDetailDTO detailDTO = collaborationService.readDetail(cno);
         return new ResponseEntity<>(detailDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/readListReceive")
+    @GetMapping("/read/receive")
     public ResponseEntity<?> readReceive(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @AuthenticationPrincipal User user) {
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(page).size(size).build();
         PageResponseDTO<CollaborationDTO> collaborationDTOPageResponseDTO = collaborationService.readReceive(pageRequestDTO,user.getLoginId());
         return new ResponseEntity<>(collaborationDTOPageResponseDTO,HttpStatus.OK);
     }
 
-    @GetMapping("/readListRequest")
+    @GetMapping("/read/request")
     public ResponseEntity<?> readRequest(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @AuthenticationPrincipal User user) {
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(page).size(size).build();
         PageResponseDTO<CollaborationDTO> collaborationDTOPageResponseDTO = collaborationService.readRequest(pageRequestDTO,user.getLoginId());

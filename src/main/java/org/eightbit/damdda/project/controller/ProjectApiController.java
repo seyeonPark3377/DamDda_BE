@@ -23,7 +23,7 @@ import java.util.List;
 // pr완료
 @CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000", "http://127.0.0.1:3000", "http://223.130.156.95", "http://223.130.156.95"})
 @RestController
-@RequestMapping("/api/projects")
+@RequestMapping("/damdda/project")
 @Log4j2
 @RequiredArgsConstructor
 public class ProjectApiController {
@@ -196,7 +196,7 @@ public class ProjectApiController {
     }
     // 태욱
     // 일별 후원액 가져오는 쿼리
-    @GetMapping("/dailySupporting/{projectId}")
+    @GetMapping("/daily/{projectId}")
     public ResponseEntity<List<?>> getDailySupportingByProjectId(@PathVariable Long projectId) {
         log.info(projectService.getDailySupportingByProjectId(projectId));
         return ResponseEntity.ok(projectService.getDailySupportingByProjectId(projectId));

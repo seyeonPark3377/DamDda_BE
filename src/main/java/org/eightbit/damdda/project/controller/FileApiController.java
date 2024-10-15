@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 @CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000"})
 
 @RestController
-@RequestMapping("/files/projects")
+@RequestMapping("/damdda/files/projects")
 @Log4j2
 @RequiredArgsConstructor
 public class FileApiController {

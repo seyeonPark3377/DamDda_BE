@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/packages")
+@RequestMapping("/damdda/package")
 @Log4j2
 public class PackageController {
 
@@ -23,38 +23,38 @@ public class PackageController {
 
 
     //package 등록
-    @PostMapping("/register/{projectId}")
+    @PostMapping("/{projectId}")
     public ResponseEntity<?> registerPackage(@Valid @RequestBody PackageDTO packageDTO, @PathVariable("projectId") Long projectId){
-        packageService.registerPackage(packageDTO,projectId);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Long id = packageService.registerPackage(packageDTO,projectId);
+        return new ResponseEntity<>(id,HttpStatus.CREATED);
     }
 
     //특정 프로젝트의 PACKAGE 조회
-    @GetMapping("/project/{projectId}")
+    @GetMapping("/{projectId}")
     public ResponseEntity<?> viewPackage(@PathVariable("projectId") Long projectId) throws JsonProcessingException{
         List<PackageDTO> packages = packageService.viewPackage(projectId);
         return new ResponseEntity<>(packages, HttpStatus.OK);
     }
 
     //package 수정
-    @PutMapping("/modify")
-    public ResponseEntity<?> modifyPackage(@Valid @RequestBody PackageDTO packageDTO, @RequestParam("projectId") Long projectId){
+    @PutMapping("/{projectId}")
+    public ResponseEntity<?> modifyPackage(@Valid @RequestBody PackageDTO packageDTO, @PathVariable("projectId") Long projectId){
         packageService.modifyPackage(packageDTO, projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // Package 삭제
-    @DeleteMapping("/delete/{packageId}")
+    @DeleteMapping("/{packageId}")
     public ResponseEntity<?> deletePackage(@PathVariable("packageId") Long packageId) {
         packageService.deletePackage(packageId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // Reward 등록
-    @PostMapping("/rewards/register/{projectId}")
+    @PostMapping("/rewards/{projectId}")
     public ResponseEntity<?> registerReward(@Valid @RequestBody RewardDTO rewardDTO,@PathVariable("projectId") Long projectId) throws JsonProcessingException {
-        packageService.registerReward(rewardDTO, projectId);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Reward registered successfully");
+        Long id = packageService.registerReward(rewardDTO, projectId);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
     @GetMapping("/rewards/package/{packageId}")
     public ResponseEntity<?> viewRewardByPackage(@PathVariable("packageId") Long packageId) {
@@ -68,7 +68,7 @@ public class PackageController {
         return ResponseEntity.ok(rewards);
     }
 
-    @DeleteMapping("/rewards/delete/{rewardId}")
+    @DeleteMapping("/rewards/{rewardId}")
     public ResponseEntity<?> deleteReward(@PathVariable("rewardId") Long rewardId) {
         packageService.deleteReward(rewardId);
         return ResponseEntity.noContent().build();

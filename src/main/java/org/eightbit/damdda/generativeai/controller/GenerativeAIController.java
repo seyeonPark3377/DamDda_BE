@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/generative-ai")
+@RequestMapping("/dammdda/generative-ai")
 @RequiredArgsConstructor
 @Tag(name = "Generative AI API", description = "생성형 AI가 제공하는 정보를 관리하는 API입니다.")
 public class GenerativeAIController {

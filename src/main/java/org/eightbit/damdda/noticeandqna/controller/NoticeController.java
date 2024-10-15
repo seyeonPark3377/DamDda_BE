@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/notices")
+@RequestMapping("/dammdda/notice")
 @RequiredArgsConstructor
 @Tag(name = "Notice API", description = "공지사항을 관리하는 API입니다.")
 public class NoticeController {

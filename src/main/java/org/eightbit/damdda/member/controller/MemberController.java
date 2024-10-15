@@ -38,7 +38,7 @@ import java.io.IOException;
 @Log4j2
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member") // member로 변경하는게 적절
+@RequestMapping("/damdda/member") // member로 변경하는게 적절
 public class MemberController {
 
     private final RegisterService registerService;
@@ -208,8 +208,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteMember(@AuthenticationPrincipal User user){
-                                                    // 이거는 테스트에서 member 정보 다 보내야 해?
+    public ResponseEntity<Map<String, Boolean>> deleteMember(@AuthenticationPrincipal User user){                                   // 이거는 테스트에서 member 정보 다 보내야 해?
         try{
             memberService.deleteMember(user.getMemberId());
             return ResponseEntity.ok(Map.of("isSuccess", true));

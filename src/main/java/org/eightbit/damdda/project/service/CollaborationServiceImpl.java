@@ -62,7 +62,6 @@ public class CollaborationServiceImpl implements CollaborationService{
     @Transactional
     public S3ObjectInputStream downloadFIle(String fileName){
         GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, fileName);
-        log.info("111111111111111111111111111111!!!11111111");
         S3Object s3Object = amazonS3.getObject(getObjectRequest);
         return s3Object.getObjectContent();
     }
@@ -160,7 +159,6 @@ public class CollaborationServiceImpl implements CollaborationService{
         collaborationList.forEach(collaboration->{
             if(collaboration.getUserId().equals(user_id)){ //협업 제안자가 삭제를 한다면
                 // 연관된 파일 삭제
-                log.info("협업 제안자가 삭제중");
                 collaboration.addSenderDeletedAt();
                 try {
                     for(String collabDoc :collaboration.getCollabDocList() ) {
@@ -171,7 +169,6 @@ public class CollaborationServiceImpl implements CollaborationService{
                 }
                 collaboration.removeCollabDocList();
             }else{ //협업 제안을 받은 사람이 삭제를 한다면 > 게시판에서만 삭제됨.
-                log.info("협업 제안 받은 자가 삭제중");
                 collaboration.addReceiverDeletedAt();
             }
         });

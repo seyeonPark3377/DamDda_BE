@@ -14,8 +14,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 
-@PropertySource("classpath:api.properties")
-
 @Service
 @RequiredArgsConstructor
 @Transactional

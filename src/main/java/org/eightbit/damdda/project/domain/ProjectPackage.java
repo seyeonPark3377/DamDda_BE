@@ -32,6 +32,8 @@ public class ProjectPackage {
 
     private int quantityLimited;
 
+    private int salesQuantity;
+
     public void change(String name, int price, int quantityLimited) {
         this.packageName = name;
         this.packagePrice = price;

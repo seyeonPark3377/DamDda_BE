@@ -22,7 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @SessionAttributes("supportingPackage")
 
-@RequestMapping("/order")
+@RequestMapping("/dammdda/order")
 ///http://localhost:9000/projects/myproject/order/create
 public class OrderController {
 

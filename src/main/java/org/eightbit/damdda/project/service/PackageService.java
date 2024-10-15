@@ -12,8 +12,8 @@ import java.util.List;
 
 @Service
 public interface PackageService {
-    void registerReward(RewardDTO rewardDTO, Long project_id) throws JsonProcessingException;
-    void registerPackage(PackageDTO packageDTO,Long project_id);
+    Long registerReward(RewardDTO rewardDTO, Long project_id) throws JsonProcessingException;
+    Long registerPackage(PackageDTO packageDTO,Long project_id);
     List<RewardDTO> viewRewardByPackage(Long package_id);
     List<RewardDTO> viewRewardByProject(Long project_id);
     List<PackageDTO> viewPackage(Long project_id) throws JsonProcessingException;

@@ -51,6 +51,7 @@ public class MemberServiceImpl implements MemberService {
         userInfo.put("key",member.getId());
         userInfo.put("imageUrl",member.getImageUrl());
         userInfo.put("nickname",member.getNickname());
+        userInfo.put("name",member.getName());
 
         return userInfo;
     }
