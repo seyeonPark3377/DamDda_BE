@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/damdda/payment")
+@RequestMapping("/payment")
 @RequiredArgsConstructor
 
 

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/damdda/collab")
+@RequestMapping("/collab")
 @RequiredArgsConstructor
 @Log4j2
 public class CollaborationController {

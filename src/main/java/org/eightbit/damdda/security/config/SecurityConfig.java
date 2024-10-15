@@ -1,10 +1,12 @@
 package org.eightbit.damdda.security.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.security.jwt.AuthEntryPoint;
 import org.eightbit.damdda.security.jwt.JwtService;
 import org.eightbit.damdda.security.filter.JwtAuthenticationFilter;
 import org.eightbit.damdda.security.filter.LoginFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,11 +23,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Log4j2
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
@@ -75,17 +79,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(authEntryPoint);
     }
 
+    @Value("${app.cors.allowed-origins}")
+    private String[] allowedOrigins;  // Allowed origins from external configuration
+
+    /**
+     * Configures global CORS settings for the application.
+     *
+     * @return CorsConfigurationSource the CORS configuration source
+     */
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:3000"); // 프론트엔드 주소
-//        config.setAllowedOrigins(List.of("*"));
-        config.setAllowedMethods(List.of("*"));
-        config.setAllowCredentials(true);
-        config.applyPermitDefaultValues();
 
+        // Set allowed origins from the external configuration
+        config.setAllowedOrigins(Arrays.asList(allowedOrigins));
+
+        // Allow specific HTTP methods and headers for cross-origin requests
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+
+        // Allow credentials (cookies, authorization headers)
+        config.setAllowCredentials(true);
+
+        // Log the CORS configuration
+        log.debug("CORS allowed origins: {}", Arrays.toString(allowedOrigins));
+
+        // Apply CORS configuration to all paths
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
+
 }

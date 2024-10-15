@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/damdda/package")
+@RequestMapping("/package")
 @Log4j2
 public class PackageController {
 

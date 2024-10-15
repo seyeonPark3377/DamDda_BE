@@ -23,7 +23,7 @@ import java.util.List;
 // pr완료
 @CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000", "http://127.0.0.1:3000", "http://223.130.156.95", "http://223.130.156.95"})
 @RestController
-@RequestMapping("/damdda/project")
+@RequestMapping("/project")
 @Log4j2
 @RequiredArgsConstructor
 public class ProjectApiController {
