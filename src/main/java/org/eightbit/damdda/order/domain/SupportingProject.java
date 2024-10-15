@@ -19,6 +19,7 @@ public class SupportingProject {
     private Long supportingProjectId;
 
     private LocalDateTime supportedAt; // 후원 시간
+
     @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "payment_id")
     private Payment payment;
@@ -34,7 +35,4 @@ public class SupportingProject {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
-
-
-
 }

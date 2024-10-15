@@ -1,13 +1,11 @@
 package org.eightbit.damdda.order.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.eightbit.damdda.member.domain.User;
+import org.eightbit.damdda.security.User;
 import org.eightbit.damdda.order.domain.Order;
-import org.eightbit.damdda.order.domain.SupportingProject;
 import org.eightbit.damdda.order.dto.OrderDTO;
 import org.eightbit.damdda.order.dto.ProjectStatisticsDTO;
 import org.eightbit.damdda.order.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

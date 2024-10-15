@@ -1,7 +1,6 @@
 package org.eightbit.damdda.project.domain;
 
 import lombok.*;
-import org.eightbit.damdda.common.domain.BaseEntity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,7 +12,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = "projects") // projects 필드를 제외하여 순환 참조 방지
-public class Tag extends BaseEntity {
+public class Tag  {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String name;
     private Integer usageFrequency;

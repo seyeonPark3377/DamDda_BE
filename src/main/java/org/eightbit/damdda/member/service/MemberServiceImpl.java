@@ -7,7 +7,6 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.member.domain.Member;
-import org.eightbit.damdda.member.domain.User;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.repository.MemberRepository;
 
@@ -25,7 +24,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 @Transactional
 @Log4j2

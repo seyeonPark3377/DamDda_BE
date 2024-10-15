@@ -1,10 +1,10 @@
 package org.eightbit.damdda.project.controller;
 
 
+import com.amazonaws.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.member.domain.Member;
-import org.eightbit.damdda.member.domain.User;
+import org.eightbit.damdda.security.User;
 import org.eightbit.damdda.project.dto.*;
 import org.eightbit.damdda.project.service.LikedProjectService;
 import org.eightbit.damdda.project.service.ProjectService;
@@ -61,7 +61,6 @@ public class ProjectApiController {
     @GetMapping("/write")
     public List<WritingProjectDTO> getWritingProjects(@AuthenticationPrincipal User user) {
         Long memberId = user.getMemberId();
-
         return projectService.getWritingProjectDTO(memberId);
     }
 
@@ -85,7 +84,7 @@ public class ProjectApiController {
     @GetMapping("/{projectId}")
     public ProjectResponseDetailDTO readProjectDetail(@AuthenticationPrincipal User user,
                                                       @PathVariable Long projectId) {
-        Long memberId = user.getMemberId();
+        Long memberId = user == null ? 0L : user.getMemberId();
         ProjectResponseDetailDTO projectResponseDetailDTO = projectService.readProjectDetail(projectId, memberId);
         return projectResponseDetailDTO;
     }
@@ -195,6 +194,13 @@ public class ProjectApiController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
+    }
+    // 태욱
+    // 일별 후원액 가져오는 쿼리
+    @GetMapping("/dailySupporting/{projectId}")
+    public ResponseEntity<List<?>> getDailySupportingByProjectId(@PathVariable Long projectId) {
+        log.info(projectService.getDailySupportingByProjectId(projectId));
+        return ResponseEntity.ok(projectService.getDailySupportingByProjectId(projectId));
     }
 
 }

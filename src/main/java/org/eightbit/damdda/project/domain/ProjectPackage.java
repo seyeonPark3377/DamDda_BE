@@ -1,10 +1,7 @@
 package org.eightbit.damdda.project.domain;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
-import org.eightbit.damdda.common.domain.BaseEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,7 +14,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectPackage extends BaseEntity {
+public class ProjectPackage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
