@@ -112,7 +112,6 @@ public class MemberController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request){
-
         return ResponseEntity.ok("logout");
     }
 
@@ -221,5 +220,4 @@ public class MemberController {
             return null;
         }
     }
-
 }

@@ -25,13 +25,6 @@ public class GenerativeAIServiceImpl {
      */
     public Mono<String> generateProjectDescription(AIProjectDescriptionDTO aiProjectDescriptionDTO) {
 
-        // 인자로 넘어온 데이터 로그 출력
-        log.info("Received AIProjectDescriptionDTO: title={}, category={}, tags={}, description={}",
-                aiProjectDescriptionDTO.getTitle(),
-                aiProjectDescriptionDTO.getCategory(),
-                aiProjectDescriptionDTO.getTags(),
-                aiProjectDescriptionDTO.getDescription());
-
         // AI API에 요청할 JSON 형식의 본문 생성
         String requestBody = String.format(
                 "{\"title\":\"%s\",\"category\":\"%s\",\"tags\":[\"%s\"],\"description\":\"%s\"}",
@@ -41,12 +34,12 @@ public class GenerativeAIServiceImpl {
                 aiProjectDescriptionDTO.getDescription()
         );
 
-        log.debug("Generated request body for AI API: {}", requestBody);
+        log.debug("[generativeai] Generated request body for AI API: {}", requestBody);
 
         // AIContentGenerationClient를 통해 외부 API 호출
         return aiContentGenerationClient.requestProjectDescription(requestBody)
                 .onErrorResume(e -> {
-                    log.error("Error while generating project description: {}", e.getMessage(), e);
+                    log.error("[generativeai] Error while generating project description: {}", e.getMessage(), e);
                     // 오류 발생 시 처리, 새로운 RuntimeException으로 변환하여 반환
                     return Mono.error(new RuntimeException("Failed to generate project description", e));
                 });

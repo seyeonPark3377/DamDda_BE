@@ -3,7 +3,6 @@ package org.eightbit.damdda.generativeai.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.generativeai.dto.AIProjectDescriptionDTO;
 import org.eightbit.damdda.generativeai.service.GenerativeAIServiceImpl;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,6 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/generative-ai")
 @RequiredArgsConstructor
 @Tag(name = "Generative AI API", description = "생성형 AI가 제공하는 정보를 관리하는 API입니다.")
-@Log4j2
 public class GenerativeAIController {
 
     // GenerativeAIServiceImpl 인스턴스를 주입받아 사용
@@ -34,8 +32,6 @@ public class GenerativeAIController {
     @Operation(summary = "상세페이지 가이드라인 생성", description = "프로젝트의 상세페이지의 가이드라인을 생성합니다.")
     public Mono<String> getAIGeneratedProjectDescription(@RequestBody AIProjectDescriptionDTO aiProjectDescriptionDTO) {
         // Service 계층을 통해 AI 프로젝트 설명을 생성하고, 결과를 반환
-        return generativeAIService.generateProjectDescription(aiProjectDescriptionDTO)
-                .doOnSuccess(result -> log.info("AI Generated Project Description: {}", result)); // 결과 로그 출력
+        return generativeAIService.generateProjectDescription(aiProjectDescriptionDTO);
     }
-
 }

@@ -1,7 +1,6 @@
 package org.eightbit.damdda.admin.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.admin.domain.AdminApproval;
 import org.eightbit.damdda.admin.repository.AdminApprovalRepository;
 import org.eightbit.damdda.project.domain.Project;
