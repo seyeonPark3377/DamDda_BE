@@ -40,7 +40,6 @@ public class User implements UserDetails {
     public String getLoginId() {
         return member.getLoginId();
     }
-
     public Long getMemberId() {
         return member.getId();
     }

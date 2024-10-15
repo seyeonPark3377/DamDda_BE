@@ -8,6 +8,7 @@ import org.eightbit.damdda.project.domain.Project;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "orders")
@@ -37,9 +38,13 @@ public class Order {
     private SupportingProject supportingProject;
 
     // SupportingPackage 정보와 연관된 필드
-    @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name = "supporting_package_id", nullable = false)
-    private SupportingPackage supportingPackage;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "ordered_packages", // 중간 테이블 이름
+            joinColumns = @JoinColumn(name = "order_id"), // 현재 엔티티의 외래 키
+            inverseJoinColumns = @JoinColumn(name = "supporting_package_id") // 연관된 SupportingPackage의 외래 키
+    )
+    private Set<SupportingPackage> supportingPackages;
 
     private LocalDateTime createdAt;  // 주문 생성 시간
     private LocalDateTime updatedAt;  // 주문 수정 시간

@@ -6,6 +6,7 @@ import org.eightbit.damdda.order.domain.*;
 
 import org.eightbit.damdda.order.dto.OrderDTO;
 import org.eightbit.damdda.order.dto.ProjectStatisticsDTO;
+import org.eightbit.damdda.order.dto.SupportingPackageDTO;
 import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,10 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,25 +71,32 @@ public class OrderService {
                 .payment(payment)
                 .delivery(delivery)
                 .build();
+        System.out.println("log: order service supporting project"+supportingProject);
         supportingProjectRepository.save(supportingProject);
 
-//        SupportingPackage supportingPackage = supportingPackageRepository.save(orderDTO.getSupportingPackage());
-        SupportingPackage supportingPackage =SupportingPackage.builder()
-                .packageName(orderDTO.getSupportingPackage().getPackageName())
-                .packagePrice(orderDTO.getSupportingPackage().getPackagePrice())
-                .packageCount(orderDTO.getSupportingPackage().getPackageCount())
-                .supportingProject(supportingProject)  // 어떤 프로젝트를 참조하는지 설정**
-                .build();
-        System.out.println(supportingPackage+"그래야이거야!");
-        supportingPackageRepository.save(supportingPackage);
 
+        // 여러 개의 SupportingPackage를 처리할 수 있도록 Set을 사용
+        Set<SupportingPackage> supportingPackages = new HashSet<>();
+
+        // OrderDTO에서 여러 개의 SupportingPackage 가져오기
+        for (SupportingPackage suppportingPackage : orderDTO.getSupportingPackages()) {
+            SupportingPackage supportingPackage = SupportingPackage.builder()
+                    .packageName(suppportingPackage.getPackageName())
+                    .packagePrice(suppportingPackage.getPackagePrice())
+                    .packageCount(suppportingPackage.getPackageCount())
+                    .supportingProject(supportingProject)  // 어떤 프로젝트를 참조하는지 설정
+                    .build();
+            System.out.println("log: order service supporting package"+supportingPackage);
+            supportingPackageRepository.save(supportingPackage);
+            supportingPackages.add(supportingPackage);  // Set에 추가
+        }
 
         // Order 엔티티 생성 및 저장
         Order order = Order.builder()
                 .delivery(delivery)
                 .payment(payment)
                 .supportingProject(supportingProject)
-                .supportingPackage(supportingPackage)
+                .supportingPackages(supportingPackages)
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -104,7 +114,7 @@ public class OrderService {
                         .delivery(order.getDelivery())  // 배송 정보
                         .payment(order.getPayment())    // 결제 정보
                         .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                        .supportingPackage(order.getSupportingPackage())  // 선물 구성 정보
+                        .supportingPackages(order.getSupportingPackages())  // 선물 구성 정보
                         .build())
                 .collect(Collectors.toList());  // List<OrderDTO>로 변환
     }
@@ -118,7 +128,7 @@ public class OrderService {
                     .delivery(order.getDelivery())  // 배송 정보
                     .payment(order.getPayment())    // 결제 정보
                     .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                    .supportingPackage(order.getSupportingPackage())  // 선물 구성 정보
+                    .supportingPackages(order.getSupportingPackages())  // 선물 구성 정보
                     .build();
         });
     }
@@ -139,7 +149,7 @@ public class OrderService {
                         .delivery(order.getDelivery())  // 배송 정보
                         .payment(order.getPayment())    // 결제 정보
                         .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                        .supportingPackage(order.getSupportingPackage())  // 선물 구성 정보
+                        .supportingPackages(order.getSupportingPackages())  // 선물 구성 정보
                         .build())
                 .collect(Collectors.toList());
     }
@@ -219,7 +229,7 @@ public class OrderService {
                 .delivery(order.getDelivery())
                 .payment(order.getPayment())
                 .supportingProject(order.getSupportingProject())
-                .supportingPackage(order.getSupportingPackage())
+                .supportingPackages(order.getSupportingPackages())
                 .build();
     }
 
@@ -232,7 +242,7 @@ public class OrderService {
                     .delivery(order.getDelivery())  // 배송 정보
                     .payment(order.getPayment())    // 결제 정보
                     .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                    .supportingPackage(order.getSupportingPackage())  // 선물 구성 정보
+                    .supportingPackages(order.getSupportingPackages())  // 선물 구성 정보
                     .build();
         }).collect(Collectors.toList());
     }

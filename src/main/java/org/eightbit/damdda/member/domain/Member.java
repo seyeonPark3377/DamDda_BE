@@ -1,28 +1,29 @@
 package org.eightbit.damdda.member.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.eightbit.damdda.common.domain.DateEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 @Table(name = "members")
 @Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
-@Builder
-@EntityListeners(value={AuditingEntityListener.class})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})  // Hibernate 프록시 무시
+//public class Member extends DateEntity {
 public class Member {
-    @Setter
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true, updatable = false)
     private String loginId;
+
 
     @Column(nullable = false)
     private String password;
@@ -41,17 +42,26 @@ public class Member {
 
     private String imageUrl;
 
+    @Column(nullable = false)
     private String address;
 
     private String detailedAddress;
 
     private int postCode;
 
-    @CreatedDate
-    @Column(updatable = false)
-    private Timestamp createdAt;
-
-    private Timestamp deletedAt;
+    @Builder
+    public Member(String loginId, String password, String nickname, String name, String email, String phoneNumber, String imageUrl, String address, String detailedAddress, int postCode) {
+        this.loginId = loginId;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.imageUrl = imageUrl;
+        this.address = address;
+        this.detailedAddress = detailedAddress;
+        this.postCode = postCode;
+    }
 
 }
 
