@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/projects/{projectId}"
                 ).permitAll()
 
-                .antMatchers(HttpMethod.POST, "/member", "/member/login", "/member/confirmpw").permitAll()
+                .antMatchers(HttpMethod.POST, "/member", "/member/login").permitAll()
                 .anyRequest().authenticated().and()
                 .logout()
 //                .logoutUrl("/member/logout")
