@@ -1,10 +1,8 @@
-package org.eightbit.damdda.member.config;
+package org.eightbit.damdda.security;
 
 import lombok.RequiredArgsConstructor;
-import org.eightbit.damdda.member.except.AuthEntryPoint;
-import org.eightbit.damdda.member.filter.JwtAuthenticationFilter;
-import org.eightbit.damdda.member.filter.LoginFilter;
-import org.eightbit.damdda.member.service.JwtService;
+import org.eightbit.damdda.security.filter.JwtAuthenticationFilter;
+import org.eightbit.damdda.security.filter.LoginFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,7 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;

@@ -2,20 +2,17 @@ package org.eightbit.damdda.project.controller;
 
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import net.bytebuddy.implementation.bind.annotation.Default;
-import org.eightbit.damdda.member.domain.User;
+import org.eightbit.damdda.security.User;
 import org.eightbit.damdda.project.dto.CollaborationDTO;
 import org.eightbit.damdda.project.dto.CollaborationDetailDTO;
 import org.eightbit.damdda.project.dto.PageRequestDTO;
 import org.eightbit.damdda.project.dto.PageResponseDTO;
 import org.eightbit.damdda.project.service.CollaborationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +23,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/collab")
