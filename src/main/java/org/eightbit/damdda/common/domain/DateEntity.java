@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @Getter //추가
 @MappedSuperclass
 @EntityListeners(value={AuditingEntityListener.class})
-public abstract class DateEntity extends BaseEntity {
+public abstract class DateEntity {
 
     @CreatedDate
     @Column(updatable = false)

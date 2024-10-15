@@ -2,13 +2,11 @@ package org.eightbit.damdda.admin.domain;
 
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.common.domain.BaseEntity;
 import org.eightbit.damdda.project.domain.Project;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "admin_approvals")
@@ -18,10 +16,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @Log4j2
-public class AdminApproval extends BaseEntity {
-    //프로젝트에서 사용(주석처리함)
-//    @ManyToOne
-//    private Admin admin;
+public class AdminApproval {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @OneToOne
     private Project project;

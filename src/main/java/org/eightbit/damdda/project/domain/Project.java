@@ -21,6 +21,9 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(exclude = {"category", "tags"})
 public class Project extends DateEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
     private Member member;
