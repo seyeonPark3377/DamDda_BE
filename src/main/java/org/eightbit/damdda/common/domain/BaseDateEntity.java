@@ -10,10 +10,10 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.sql.Timestamp;
 
-@Getter //추가
+@Getter
 @MappedSuperclass
 @EntityListeners(value={AuditingEntityListener.class})
-public abstract class DateEntity extends BaseEntity {
+public abstract class BaseDateEntity {
 
     @CreatedDate
     @Column(updatable = false)

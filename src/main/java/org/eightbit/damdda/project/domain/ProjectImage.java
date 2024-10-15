@@ -1,11 +1,8 @@
 package org.eightbit.damdda.project.domain;
 
 import lombok.*;
-import org.eightbit.damdda.common.domain.BaseEntity;
-import org.hibernate.annotations.Tables;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "project_images")
@@ -15,7 +12,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = "project")
-public class ProjectImage extends BaseEntity {
+public class ProjectImage {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
     private Project project;

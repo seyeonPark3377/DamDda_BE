@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.admin.domain.AdminApproval;
 import org.eightbit.damdda.admin.service.AdminApprovalService;
-import org.eightbit.damdda.common.domain.DateEntity;
+import org.eightbit.damdda.common.domain.BaseDateEntity;
+import org.eightbit.damdda.common.domain.BaseDateEntity;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.order.service.SupportingProjectService;
@@ -414,7 +415,7 @@ public class ProjectServiceImpl implements ProjectService {
 
             try {
                 // DateEntity 클래스에서 deletedAt 필드를 가져옴
-                Field deletedAtField = DateEntity.class.getDeclaredField("deletedAt");
+                Field deletedAtField = BaseDateEntity.class.getDeclaredField("deletedAt");
                 deletedAtField.setAccessible(true);  // private 필드에 접근 가능하도록 설정
 
                 // 현재 시간으로 deletedAt 필드 설정
