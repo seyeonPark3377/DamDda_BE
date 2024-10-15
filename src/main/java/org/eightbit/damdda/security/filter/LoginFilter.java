@@ -1,9 +1,9 @@
 package org.eightbit.damdda.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.eightbit.damdda.security.AccountCredentials;
-import org.eightbit.damdda.security.User;
-import org.eightbit.damdda.security.JwtService;
+import org.eightbit.damdda.security.user.AccountCredentials;
+import org.eightbit.damdda.security.user.User;
+import org.eightbit.damdda.security.jwt.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

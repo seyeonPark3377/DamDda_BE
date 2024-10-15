@@ -1,6 +1,8 @@
-package org.eightbit.damdda.security;
+package org.eightbit.damdda.security.config;
 
 import lombok.RequiredArgsConstructor;
+import org.eightbit.damdda.security.jwt.AuthEntryPoint;
+import org.eightbit.damdda.security.jwt.JwtService;
 import org.eightbit.damdda.security.filter.JwtAuthenticationFilter;
 import org.eightbit.damdda.security.filter.LoginFilter;
 import org.springframework.context.annotation.Bean;

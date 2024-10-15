@@ -1,4 +1,4 @@
-package org.eightbit.damdda.security;
+package org.eightbit.damdda.security.user;
 
 import org.eightbit.damdda.member.domain.Member;
 import org.springframework.security.core.GrantedAuthority;

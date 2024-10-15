@@ -1,4 +1,4 @@
-package org.eightbit.damdda.security;
+package org.eightbit.damdda.security.jwt;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.security.User;
+import org.eightbit.damdda.security.user.User;
 import org.eightbit.damdda.project.dto.CollaborationDTO;
 import org.eightbit.damdda.project.dto.CollaborationDetailDTO;
 import org.eightbit.damdda.project.dto.PageRequestDTO;

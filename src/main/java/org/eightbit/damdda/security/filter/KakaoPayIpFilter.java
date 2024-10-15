@@ -1,4 +1,4 @@
-package org.eightbit.damdda.member.filter;
+package org.eightbit.damdda.security.filter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

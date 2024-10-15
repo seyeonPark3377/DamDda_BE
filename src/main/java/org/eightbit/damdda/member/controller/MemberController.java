@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 
 import org.eightbit.damdda.member.dto.MemberSearchDTO;
 import org.eightbit.damdda.member.dto.PasswordDTO;
-import org.eightbit.damdda.security.AccountCredentials;
-import org.eightbit.damdda.security.JwtService;
-import org.eightbit.damdda.security.User;
+import org.eightbit.damdda.security.user.AccountCredentials;
+import org.eightbit.damdda.security.jwt.JwtService;
+import org.eightbit.damdda.security.user.User;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.dto.RegisterDTO;
 import org.springframework.http.HttpHeaders;

@@ -1,7 +1,7 @@
 package org.eightbit.damdda.noticeandqna.security;
 
 import org.eightbit.damdda.noticeandqna.exception.UnauthenticatedMemberException;
-import org.eightbit.damdda.security.User;
+import org.eightbit.damdda.security.user.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

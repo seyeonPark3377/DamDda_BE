@@ -1,4 +1,4 @@
-package org.eightbit.damdda.security;
+package org.eightbit.damdda.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

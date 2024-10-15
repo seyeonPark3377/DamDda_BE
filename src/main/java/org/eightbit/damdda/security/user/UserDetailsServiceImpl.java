@@ -1,4 +1,4 @@
-package org.eightbit.damdda.security;
+package org.eightbit.damdda.security.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
