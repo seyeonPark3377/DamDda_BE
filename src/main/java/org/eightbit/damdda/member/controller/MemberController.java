@@ -156,7 +156,7 @@ public class MemberController {
     }
 
     @PutMapping("/{id}/Photo")
-    public ResponseEntity<String> updateProfilePhoto (@RequestBody MultipartFile imageUrl, HttpSession session) throws IOException {
+    public ResponseEntity<String> updateProfilePhoto(@RequestBody MultipartFile imageUrl, HttpSession session) throws IOException {
         try {
 
             String fileName = memberService.uploadFile(imageUrl);
@@ -209,15 +209,16 @@ public class MemberController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteMember(@AuthenticationPrincipal User user){
+                                                    // 이거는 테스트에서 member 정보 다 보내야 해?
         try{
-            System.out.println(user);
-            return null;
+            memberService.deleteMember(user.getMemberId());
+            return ResponseEntity.ok(Map.of("isSuccess", true));
         } catch (IllegalArgumentException e) {
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (NoSuchElementException e) {
-            return null;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (Exception e) {
-            return null;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }

@@ -5,6 +5,8 @@ import lombok.*;
 import org.eightbit.damdda.member.domain.Member;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Timestamp;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -20,9 +22,11 @@ public class MemberDTO {
     private String phoneNumber;
     private String address;
     private String detailedAddress;
-    private int postCode;
+    // int -> Integer로 변경
+    private Integer postCode;
     //    private MultipartFile imageUrl;
     private String imageUrl;
+    private Timestamp deletedAt;
 
     public static MemberDTO of(Member member) {
         return MemberDTO.builder()
@@ -40,8 +44,9 @@ public class MemberDTO {
                 .build();
     }
 
+    // 빌더 수정
     public Member toEntity() {
-        return MemberDTO.builder()
+        return Member.builder()
                 .loginId(loginId)
                 .password(password)
                 .nickname(nickname)
@@ -52,6 +57,7 @@ public class MemberDTO {
                 .detailedAddress(detailedAddress)
                 .postCode(postCode)
                 .imageUrl(imageUrl)
-                .build().toEntity();
+                .deletedAt(deletedAt)
+                .build();
     }
 }

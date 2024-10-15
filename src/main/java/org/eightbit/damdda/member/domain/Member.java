@@ -16,27 +16,26 @@ import java.sql.Timestamp;
 @Builder
 @EntityListeners(value={AuditingEntityListener.class})
 public class Member {
+    // nullable 삭제
+
     @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column(unique = true, updatable = false)
     private String loginId;
 
-    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String nickname;
 
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false)
     private String name;
 
-    @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String phoneNumber;
 
     private String imageUrl;
@@ -45,7 +44,8 @@ public class Member {
 
     private String detailedAddress;
 
-    private int postCode;
+    // int -> Integer로 변경
+    private Integer postCode;
 
     @CreatedDate
     @Column(updatable = false)
