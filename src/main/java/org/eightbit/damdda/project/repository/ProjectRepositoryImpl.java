@@ -99,7 +99,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         // 전체 개수 조회
         long total = queryFactory.selectFrom(project)
                 .where(builder)
-                .fetchCount();
+                .fetch().size();
 
 
 

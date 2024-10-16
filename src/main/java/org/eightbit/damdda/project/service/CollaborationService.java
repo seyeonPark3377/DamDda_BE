@@ -42,7 +42,7 @@ public interface CollaborationService {
     }
 
     default CollaborationDetailDTO collabEntityToDto(Collaboration collaboration) throws JsonProcessingException {
-        List collabDocList = collaboration.getCollabDocList()==null ? new ArrayList() : collaboration.getCollabDocList().stream().map(String.class::cast).collect(Collectors.toList());
+        List<Object> collabDocList = collaboration.getCollabDocList()==null ? new ArrayList<>() : collaboration.getCollabDocList().stream().map(String.class::cast).collect(Collectors.toList());
         return CollaborationDetailDTO.builder()
                 .collaborationDTO(CollaborationDTO.builder().id(collaboration.getId()).title(collaboration.getProject().getTitle()).approval(collaboration.getApproval()).CollaborateDate(collaboration.getSavedAt()).name(collaboration.getName()).build())
                 .phoneNumber(collaboration.getPhoneNumber())

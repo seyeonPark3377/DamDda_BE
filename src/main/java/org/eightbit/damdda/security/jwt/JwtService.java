@@ -2,6 +2,7 @@ package org.eightbit.damdda.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
@@ -12,19 +13,17 @@ import java.util.Date;
 @Component
 public class JwtService {
 
-    static final long EXPIRATION_TIME = 60 * 60 * 24 * 1 * 1000;
+    static final long EXPIRATION_TIME = 60 * 60 * 24 * 1 * 1000; // 1 day in milliseconds
     static final String PREFIX = "Bearer ";
-    static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Generate a secret key for HS256 algorithm
 
-    public String getToken(Long memberId, String loginId){
-        String token = Jwts.builder()
-                .setSubject(loginId)  // loginId를 subject로 설정
-                .claim("memberId", memberId)  // memberId를 클레임에 추가
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))  // 토큰 만료 시간 설정
-                .signWith(key)  // 서명 키 설정
+    public String getToken(Long memberId, String loginId) {
+        return Jwts.builder()
+                .setSubject(loginId)  // Set the loginId as the subject
+                .claim("memberId", memberId)  // Add memberId to claims
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))  // Set token expiration
+                .signWith(key)  // Sign with the secret key
                 .compact();
-
-        return token;
     }
 
     public String getAuthUser(HttpServletRequest request) {
@@ -32,50 +31,47 @@ public class JwtService {
 
         if (token != null && token.startsWith(PREFIX)) {
             System.out.println(token);
+            // Use parserBuilder instead of deprecated parser()
             Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token.replace(PREFIX, ""))
+                    .setSigningKey(key) // Set the signing key
+                    .build() // Build the parser
+                    .parseClaimsJws(token.replace(PREFIX, "")) // Parse the token
                     .getBody();
-            String user = claims.getSubject();
-            return user;
+            return claims.getSubject(); // Get the subject (loginId)
         }
         return null;
     }
 
     public boolean validateToken(String token) {
         try {
-            // 토큰에서 모든 클레임을 추출하면서 서명 검증을 진행
-            Claims claims = extractAllClaims(token);
-
-            // 만료 시간을 확인
-            return !isTokenExpired(claims);
-        } catch (SignatureException e) {
+            Claims claims = extractAllClaims(token);  // Extract all claims from the token
+            return !isTokenExpired(claims);  // Check if the token is expired
+        } catch (SecurityException e) {  // Catch security-related exceptions
             System.out.println("Invalid JWT signature: " + e.getMessage());
-        } catch (MalformedJwtException e) {
+        } catch (MalformedJwtException e) {  // Catch malformed token exceptions
             System.out.println("Invalid JWT token: " + e.getMessage());
-        } catch (ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {  // Catch expired token exceptions
             System.out.println("JWT token is expired: " + e.getMessage());
-        } catch (UnsupportedJwtException e) {
+        } catch (UnsupportedJwtException e) {  // Catch unsupported token exceptions
             System.out.println("JWT token is unsupported: " + e.getMessage());
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {  // Catch invalid token format exceptions
             System.out.println("JWT claims string is empty: " + e.getMessage());
         }
         return false;
     }
 
-    // JWT에서 만료 시간을 확인
+    // Check if the token is expired
     private boolean isTokenExpired(Claims claims) {
         Date expiration = claims.getExpiration();
-        return expiration.before(new Date()); // 현재 시간보다 만료 시간이 이전인지 확인
+        return expiration.before(new Date()); // Compare the expiration date with the current date
     }
 
-    // JWT에서 모든 클레임을 추출하는 메소드
+    // Extract all claims from the token
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(key) // 서명할 때 사용한 키를 설정
-                .parseClaimsJws(token)    // 토큰에서 클레임을 추출
+        return Jwts.parserBuilder()  // Use parserBuilder instead of deprecated parser()
+                .setSigningKey(key)  // Set the signing key
+                .build()  // Build the parser
+                .parseClaimsJws(token)  // Parse the token and extract claims
                 .getBody();
     }
-
 }
