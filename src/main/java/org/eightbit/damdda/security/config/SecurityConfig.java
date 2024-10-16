@@ -55,29 +55,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.PUT, "/member/{id}/password").permitAll()
-                .antMatchers(HttpMethod.GET,
-                        "/member/findid",
-                        "/member/profile",
-                        "/member/check",
-                        "/member/check/**",
-                        "/packages/project/{projectId}",
-                        "/files/projects/**",
-                        "/api/projects/projects",
-                        "/api/projects/{projectId}"
+                .antMatchers(HttpMethod.POST,
+                        "/damdda/member", // 회원 정보 등록(회원가입)
+                        "/damdda/member/login" // 로그인
                 ).permitAll()
-
-                .antMatchers(HttpMethod.POST, "/member", "/member/login").permitAll()
+                .antMatchers(HttpMethod.GET,
+                        "/damdda/member/findid", // 아이디 찾기
+                        "/damdda/member/check", // 회원 정보 확인
+                        "/damdda/member/check/**", // 아이디, 닉네임 중복 확인
+                        "/damdda/projects/projects", // 프로젝트 목록 조회
+                        "/damdda/files/projects/**", // 프로젝트 문서 및 이미지 조회
+                        "/damdda/project/{projectId}", // 프로젝트 상세 조회
+                        "/damdda/packages/{projectId}" // 프로젝트 선물 구성 조회
+                ).permitAll()
+                .antMatchers(HttpMethod.PUT,
+                        "/damdda/member/{id}/password" // 비밀번호 수정
+                ).permitAll()
                 .anyRequest().authenticated().and()
                 .logout()
-//                .logoutUrl("/member/logout")
-//                .logoutSuccessUrl("/members/login?logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID").and()
                 .addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class)  // 로그인 필터 추가
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // JWT 필터 추가
                 .exceptionHandling().authenticationEntryPoint(authEntryPoint);
     }
+
 
     @Value("${app.cors.allowed-origins}")
     private String[] allowedOrigins;  // Allowed origins from external configuration
@@ -96,7 +98,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         config.setAllowedOrigins(Arrays.asList(allowedOrigins));
 
         // Allow specific HTTP methods and headers for cross-origin requests
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(List.of("*"));
 
         // Allow credentials (cookies, authorization headers)

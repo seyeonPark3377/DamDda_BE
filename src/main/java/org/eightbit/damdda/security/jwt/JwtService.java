@@ -46,17 +46,16 @@ public class JwtService {
             Claims claims = extractAllClaims(token);  // Extract all claims from the token
             return !isTokenExpired(claims);  // Check if the token is expired
         } catch (SecurityException e) {  // Catch security-related exceptions
-            System.out.println("Invalid JWT signature: " + e.getMessage());
+            throw new RuntimeException("Invalid JWT signature", e);
         } catch (MalformedJwtException e) {  // Catch malformed token exceptions
-            System.out.println("Invalid JWT token: " + e.getMessage());
+            throw new RuntimeException("Invalid JWT token", e);
         } catch (ExpiredJwtException e) {  // Catch expired token exceptions
-            System.out.println("JWT token is expired: " + e.getMessage());
+            throw new RuntimeException("JWT token is expired", e);
         } catch (UnsupportedJwtException e) {  // Catch unsupported token exceptions
-            System.out.println("JWT token is unsupported: " + e.getMessage());
+            throw new RuntimeException("JWT token is unsupported", e);
         } catch (IllegalArgumentException e) {  // Catch invalid token format exceptions
-            System.out.println("JWT claims string is empty: " + e.getMessage());
+            throw new RuntimeException("JWT claims string is empty", e);
         }
-        return false;
     }
 
     // Check if the token is expired
