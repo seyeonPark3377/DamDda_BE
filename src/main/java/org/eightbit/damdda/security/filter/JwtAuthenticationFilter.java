@@ -32,7 +32,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = null;
         String username = null;
-        Long memberId = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             token = authorizationHeader.substring(7); // "Bearer " 이후 토큰 값만 추출
@@ -41,7 +40,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             User user = (User) userDetailsService.loadUserByUsername(username);
-            memberId = user.getMember().getId();
 
             if (jwtService.validateToken(token)) { // 토큰 유효성 검증
                 UsernamePasswordAuthenticationToken authToken =
@@ -51,11 +49,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken); // 인증 정보 설정
             }
         }
-
-        request.setAttribute("memberId", memberId);
-        request.setAttribute("username", username);
-
-        System.out.println("Request Info: " + memberId + ", " + username);
         filterChain.doFilter(request, response);
     }
 }

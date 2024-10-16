@@ -34,30 +34,22 @@ public class KakaoPayIpFilter implements Filter {
 
         String requestURI = httpRequest.getRequestURI();
         String remoteIp = httpRequest.getRemoteAddr();
-        System.out.println("remoteIp: "+remoteIp);
-
-        System.out.println("kakao log: " + requestURI);
 
         // 카카오페이 엔드포인트에만 필터 적용
         if (requestURI.startsWith("/payment/kakao/success") ||
                 requestURI.startsWith("/payment/kakao/cancel") ||
                 requestURI.startsWith("/payment/kakao/fail")) {
-            System.out.println("kakao log: enter if문");
-
             // 허용된 IP 주소 중 하나와 일치하는지 확인
             if (ALLOWED_IPS.contains(remoteIp)) {
                 // IP가 일치하면 요청을 처리
                 chain.doFilter(request, response);
-                System.out.println("kakao log: 일치");
             } else {
                 // IP가 일치하지 않으면 403 Forbidden 응답
-                System.out.println("불일치");
                 httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
             }
         } else {
             // 카카오페이 엔드포인트가 아니면 필터를 적용하지 않고 다음 필터로 넘김
             chain.doFilter(request, response);
-            System.out.println("kakao log: pass");
         }
     }
 
@@ -70,4 +62,5 @@ public class KakaoPayIpFilter implements Filter {
     public void destroy() {
         // 필터 종료 시 작업
     }
+
 }

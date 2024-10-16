@@ -36,10 +36,6 @@ public class PageResponseDTO<E> {
 
         // Math.ceil은 소수점에 10.1이 있으면 11로 값을 올린다.
         // 올림 함수
-        //this.end = (int)(Math.ceil(this.page / size)) * size;
-
-        //this.start = this.end - size + 1;
-
         this.end = (int)(Math.ceil(this.page / 10.0)) * 10;
 
         this.start = this.end - 9;

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.eightbit.damdda.order.dto.TossRequest;
 
 import org.eightbit.damdda.order.dto.TossResponse;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -35,12 +34,9 @@ public class TossPayService {
 
         // HTTP 헤더 설정
         HttpHeaders headers = new HttpHeaders();
-
         headers.setBasicAuth(TOSS_SECRET_KEY, "");
         headers.set("x-damdda-authorization", authorizationHeader); // Custom 헤더 설정
         headers.add("Content-Type", "application/json");
-        System.out.println("tosspay service- authorizationHeader"+authorizationHeader);
-
 
         // 요청 DTO 생성
         TossRequest requestDTO = new TossRequest();
@@ -59,7 +55,5 @@ public class TossPayService {
                 TossResponse.class
         );
         return tossResponse.getBody();
-
-
     }
 }

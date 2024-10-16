@@ -20,8 +20,6 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
-// pr완료
-@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000", "http://127.0.0.1:3000", "http://223.130.156.95", "http://223.130.156.95"})
 @RestController
 @RequestMapping("/project")
 @Log4j2
@@ -30,7 +28,6 @@ public class ProjectApiController {
 
     private final ProjectService projectService;
     private final LikedProjectService likedProjectService;
-
 
     @GetMapping("/projects")
     public PageResponseDTO<ProjectBoxDTO> getProjects(
@@ -42,10 +39,7 @@ public class ProjectApiController {
             @RequestParam(required = false) String progress,
             @RequestParam(required = false) String[] sort,
             PageRequestDTO pageRequestDTO) {
-
-
         Long memberId = user == null ? 0L : user.getMemberId();
-
         List<String> sortConditions = sort != null ? Arrays.asList(sort) : List.of();
         PageResponseDTO<ProjectBoxDTO> sortedProjects = projectService.getProjects(pageRequestDTO, memberId, page, size, category, search, progress, sortConditions);
         return sortedProjects;
@@ -109,7 +103,6 @@ public class ProjectApiController {
         likedProjectService.deleteLikedProject(projectId, memberId);
     }
 
-
     //@PostMapping("/register")
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Long registerPost(@AuthenticationPrincipal User user,
@@ -121,24 +114,9 @@ public class ProjectApiController {
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes) {
         Long memberId = user.getMemberId();
-
-
-//        Long projectId = null;
-
         Long projectId = projectService.register(memberId, projectDetailDTO, submit.equals("제출"), productImages, descriptionImages, docs);
-
-
-//        if (submit.equals("저장")) {
-//            projectId = projectService.register(memberId, projectDetailDTO, false, productImages, descriptionImages, docs);
-//        } else if (submit.equals("제출")) {
-//            projectId = projectService.register(memberId, projectDetailDTO, true, productImages, descriptionImages, docs);
-//        } else {
-//            redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
-//        }
         return projectId;
-
     }
-
 
     @PutMapping("/register/{projectId}")
     public String registerPut(@PathVariable Long projectId,
@@ -156,33 +134,18 @@ public class ProjectApiController {
                               BindingResult bindingResult,
                               RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            log.info("has errors..........");
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "error";  // 유효성 검증 실패 시 에러 페이지로 이동
         }
 
-
         projectId = projectService.updateProject(projectDetailDTO, projectId,
                 submit.equals("제출"), productImagesMeta, descriptionImagesMeta, docsMeta,
                 productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
-
-
-        // submit 값에 따른 처리
-//        if (submit.equals("저장")) {
-//            projectId = projectService.updateProject(projectDetailDTO, projectId, false, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
-//        } else if (submit.equals("제출")) {
-//            projectId = projectService.updateProject(projectDetailDTO, projectId, true, productImagesMeta, descriptionImagesMeta, docsMeta, productImages, descriptionImages, docs, updateProductImage, updateDescriptionImage, updateDocs);
-//        } else {
-//            redirectAttributes.addFlashAttribute("errors", "Invalid submit action.");
-//            return "error";  // submit 값이 잘못된 경우 에러 페이지로 이동
-//        }
-        // projectId 리턴
         return "projectId: " + projectId + "\n" + projectService.findById(projectId);
     }
 
     @DeleteMapping("/{projectId}")
     public ResponseEntity<String> registerDelete(@PathVariable Long projectId) {
-
         try {
             // 프로젝트가 존재하는지 확인
             projectService.findById(projectId);
@@ -194,11 +157,10 @@ public class ProjectApiController {
         }
 
     }
-    // 태욱
+
     // 일별 후원액 가져오는 쿼리
     @GetMapping("/daily/{projectId}")
     public ResponseEntity<List<?>> getDailySupportingByProjectId(@PathVariable Long projectId) {
-        log.info(projectService.getDailySupportingByProjectId(projectId));
         return ResponseEntity.ok(projectService.getDailySupportingByProjectId(projectId));
     }
 

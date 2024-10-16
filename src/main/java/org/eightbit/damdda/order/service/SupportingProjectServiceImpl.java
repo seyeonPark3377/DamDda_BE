@@ -19,7 +19,6 @@ import java.util.List;
 @Transactional
 public class SupportingProjectServiceImpl implements SupportingProjectService {
 
-
     private final SupportingProjectRepository supportingProjectRepository;
 
     @Override

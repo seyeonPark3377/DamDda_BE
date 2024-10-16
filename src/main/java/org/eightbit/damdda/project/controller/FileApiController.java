@@ -31,7 +31,6 @@ public class FileApiController {
 
     @GetMapping("/{projectId}/{fileName:.+}")
     public ResponseEntity<Resource> serveFile(@PathVariable String projectId, @PathVariable String fileName) {
-        log.info("Request file " + fileName);
         try {
             // 파일 경로 생성
             Path filePath = Paths.get(basePath).resolve("projects").resolve(projectId).resolve(fileName).normalize();
@@ -45,14 +44,12 @@ public class FileApiController {
                 if (contentType == null) {
                     contentType = "application/octet-stream";
                 }
-                log.info("Served file " + fileName);
                 // ResponseEntity로 파일과 헤더 반환
                 return ResponseEntity.ok()
                         .contentType(MediaType.parseMediaType(contentType))
                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + UriUtils.encode(resource.getFilename(), StandardCharsets.UTF_8) + "\"")
                         .body(resource);
             } else {
-                log.info(fileName + " not found");
                 throw new RuntimeException(fileName + " not found" + "파일을 찾을 수 없거나 읽을 수 없습니다.");
             }
         } catch (MalformedURLException e) {

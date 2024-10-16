@@ -78,33 +78,6 @@ public class KakaoPayService {
         return approveResponse;
     }
 
-
-    /* * 결제 환불
-     */
-//    public KakaoCancelResponse kakaoCancel() {
-//
-//        // 카카오페이 요청
-//        MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-//        parameters.add("cid", cid);
-//        parameters.add("tid", kakaoReady.getTid());
-//        parameters.add("cancel_amount", 10);
-//        parameters.add("cancel_tax_free_amount", 0);
-//        parameters.add("cancel_vat_amount", 0);
-//
-//        // 파라미터, 헤더
-//        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
-//
-//        // 외부에 보낼 url
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        KakaoCancelResponse cancelResponse = restTemplate.postForObject(
-//                "https://kapi.kakao.com/v1/payment/cancel",
-//                requestEntity,
-//                KakaoCancelResponse.class);
-//
-//        return cancelResponse;
-//    }
-
     /**
      * 카카오 요구 헤더값
      */

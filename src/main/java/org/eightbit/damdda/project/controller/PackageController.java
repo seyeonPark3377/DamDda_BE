@@ -1,6 +1,7 @@
 package org.eightbit.damdda.project.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.project.dto.PackageDTO;
 import org.eightbit.damdda.project.dto.RewardDTO;
@@ -16,11 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/package")
 @Log4j2
+@RequiredArgsConstructor
 public class PackageController {
 
-    @Autowired
-    PackageService packageService;
-
+    private final PackageService packageService;
 
     //package 등록
     @PostMapping("/{projectId}")

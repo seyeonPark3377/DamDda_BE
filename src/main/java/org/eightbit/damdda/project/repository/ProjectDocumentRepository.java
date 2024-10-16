@@ -7,8 +7,8 @@ import java.util.List;
 
 
 public interface ProjectDocumentRepository  extends JpaRepository<ProjectDocument, Long> {
-    public List<ProjectDocument> findAllByProjectId(Long projectId);
-    public List<ProjectDocument> findAllByProjectIdOrderByOrd(Long projectId);
+    List<ProjectDocument> findAllByProjectId(Long projectId);
+    List<ProjectDocument> findAllByProjectIdOrderByOrd(Long projectId);
     void deleteByUrlIn(List<String> urls);
 }
 

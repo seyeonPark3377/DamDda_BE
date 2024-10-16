@@ -30,7 +30,6 @@ public class JwtService {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (token != null && token.startsWith(PREFIX)) {
-            System.out.println(token);
             // Use parserBuilder instead of deprecated parser()
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(key) // Set the signing key
