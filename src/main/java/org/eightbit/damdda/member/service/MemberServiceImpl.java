@@ -35,8 +35,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final RegisterRepository registerRepository;
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    // = new BCryptPasswordEncorder() 추가
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Value("${cloud.aws.credentials.bucket}")
     private String bucketName;
@@ -46,7 +45,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Map<String, Object> getUserInfo(Long member_id){
         Member member = memberRepository.findById(member_id).orElseThrow();
-        Map userInfo = new HashMap<>();
+        Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("id",member.getLoginId());
         userInfo.put("key",member.getId());
         userInfo.put("imageUrl",member.getImageUrl());
@@ -86,11 +85,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO getMember(String loginId) {
         Optional<Member> member = memberRepository.findByLoginId(loginId);
-        if (member.isPresent()) {
-            return MemberDTO.of(member.get());
-        }else {
-            return null;
-        }
+        return member.map(MemberDTO::of).orElse(null);
     }
 
     @Override
@@ -117,7 +112,7 @@ public class MemberServiceImpl implements MemberService {
         memberDTO.setLoginId(null);
         memberDTO.setPassword(null);
         memberDTO.setName(null);
-        memberDTO.setNickname("(unknown)");
+        memberDTO.setNickname(null);
         memberDTO.setEmail(null);
         memberDTO.setPhoneNumber(null);
         memberDTO.setAddress(null);
@@ -126,7 +121,8 @@ public class MemberServiceImpl implements MemberService {
         memberDTO.setImageUrl(null);
         memberDTO.setDeletedAt(new Timestamp(System.currentTimeMillis()));
 
-        this.memberRepository.save(memberDTO.toEntity());
+        Member member = memberDTO.toEntity();
+        this.memberRepository.save(member);
     }
 
     @Transactional

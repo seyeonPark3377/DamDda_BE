@@ -22,9 +22,7 @@ public class MemberDTO {
     private String phoneNumber;
     private String address;
     private String detailedAddress;
-    // int -> Integer로 변경
     private Integer postCode;
-    //    private MultipartFile imageUrl;
     private String imageUrl;
     private Timestamp deletedAt;
 
@@ -44,9 +42,9 @@ public class MemberDTO {
                 .build();
     }
 
-    // 빌더 수정
     public Member toEntity() {
         return Member.builder()
+                .id(id)
                 .loginId(loginId)
                 .password(password)
                 .nickname(nickname)

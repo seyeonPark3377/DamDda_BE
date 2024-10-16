@@ -208,7 +208,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteMember(@AuthenticationPrincipal User user){                                   // 이거는 테스트에서 member 정보 다 보내야 해?
+    public ResponseEntity<Map<String, Boolean>> deleteMember(@AuthenticationPrincipal User user){
         try{
             memberService.deleteMember(user.getMemberId());
             return ResponseEntity.ok(Map.of("isSuccess", true));
