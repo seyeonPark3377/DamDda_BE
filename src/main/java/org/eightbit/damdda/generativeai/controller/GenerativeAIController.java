@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.generativeai.dto.AIProjectDescriptionDTO;
-import org.eightbit.damdda.generativeai.service.GenerativeAIServiceImpl;
+import org.eightbit.damdda.generativeai.service.GenerativeAIService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 public class GenerativeAIController {
 
     // GenerativeAIServiceImpl 인스턴스를 주입받아 사용
-    private final GenerativeAIServiceImpl generativeAIService;
+    private final GenerativeAIService generativeAIService;
 
     /**
      * 프로젝트 상세페이지 가이드라인을 생성하는 POST 요청 처리
