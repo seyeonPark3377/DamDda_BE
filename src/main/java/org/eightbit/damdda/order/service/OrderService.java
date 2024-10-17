@@ -1,10 +1,8 @@
 package org.eightbit.damdda.order.service;
 
-import com.amazonaws.HttpMethod;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.common.util.ExcelGenerator;
+import org.eightbit.damdda.common.util.S3Util;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.order.domain.*;
 
@@ -18,14 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 
 import java.io.IOException;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.io.File;
 
 @Service
 @RequiredArgsConstructor
@@ -38,9 +35,10 @@ public class OrderService {
     private final org.eightbit.damdda.order.repository.SupportingPackageRepository supportingPackageRepository;
     private final org.eightbit.damdda.project.repository.ProjectRepository projectRepository;
     private final org.eightbit.damdda.member.repository.MemberRepository memberRepository;
-    private final AmazonS3 amazonS3;
-    @Value("${cloud.aws.credentials.bucket}")
-    private String bucketName;
+    private final S3Util s3Util;
+    private final ExcelGenerator excelGenerator;
+    @Value("${s3.url.expiration.minutes}")
+    private int s3UrlExpirationMinutes;
 
     //주문 저장
     @Transactional
@@ -269,45 +267,82 @@ public class OrderService {
                 .build();
     }
 
-    public String generateExcelAndPresignedUrlForProject(Long projectId) throws IOException {
+    public String generateUploadAndGetPresignedUrlForSupportersExcel(Long projectId) throws IOException {
+        // Generate the file name for the Excel file
+        String fileName = generateSupportersExcelFileName(projectId);
+        String fileType = ".xlsx";
 
+        // Upload the generated Excel file to the S3 bucket
+        s3Util.uploadFileToS3(
+                fileName,
+                fileType,
+                excelGenerator.generateExcelFile(
+                        fileName,
+                        getSupportersDataForExcel(projectId)
+                )
+        );
+
+        // Return the presigned URL for the uploaded file, with an expiration time
+        return s3Util.generatePresignedUrlWithExpiration(fileName, fileType, s3UrlExpirationMinutes);
+    }
+
+    private List<Map<String, Object>> getSupportersDataForExcel(Long projectId) {
+        // Retrieve the list of orders for the specified project
         List<Order> orders = orderRepository.findAllBySupportingProject_Project_Id(projectId);
         List<Map<String, Object>> data = new ArrayList<>(orders.size());
 
+        // Loop through each order and gather the necessary details
         for (Order order : orders) {
-            // 각 Order 객체에서 정보를 추출하여 Map에 저장
             Map<String, Object> rowData = new HashMap<>();
+
+            // Add order details
             rowData.put("후원번호", order.getOrderId());
-            rowData.put("후원자 이름", order.getSupportingProject().getUser().getName());
+            rowData.put("이름", order.getSupportingProject().getUser().getName());
             rowData.put("후원일시", order.getCreatedAt());
 
-            // 추출된 rowData를 ExcelGenerator에 전달할 data 리스트에 추가
+            // Add package details
+            rowData.put("패키지 이름", joinSupportingPackageDetails(order.getSupportingPackages(), SupportingPackage::getPackageName));
+            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackages(),
+                    supportingPackage -> String.valueOf(supportingPackage.getPackageCount())));
+            rowData.put("패키지 가격", joinSupportingPackageDetails(order.getSupportingPackages(),
+                    supportingPackage -> String.valueOf(supportingPackage.getPackagePrice())));
+
+            // TODO: 옵션 정보 추가 필요
+
+            // Add payment details, if available
+            if (order.getPayment() != null) {
+                rowData.put("결제 여부", order.getPayment().getPaymentStatus());
+            }
+
+            // Add delivery details, if available
+            if (order.getDelivery() != null) {
+                rowData.put("닉네임", order.getDelivery().getDeliveryName());
+                rowData.put("전화번호", order.getDelivery().getDeliveryPhoneNumber());
+                rowData.put("이메일", order.getDelivery().getDeliveryEmail());
+                rowData.put("주소", order.getDelivery().getDeliveryAddress());
+                rowData.put("상세주소", order.getDelivery().getDeliveryDetailedAddress());
+                rowData.put("배송 메시지", order.getDelivery().getDeliveryMessage());
+                rowData.put("우편번호", order.getDelivery().getDeliveryPostCode());
+            }
+
+            // Add the row data to the list
             data.add(rowData);
         }
 
-        String fileName = "후원자 관리";
+        // Return the list of data for Excel generation
+        return data;
+    }
 
-        amazonS3.putObject(
-                bucketName,
-                fileName + ".xlsx",
-                new ExcelGenerator().generateExcelFile(fileName, data)
-        );
+    private String joinSupportingPackageDetails(Set<SupportingPackage> supportingPackages, Function<SupportingPackage, String> mapper) {
+        // Convert package details into a single string, joined by commas
+        return supportingPackages.stream()
+                .map(mapper)
+                .collect(Collectors.joining(", "));
+    }
 
-        // 서명된 URL의 만료 시간 설정 (예: 1시간)
-        Date expiration = new Date();
-        long expTimeMillis = expiration.getTime();
-        expTimeMillis += 1000 * 60 * 60;  // 1시간 유효
-        expiration.setTime(expTimeMillis);
-
-        String password = "ddd";
-
-        return (
-                amazonS3.generatePresignedUrl(
-                        new GeneratePresignedUrlRequest(bucketName, fileName + ".xlsx", HttpMethod.GET)
-                                .withExpiration(expiration)
-                ).toString() + "&password=" + password
-        );
-
+    private String generateSupportersExcelFileName(Long projectId) {
+        // Create a unique file name based on the project ID
+        return "후원자_관리_" + projectId;
     }
 
 }

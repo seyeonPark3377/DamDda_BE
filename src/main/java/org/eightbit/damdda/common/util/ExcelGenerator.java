@@ -142,11 +142,9 @@ public class ExcelGenerator {
      */
     private File writeToFile(Workbook workbook) throws IOException {
         File tempFile = File.createTempFile("generated_excel_", ".xlsx");
-        log.info("[Excel Generator] Creating temporary file at: {}", tempFile.getAbsolutePath());
 
         try (workbook; FileOutputStream fileOut = new FileOutputStream(tempFile)) {
             workbook.write(fileOut);
-            log.info("[Excel Generator] Excel file written to: {}", tempFile.getAbsolutePath());
         }
 
         return tempFile;

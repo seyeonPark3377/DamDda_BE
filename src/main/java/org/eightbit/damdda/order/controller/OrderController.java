@@ -97,18 +97,12 @@ public class OrderController {
     }
 
     @GetMapping("/{projectId}/supporters/excel")
-    public ResponseEntity<String> generateSupporterListExcel(@PathVariable Long projectId) {
-        try {
-            // 서비스 메서드를 호출하여 서명된 URL을 얻음
-            String presignedUrl = orderService.generateExcelAndPresignedUrlForProject(projectId);
+    public ResponseEntity<String> generateAndGetSupportersExcel(@PathVariable Long projectId) throws IOException {
+        // Generate the presigned URL by calling the service method
+        String presignedUrl = orderService.generateUploadAndGetPresignedUrlForSupportersExcel(projectId);
 
-            // 서명된 URL을 응답으로 반환
-            return ResponseEntity.ok(presignedUrl);
-        } catch (IOException e) {
-            // 예외 처리 (파일 생성 또는 업로드 중 오류 발생 시)
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error occurred while generating Excel and uploading to S3.");
-        }
+        // Return the presigned URL as a response
+        return ResponseEntity.ok(presignedUrl);
     }
 
 }
