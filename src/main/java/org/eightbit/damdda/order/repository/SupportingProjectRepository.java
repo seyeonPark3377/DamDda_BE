@@ -17,7 +17,6 @@ public interface SupportingProjectRepository extends JpaRepository<SupportingPro
 
     List<SupportingProject> findAllByUser_Id(Long userId);
 
-    // 태욱
     // 일별 후원액 가져오는 쿼리
     @Query("SELECT pr.supportedAt, SUM(pa.packagePrice) "+
             "FROM SupportingProject pr INNER JOIN SupportingPackage pa " +
