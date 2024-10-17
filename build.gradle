@@ -51,6 +51,9 @@ dependencies {
     // Database Driver
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
+    // Apache POI for Excel handling
+    implementation 'org.apache.poi:poi-ooxml:5.2.3'
+
     // Development Only
 //    developmentOnly 'org.springframework.boot:spring-boot-devtools'  // 추가
 

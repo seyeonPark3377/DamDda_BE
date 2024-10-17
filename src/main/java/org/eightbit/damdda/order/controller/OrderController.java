@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -93,6 +94,21 @@ public class OrderController {
     public ResponseEntity<ProjectStatisticsDTO> getProjectStatistics(@PathVariable Long projectId) {
         ProjectStatisticsDTO statistics = orderService.getProjectStatistics(projectId);
         return new ResponseEntity<>(statistics, HttpStatus.OK);
+    }
+
+    @GetMapping("/{projectId}/supporters/excel")
+    public ResponseEntity<String> generateSupporterListExcel(@PathVariable Long projectId) {
+        try {
+            // 서비스 메서드를 호출하여 서명된 URL을 얻음
+            String presignedUrl = orderService.generateExcelAndPresignedUrlForProject(projectId);
+
+            // 서명된 URL을 응답으로 반환
+            return ResponseEntity.ok(presignedUrl);
+        } catch (IOException e) {
+            // 예외 처리 (파일 생성 또는 업로드 중 오류 발생 시)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error occurred while generating Excel and uploading to S3.");
+        }
     }
 
 }

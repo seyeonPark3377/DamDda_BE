@@ -37,10 +37,9 @@ public class MemberServiceImpl implements MemberService {
     private final RegisterRepository registerRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    private final AmazonS3 amazonS3;
     @Value("${cloud.aws.credentials.bucket}")
     private String bucketName;
-    @Autowired
-    private AmazonS3 amazonS3;
 
     @Override
     public Map<String, Object> getUserInfo(Long member_id){

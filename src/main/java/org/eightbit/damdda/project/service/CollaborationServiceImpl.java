@@ -39,11 +39,10 @@ import java.util.stream.Collectors;
 @Log4j2
 public class CollaborationServiceImpl implements CollaborationService{
 
+    private final AmazonS3 amazonS3;
     @Value("${cloud.aws.credentials.bucket}")
     private String bucketName;
 
-    @Autowired
-    private AmazonS3 amazonS3;
     private final CollaborationRepository collaborationRepository;
     private final ProjectRepository projectRepository;
 

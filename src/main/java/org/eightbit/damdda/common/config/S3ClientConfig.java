@@ -1,4 +1,4 @@
-package org.eightbit.damdda.project.config;
+package org.eightbit.damdda.common.config;
 
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -11,17 +11,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class NcpConfig {
-    @Value("${CLOUD_AWS_ACCESS_KEY_MINHEE}")
+public class S3ClientConfig {
+    @Value("${cloud.aws.credentials.access-key}")
     private String accessKey;
 
-    @Value("${CLOUD_AWS_SECRET_KEY_MINHEE}")
+    @Value("${cloud.aws.credentials.secret-key}")
     private String secretKey;
 
-    @Value("${CLOUD_AWS_REGION}")
+    @Value("${cloud.aws.region.static}")
     private String region;
 
-    @Value("${CLOUD_AWS_S3_ENDPOINT}")
+    @Value("${cloud.aws.s3.endpoint}")
     private String endPoint;
 
     @Bean

@@ -66,7 +66,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/project/projects", // 프로젝트 목록 조회
                         "/files/projects/**", // 프로젝트 문서 및 이미지 조회
                         "/project/{projectId}", // 프로젝트 상세 조회
-                        "/package/{projectId}" // 프로젝트 선물 구성 조회
+                        "/package/{projectId}", // 프로젝트 선물 구성 조회
+
+                        "/order/**" // 임시
                 ).permitAll()
                 .antMatchers(HttpMethod.PUT,
                         "/member/{id}/password" // 비밀번호 수정

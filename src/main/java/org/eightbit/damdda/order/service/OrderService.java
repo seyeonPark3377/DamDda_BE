@@ -1,26 +1,31 @@
 package org.eightbit.damdda.order.service;
 
+import com.amazonaws.HttpMethod;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import lombok.RequiredArgsConstructor;
+import org.eightbit.damdda.common.util.ExcelGenerator;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.order.domain.*;
 
 import org.eightbit.damdda.order.dto.OrderDTO;
 import org.eightbit.damdda.order.dto.ProjectStatisticsDTO;
 import org.eightbit.damdda.project.domain.Project;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
+import java.io.IOException;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.io.File;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +38,9 @@ public class OrderService {
     private final org.eightbit.damdda.order.repository.SupportingPackageRepository supportingPackageRepository;
     private final org.eightbit.damdda.project.repository.ProjectRepository projectRepository;
     private final org.eightbit.damdda.member.repository.MemberRepository memberRepository;
+    private final AmazonS3 amazonS3;
+    @Value("${cloud.aws.credentials.bucket}")
+    private String bucketName;
 
     //주문 저장
     @Transactional
@@ -83,7 +91,7 @@ public class OrderService {
                 .payment(payment)
                 .supportingProject(supportingProject)
                 .supportingPackages(supportingPackages)
-                .createdAt(LocalDateTime.now())
+                .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .build();
 
         Order savedOrder = orderRepository.save(order);
@@ -259,6 +267,47 @@ public class OrderService {
                 .remainingDays(Math.max(remainingDays, 0)) // 남은 기간이 음수면 0
                 .targetFunding(targetFunding)
                 .build();
+    }
+
+    public String generateExcelAndPresignedUrlForProject(Long projectId) throws IOException {
+
+        List<Order> orders = orderRepository.findAllBySupportingProject_Project_Id(projectId);
+        List<Map<String, Object>> data = new ArrayList<>(orders.size());
+
+        for (Order order : orders) {
+            // 각 Order 객체에서 정보를 추출하여 Map에 저장
+            Map<String, Object> rowData = new HashMap<>();
+            rowData.put("후원번호", order.getOrderId());
+            rowData.put("후원자 이름", order.getSupportingProject().getUser().getName());
+            rowData.put("후원일시", order.getCreatedAt());
+
+            // 추출된 rowData를 ExcelGenerator에 전달할 data 리스트에 추가
+            data.add(rowData);
+        }
+
+        String fileName = "후원자 관리";
+
+        amazonS3.putObject(
+                bucketName,
+                fileName + ".xlsx",
+                new ExcelGenerator().generateExcelFile(fileName, data)
+        );
+
+        // 서명된 URL의 만료 시간 설정 (예: 1시간)
+        Date expiration = new Date();
+        long expTimeMillis = expiration.getTime();
+        expTimeMillis += 1000 * 60 * 60;  // 1시간 유효
+        expiration.setTime(expTimeMillis);
+
+        String password = "ddd";
+
+        return (
+                amazonS3.generatePresignedUrl(
+                        new GeneratePresignedUrlRequest(bucketName, fileName + ".xlsx", HttpMethod.GET)
+                                .withExpiration(expiration)
+                ).toString() + "&password=" + password
+        );
+
     }
 
 }
