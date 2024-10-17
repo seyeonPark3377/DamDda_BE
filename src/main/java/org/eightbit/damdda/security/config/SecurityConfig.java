@@ -56,20 +56,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST,
-                        "/damdda/member", // 회원 정보 등록(회원가입)
-                        "/damdda/member/login" // 로그인
+                        "/member", // 회원 정보 등록(회원가입)
+                        "/member/login" // 로그인
                 ).permitAll()
                 .antMatchers(HttpMethod.GET,
-                        "/damdda/member/findid", // 아이디 찾기
-                        "/damdda/member/check", // 회원 정보 확인
-                        "/damdda/member/check/**", // 아이디, 닉네임 중복 확인
-                        "/damdda/projects/projects", // 프로젝트 목록 조회
-                        "/damdda/files/projects/**", // 프로젝트 문서 및 이미지 조회
-                        "/damdda/project/{projectId}", // 프로젝트 상세 조회
-                        "/damdda/packages/{projectId}" // 프로젝트 선물 구성 조회
+                        "/member/findid", // 아이디 찾기
+                        "/member/check", // 회원 정보 확인
+                        "/member/check/**", // 아이디, 닉네임 중복 확인
+                        "/project/projects", // 프로젝트 목록 조회
+                        "/files/projects/**", // 프로젝트 문서 및 이미지 조회
+                        "/project/{projectId}", // 프로젝트 상세 조회
+                        "/package/{projectId}" // 프로젝트 선물 구성 조회
                 ).permitAll()
                 .antMatchers(HttpMethod.PUT,
-                        "/damdda/member/{id}/password" // 비밀번호 수정
+                        "/member/{id}/password" // 비밀번호 수정
                 ).permitAll()
                 .anyRequest().authenticated().and()
                 .logout()
@@ -80,36 +80,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(authEntryPoint);
     }
 
-
     @Value("${app.cors.allowed-origins}")
     private String[] allowedOrigins;  // Allowed origins from external configuration
 
-    /**
-     * Configures global CORS settings for the application.
-     *
-     * @return CorsConfigurationSource the CORS configuration source
-     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
-        // Set allowed origins from the external configuration
         config.setAllowedOrigins(Arrays.asList(allowedOrigins));
-
-        // Allow specific HTTP methods and headers for cross-origin requests
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(List.of("*"));
-
-        // Allow credentials (cookies, authorization headers)
         config.setAllowCredentials(true);
 
-        // Log the CORS configuration
         log.debug("CORS allowed origins: {}", Arrays.toString(allowedOrigins));
 
-        // Apply CORS configuration to all paths
         source.registerCorsConfiguration("/**", config);
-
         return source;
     }
 
