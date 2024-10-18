@@ -153,7 +153,7 @@ public class MemberController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProfile (@PathVariable Long id, @RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "member") MemberDTO memberDTO){
+    public ResponseEntity<MemberDTO> updateProfile (@PathVariable Long id, @RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "member") MemberDTO memberDTO){
         memberValidator.validateMemberIdForLoginUser(id);
         try {
             if (image != null) {
