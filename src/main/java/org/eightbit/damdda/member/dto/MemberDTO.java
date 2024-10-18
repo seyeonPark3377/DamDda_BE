@@ -30,7 +30,6 @@ public class MemberDTO {
         return MemberDTO.builder()
                 .id(member.getId())
                 .loginId(member.getLoginId())
-                .password(member.getPassword())
                 .nickname(member.getNickname())
                 .name(member.getName())
                 .email(member.getEmail())
