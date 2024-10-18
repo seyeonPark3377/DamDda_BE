@@ -1,12 +1,9 @@
 package org.eightbit.damdda.order.domain;
 
 import lombok.*;
-import org.eightbit.damdda.project.domain.Project;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -39,19 +36,12 @@ public class Order {
     @JoinColumn(name = "supporting_project_id", nullable = false)
     private SupportingProject supportingProject;
 
-    // SupportingPackage 정보와 연관된 필드
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "ordered_packages", // 중간 테이블 이름
-            joinColumns = @JoinColumn(name = "order_id"), // 현재 엔티티의 외래 키
-            inverseJoinColumns = @JoinColumn(name = "supporting_package_id") // 연관된 SupportingPackage의 외래 키
-    )
-    private Set<SupportingPackage> supportingPackages;
+    @OneToMany
+    @JoinColumn(name="supporting_package_id")
+    private Set<SupportingPackage> supportingPackage;
 
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;  // 주문 수정 시간
-
 }

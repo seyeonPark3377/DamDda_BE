@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface OrderService {
     //주문 저장
     @Transactional
-    Order createOrder(OrderDTO orderDTO);
+    OrderDTO createOrder(OrderDTO orderDTO);
 
     // userId로 주문 목록을 조회하는 메서드
     List<OrderDTO> getOrdersByUserId(Long userId);

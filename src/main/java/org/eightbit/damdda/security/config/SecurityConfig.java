@@ -55,25 +55,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-//                .regexMatchers(HttpMethod.POST,
-//                        "^/member$",                                    // 회원 정보 등록(회원가입)
-//                        "^/member/login$"                               // 로그인
-//                ).permitAll()
-//                .regexMatchers(HttpMethod.GET,
-//                        "^/member/findid$",                             // 아이디 찾기
-//                        "^/member/check$",                              // 회원 정보 확인
-//                        "^/member/check/.*$",                           // 아이디, 닉네임 중복 확인
-//                        "^/project/projects$",                          // 프로젝트 목록 조회
-//                        "/damdda/files/projects/\\d+/.+$",          // 프로젝트 문서 및 이미지 조회
-//                        "^/project/\\d+$",                              // 프로젝트 상세 조회, 숫자만 매칭
-//                        "^/package/\\d+$",                              // 프로젝트 선물 구성 조회, 숫자만 매칭
-//                        "^/damdda/order/\\d+/supporters/excel$"         // TODO: 삭제 필요; 후원자 리스트 엑셀 파일 테스트용
-//                ).permitAll()
-//                .regexMatchers(HttpMethod.PUT,
-//                        "^/member/\\d+/password$"                       // TODO: 확인 필요; 비밀번호 수정, 숫자만 매칭
-//                ).permitAll()
-                .antMatchers("/**").permitAll()
-
+                .regexMatchers(HttpMethod.POST,
+                        "^/member$",                                    // 회원 정보 등록(회원가입)
+                        "^/member/login$"                               // 로그인
+                ).permitAll()
+                .regexMatchers(HttpMethod.GET,
+                        "^/member/findid$",                             // 아이디 찾기
+                        "^/member/check$",                              // 회원 정보 확인
+                        "^/member/check/.*$",                           // 아이디, 닉네임 중복 확인
+                        "^/project/projects$",                          // 프로젝트 목록 조회
+                        "^/files/projects/\\d+/[^/]+$",          // 프로젝트 문서 및 이미지 조회
+                        "^/project/\\d+$",                              // 프로젝트 상세 조회, 숫자만 매칭
+                        "^/package/\\d+$",                              // 프로젝트 선물 구성 조회, 숫자만 매칭
+                        "^/order/\\d+/supporters/excel$"         // TODO: 삭제 필요; 후원자 리스트 엑셀 파일 테스트용
+                ).permitAll()
+                .regexMatchers(HttpMethod.PUT,
+                        "^/member/\\d+/password$"                       // 비밀번호 변경, TODO: 수정 필요 (세연)
+                ).permitAll()
                 .anyRequest().authenticated().and()
                 .logout()
                 .invalidateHttpSession(true)
