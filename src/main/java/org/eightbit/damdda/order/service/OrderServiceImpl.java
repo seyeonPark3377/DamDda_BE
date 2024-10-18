@@ -21,6 +21,7 @@ import org.eightbit.damdda.project.domain.ProjectPackage;
 import org.eightbit.damdda.project.dto.PackageDTO;
 import org.eightbit.damdda.project.dto.RewardDTO;
 import org.eightbit.damdda.security.util.SecurityContextUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
+import java.sql.Timestamp;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,6 +37,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 
 @Log4j2
 @Service
@@ -51,6 +54,7 @@ public class OrderServiceImpl implements  OrderService{
     private final org.eightbit.damdda.member.repository.MemberRepository memberRepository;
     private final org.eightbit.damdda.project.repository.PackageRepository packageRepository;
     private final SecurityContextUtil securityContextUtil;
+
     private final ProjectValidator projectValidator;
     private final S3Util s3Util;
     private final ExcelGenerator excelGenerator;
@@ -165,7 +169,6 @@ public class OrderServiceImpl implements  OrderService{
     @Override
     public List<OrderDTO> getOrdersWithPaymentByUserId(Long userId) {
         // userId로 SupportingProject 가져오기
-        System.out.println("User ID in Service: " + userId);
 
         List<SupportingProject> supportingProjects = supportingProjectRepository.findAllByUser_Id(userId);
 
@@ -204,6 +207,12 @@ public class OrderServiceImpl implements  OrderService{
         //project의 후원자 수, 후원금액 업데이트
         Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp-> (long) sp.getPackageCount() *sp.getProjectPackage().getPackagePrice()).sum();
         projectRepository.updateProjectStatus(fundsReceive,order.getSupportingProject().getProject().getId(),1L);
+
+        //package의 salesQuantity,
+        order.getSupportingPackage().forEach(sp ->{
+            packageRepository.updateQuantities(sp.getPackageCount(),sp.getProjectPackage().getId());
+        });
+
         orderRepository.save(order);  // 변경된 상태를 저장
     }
 
@@ -230,8 +239,6 @@ public class OrderServiceImpl implements  OrderService{
         }
 
     }
-
-    //**********여기!!!!!결제 취소 로직 orderId가 필요한지 어쩐지 모르겠어요!***************
 
     //order 테이블 가져오기
     @Override
@@ -412,7 +419,6 @@ public class OrderServiceImpl implements  OrderService{
         Set<SupportingPackageDTO> supportingPackageDTOS = supportingPackage.stream().map( pac-> {
 
                     ObjectMapper objectMapper = new ObjectMapper();
-                    log.info("null이게요 아니게요"+pac.getOptionList());
                     PackageDTO packageDTO = PackageDTO.builder()
                             .id(pac.getProjectPackage().getId())
                             .name(pac.getProjectPackage().getPackageName())
@@ -446,3 +452,4 @@ public class OrderServiceImpl implements  OrderService{
     }
 
 }
+

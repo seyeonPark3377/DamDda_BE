@@ -38,9 +38,9 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         parameters.add("total_amount", 10000);
         parameters.add("vat_amount", 100);
         parameters.add("tax_free_amount", 0);
-        parameters.add("approval_url", String.format("http://localhost:9000/payment/kakao/success/%d", orderId));
-        parameters.add("cancel_url", String.format("http://localhost:9000/payment/kakao/cancel?orderId=%d", orderId));
-        parameters.add("fail_url", String.format("http://localhost:9000/payment/kakao/fail?orderId=%d", orderId));
+        parameters.add("approval_url", String.format("http://localhost:9000/damdda/payment/kakao/success/%d", orderId));
+        parameters.add("cancel_url", String.format("http://localhost:9000/damdda/payment/kakao/cancel?orderId=%d", orderId));
+        parameters.add("fail_url", String.format("http://localhost:9000/damdda/payment/kakao/fail?orderId=%d", orderId));
 
         // 파라미터, 헤더
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters,this.getHeaders(authorizationHeader));
@@ -87,9 +87,8 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 
         String auth = "KakaoAK " + KAKAO_ADMIN_KEY;
         httpHeaders.set("Authorization", auth);
-        httpHeaders.set("x-damdda-authorization", damddaAuth);
+//        httpHeaders.set("x-damdda-authorization", damddaAuth);
         httpHeaders.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
         return httpHeaders;
     }
 }

@@ -36,7 +36,7 @@ public class TossPayServiceImpl implements TossPayService {
         // HTTP 헤더 설정
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(TOSS_SECRET_KEY, "");
-        headers.set("x-damdda-authorization", authorizationHeader); // Custom 헤더 설정
+        //headers.set("x-damdda-authorization", authorizationHeader); // Custom 헤더 설정
         headers.add("Content-Type", "application/json");
 
         // 요청 DTO 생성

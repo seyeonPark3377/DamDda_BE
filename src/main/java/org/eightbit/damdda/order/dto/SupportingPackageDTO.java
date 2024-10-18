@@ -1,5 +1,6 @@
 package org.eightbit.damdda.order.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +12,6 @@ import org.eightbit.damdda.project.dto.PackageDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SupportingPackageDTO {
-
     private PackageDTO packageDTO;
-
     private Integer packageCount;
 }
