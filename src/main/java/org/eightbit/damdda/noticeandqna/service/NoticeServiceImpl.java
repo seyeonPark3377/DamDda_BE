@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.common.utils.validation.ProjectValidator;
 import org.eightbit.damdda.noticeandqna.domain.Notice;
 import org.eightbit.damdda.noticeandqna.dto.NoticeDTO;
-import org.eightbit.damdda.common.exception.custom.UnauthorizedAccessException;
 import org.eightbit.damdda.noticeandqna.repository.NoticeRepository;
 import org.eightbit.damdda.security.util.SecurityContextUtil;
 import org.modelmapper.ModelMapper;
@@ -27,6 +26,7 @@ public class NoticeServiceImpl implements NoticeService {
     private final ModelMapper modelMapper;
     private final NoticeRepository noticeRepository;
     private final ProjectValidator projectValidator;
+    private final SecurityContextUtil securityContextUtil;
 
     /**
      * 공지사항을 저장하거나 수정하는 메서드.
@@ -38,7 +38,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     @Transactional
     public NoticeDTO saveNotice(NoticeDTO noticeDTO) {
-        Long memberId = SecurityContextUtil.getAuthenticatedMemberId();  // 현재 로그인된 사용자 ID를 조회.
+        Long memberId = securityContextUtil.getAuthenticatedMemberId();  // 현재 로그인된 사용자 ID를 조회.
         projectValidator.validateMemberIsOrganizer(memberId, noticeDTO.getProjectId());  // 현재 사용자가 프로젝트의 진행자인지 검증.
         Notice notice = modelMapper.map(noticeDTO, Notice.class);  // DTO를 엔티티로 변환.
         Notice savedNotice = noticeRepository.save(notice);  // 공지사항을 저장.
@@ -57,7 +57,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     @Transactional
     public boolean softDeleteNotice(Long noticeId, Long projectId) {
-        Long memberId = SecurityContextUtil.getAuthenticatedMemberId();  // 현재 로그인된 사용자 ID를 조회.
+        Long memberId = securityContextUtil.getAuthenticatedMemberId();  // 현재 로그인된 사용자 ID를 조회.
         projectValidator.validateMemberIsOrganizer(memberId, projectId);  // 현재 사용자가 프로젝트의 진행자인지 검증.
         int deleteResult = noticeRepository.softDeleteNotice(noticeId);  // 소프트 삭제 수행.
 

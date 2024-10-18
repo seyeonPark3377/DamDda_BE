@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.common.utils.cloud.S3Util;
 import org.eightbit.damdda.common.utils.file.ExcelGenerator;
@@ -21,7 +20,7 @@ import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.domain.ProjectPackage;
 import org.eightbit.damdda.project.dto.PackageDTO;
 import org.eightbit.damdda.project.dto.RewardDTO;
-import org.eightbit.damdda.project.repository.ProjectRepository;
+import org.eightbit.damdda.security.util.SecurityContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
-import java.sql.Timestamp;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,8 +36,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-
-import static org.eightbit.damdda.security.util.SecurityContextUtil.getAuthenticatedMemberId;
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -54,6 +50,7 @@ public class OrderServiceImpl implements  OrderService{
     private final org.eightbit.damdda.project.repository.ProjectRepository projectRepository;
     private final org.eightbit.damdda.member.repository.MemberRepository memberRepository;
     private final org.eightbit.damdda.project.repository.PackageRepository packageRepository;
+    private final SecurityContextUtil securityContextUtil;
     private final ProjectValidator projectValidator;
     private final S3Util s3Util;
     private final ExcelGenerator excelGenerator;
@@ -332,7 +329,7 @@ public class OrderServiceImpl implements  OrderService{
     public String generateUploadAndGetPresignedUrlForSupportersExcel(Long projectId) throws IOException {
         // Validate that the currently authenticated user is the organizer of the given project.
         // Throws UnauthorizedAccessException if the user is not the organizer.
-        projectValidator.validateMemberIsOrganizer(getAuthenticatedMemberId(), projectId);
+        projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
 
 
         // Generate the file name for the Excel file

@@ -3,6 +3,7 @@ package org.eightbit.damdda.project.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.eightbit.damdda.common.utils.validation.ProjectValidator;
 import org.eightbit.damdda.security.user.User;
 import org.eightbit.damdda.project.dto.*;
 import org.eightbit.damdda.project.service.LikedProjectService;
@@ -146,6 +147,7 @@ public class ProjectController {
 
     @DeleteMapping("/{projectId}")
     public ResponseEntity<String> registerDelete(@PathVariable Long projectId) {
+
         try {
             // 프로젝트가 존재하는지 확인
             projectService.findById(projectId);

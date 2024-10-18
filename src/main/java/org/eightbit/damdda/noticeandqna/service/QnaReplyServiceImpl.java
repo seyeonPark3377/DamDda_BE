@@ -22,12 +22,13 @@ public class QnaReplyServiceImpl implements QnaReplyService {
 
     private final QnaReplyRepository qnaReplyRepository;
     private final ModelMapper modelMapper;
+    private final SecurityContextUtil securityContextUtil;
 
     @Transactional
     @Override
     public QnaReplyDTO saveQnaReply(QnaReplyDTO qnaReplyDTO) {
         Long qnaReplyId = qnaReplyDTO.getId();
-        Long memberId = SecurityContextUtil.getAuthenticatedMemberId();
+        Long memberId = securityContextUtil.getAuthenticatedMemberId();
 
         qnaReplyDTO.setMemberId(memberId);
 
@@ -62,7 +63,7 @@ public class QnaReplyServiceImpl implements QnaReplyService {
 
     @Override
     public boolean softDeleteQnaReply(Long qnaReplyId) {
-        Long memberId = SecurityContextUtil.getAuthenticatedMemberId();
+        Long memberId = securityContextUtil.getAuthenticatedMemberId();
         validateQnaReply(memberId, qnaReplyId);
 
         int deleteResult = qnaReplyRepository.softDeleteQnaReply(qnaReplyId);

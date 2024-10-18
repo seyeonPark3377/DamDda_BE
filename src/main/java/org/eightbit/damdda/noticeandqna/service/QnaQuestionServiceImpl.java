@@ -31,6 +31,7 @@ public class QnaQuestionServiceImpl implements QnaQuestionService {
     private final QnaQuestionRepository qnaQuestionRepository;
     private final MemberService memberService;
     private final ProjectService projectService;
+    private final SecurityContextUtil securityContextUtil;
 
     /**
      * Q&A 질문을 저장하는 메서드.
@@ -44,7 +45,7 @@ public class QnaQuestionServiceImpl implements QnaQuestionService {
     @Override
     public QnaQuestionDTO saveQnaQuestion(QnaQuestionDTO qnaQuestionDTO) {
         Long qnaQuestionId = qnaQuestionDTO.getId();
-        Long memberId = SecurityContextUtil.getAuthenticatedMemberId();
+        Long memberId = securityContextUtil.getAuthenticatedMemberId();
 
         // 현재 로그인한 사용자의 ID를 DTO에 설정
         qnaQuestionDTO.setMemberId(memberId);
@@ -88,7 +89,7 @@ public class QnaQuestionServiceImpl implements QnaQuestionService {
     @Transactional
     @Override
     public boolean softDeleteQnaQuestion(Long qnaQuestionId) {
-        Long memberId = SecurityContextUtil.getAuthenticatedMemberId();
+        Long memberId = securityContextUtil.getAuthenticatedMemberId();
         validateMemberIsQuestioner(memberId, qnaQuestionId);  // 작성자 확인.
 
         // Q&A 질문 소프트 삭제.
