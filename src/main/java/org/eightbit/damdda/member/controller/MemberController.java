@@ -50,13 +50,12 @@ public class MemberController {
     @GetMapping("/userinfo")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal User user){
         Long memberId = user.getMemberId();
-        Map userInfo = memberService.getUserInfo(memberId);
+        Map<String, Object> userInfo = memberService.getUserInfo(memberId);
         return ResponseEntity.ok().body(userInfo);
     }
 
     @PostMapping
     public ResponseEntity<String> insertMember (@RequestBody RegisterDTO registerDTO){
-
         try {
             registerService.insertMember(registerDTO);
             return ResponseEntity.ok("success");
@@ -158,7 +157,6 @@ public class MemberController {
     @PutMapping("/{id}/photo")
     public ResponseEntity<String> updateProfilePhoto(@RequestBody MultipartFile imageUrl, HttpSession session) throws IOException {
         try {
-
             String fileName = memberService.uploadFile(imageUrl);
             return ResponseEntity.ok(fileName);
         } catch (IllegalArgumentException e) {

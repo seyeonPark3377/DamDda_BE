@@ -87,7 +87,7 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            errors.put("timestamp", LocalDateTime.now());
+            errors.put("LocalDateTime", LocalDateTime.now());
             errors.put(fieldName, errorMessage);
         });
 
@@ -105,7 +105,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<Object> handleJsonProcessingException(JsonProcessingException ex, WebRequest request) {
         Map<String, Object> errors = new HashMap<>();
-        errors.put("timestamp", LocalDateTime.now());
+        errors.put("LocalDateTime", LocalDateTime.now());
         errors.put("message", "Error processing Json Data");
         errors.put("path", request.getDescription(false));
 
@@ -123,7 +123,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
         Map<String, Object> errors = new HashMap<>();
-        errors.put("timestamp", LocalDateTime.now());
+        errors.put("LocalDateTime", LocalDateTime.now());
         errors.put("message", "An error occurred");
         errors.put("path", request.getDescription(false));
 

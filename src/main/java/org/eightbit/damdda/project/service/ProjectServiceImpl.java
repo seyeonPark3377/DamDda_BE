@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -408,7 +408,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         if (delImg) {
 
-            project.setDeletedAt(Timestamp.from(Instant.now()));
+            project.setDeletedAt(LocalDateTime.from(Instant.now()));
 
             // 변경 사항 저장
             projectRepository.save(project);
@@ -446,7 +446,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .viewCnt(0L)       // 기본값 0
                 .likeCnt(0L)       // 기본값 0
                 .thumbnailUrl("")  // 기본값은 빈 문자열로 설정
-                .submitAt(submit ? Timestamp.valueOf(LocalDateTime.now()) : null)  // 제출 시간 설정
+                .submitAt(submit ? LocalDateTime.now() : null)  // 제출 시간 설정
                 .build();
 
 
@@ -609,7 +609,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setStartDate(projectDetailDTO.getStartDate());
         project.setEndDate(projectDetailDTO.getEndDate());
         project.setTargetFunding(projectDetailDTO.getTargetFunding());
-        project.setSubmitAt(submit ? Timestamp.valueOf(LocalDateTime.now()) : null);  // 제출 시간 설정
+        project.setSubmitAt(submit ? LocalDateTime.now() : null);  // 제출 시간 설정
 
 
         if (submit) adminApprovalService.submitProject(project);

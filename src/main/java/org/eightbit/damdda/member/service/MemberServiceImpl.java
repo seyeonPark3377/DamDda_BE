@@ -10,11 +10,9 @@ import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.repository.MemberRepository;
 
-import org.eightbit.damdda.member.repository.RegisterRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.stereotype.Service;
@@ -22,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -116,7 +114,7 @@ public class MemberServiceImpl implements MemberService {
         memberDTO.setDetailedAddress(null);
         memberDTO.setPostCode(null);
         memberDTO.setImageUrl(null);
-        memberDTO.setDeletedAt(new Timestamp(System.currentTimeMillis()));
+        memberDTO.setDeletedAt(LocalDateTime.now());
 
         Member member = memberDTO.toEntity();
         this.memberRepository.save(member);

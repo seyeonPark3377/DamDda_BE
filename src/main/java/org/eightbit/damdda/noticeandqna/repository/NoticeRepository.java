@@ -26,6 +26,6 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
      */
     @Modifying
     @Transactional
-    @Query("UPDATE Notice n SET n.deletedAt = CURRENT_TIMESTAMP WHERE n.id = :noticeId")
+    @Query("UPDATE Notice n SET n.deletedAt = CURRENT_LocalDateTime WHERE n.id = :noticeId")
     int softDeleteNotice(Long noticeId);
 }

@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -94,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
                 .payment(payment)
                 .supportingProject(supportingProject)
                 .supportingPackages(supportingPackages)
-                .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+                .createdAt(LocalDateTime.now())
                 .build();
 
         Order savedOrder = orderRepository.save(order);
@@ -258,24 +258,24 @@ public class OrderServiceImpl implements OrderService {
         LocalDate today = LocalDate.now();
 
         // 프로젝트 종료일을 SupportingPackage에서 가져옴
-        Timestamp endDateTimestamp = supportingPackageRepository.findProjectEndDateByProjectId(projectId);
-        // Timestamp를 LocalDateTime으로 변환 후 LocalDate로 변환
-        LocalDateTime endDateTime = endDateTimestamp.toLocalDateTime();
+        LocalDateTime endDateLocalDateTime = supportingPackageRepository.findProjectEndDateByProjectId(projectId);
+        // LocalDateTime를 LocalDateTime으로 변환 후 LocalDate로 변환
+        LocalDateTime endDateTime = endDateLocalDateTime.toLocalDate().atStartOfDay();
         LocalDate endDate = endDateTime.toLocalDate();
 
         // 종료일과 오늘 날짜 사이의 남은 일수 계산
         long remainingDays = ChronoUnit.DAYS.between(today, endDate);
 
         // 4. created_at 가져오기
-        Timestamp createdAtTimestamp = supportingPackageRepository.getCreatedAtByProjectId(projectId);
-        LocalDateTime createdAtTime = createdAtTimestamp.toLocalDateTime();
+        LocalDateTime createdAtLocalDateTime = supportingPackageRepository.getCreatedAtByProjectId(projectId);
+        LocalDateTime createdAtTime = createdAtLocalDateTime.toLocalDate().atStartOfDay();
         LocalDate createdAt = createdAtTime.toLocalDate();
         // 5. target Funding
         Long targetFunding=supportingPackageRepository.getTargetFundingByProjectId(projectId);
         // 5. DTO로 통계 정보를 반환
         return ProjectStatisticsDTO.builder()
-                .startDate(createdAtTimestamp) // created_at 값을 Timestamp로 사용
-                .endDate(endDateTimestamp)     // endDate 값을 Timestamp로 사용
+                .startDate(createdAtLocalDateTime) // created_at 값을 LocalDateTime로 사용
+                .endDate(endDateLocalDateTime)     // endDate 값을 LocalDateTime로 사용
                 .totalSupportAmount(totalAmount != null ? totalAmount : 0)
                 .totalSupporters(totalSupporters != null ? totalSupporters : 0)
                 .remainingDays(Math.max(remainingDays, 0)) // 남은 기간이 음수면 0

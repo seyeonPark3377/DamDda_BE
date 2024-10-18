@@ -2,7 +2,7 @@ package org.eightbit.damdda.project.dto;
 
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -18,8 +18,8 @@ public class ProjectResponseDetailDTO {
     private Long fundsReceive;  //받은 후원금
     private Long targetFunding; // 목표액
     private String nickName;    //프로젝트 진행자 닉네임
-    private Timestamp startDate;    // 프로젝트 시작일
-    private Timestamp endDate;  //프로젝트 마감일
+    private LocalDateTime startDate;    // 프로젝트 시작일
+    private LocalDateTime endDate;  //프로젝트 마감일
     private Long supporterCnt;  //후원자수
     private Long likeCnt;   //좋아요 한 사람 수
     private String category;    // 카테고리

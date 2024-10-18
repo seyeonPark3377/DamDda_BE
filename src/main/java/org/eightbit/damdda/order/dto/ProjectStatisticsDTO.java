@@ -3,14 +3,14 @@ package org.eightbit.damdda.order.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 
 @Data
 @Builder
 public class ProjectStatisticsDTO {
-    private Timestamp startDate;
-    private Timestamp endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private Long totalSupportAmount;   // 총 후원 금액
     private Long totalSupporters;      // 후원자 수
     private long remainingDays;        // 남은 기간

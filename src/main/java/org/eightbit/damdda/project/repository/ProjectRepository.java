@@ -30,9 +30,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
             + "OR EXISTS (SELECT t FROM Tag t WHERE t MEMBER OF p.tags AND t.name LIKE %:search%)) "  // 검색어 필터 (태그 포함)
             + "AND (:progress IS NULL OR "
             + "     (:progress = 'all') OR "
-            + "     (:progress = 'ongoing' AND CURRENT_TIMESTAMP BETWEEN p.startDate AND p.endDate) OR "  // 진행 중 필터
-            + "     (:progress = 'upcoming' AND p.startDate > CURRENT_TIMESTAMP) OR "  // 예정 필터
-            + "     (:progress = 'completed' AND p.endDate < CURRENT_TIMESTAMP)) " // 완료된 필터
+            + "     (:progress = 'ongoing' AND CURRENT_LocalDateTime BETWEEN p.startDate AND p.endDate) OR "  // 진행 중 필터
+            + "     (:progress = 'upcoming' AND p.startDate > CURRENT_LocalDateTime) OR "  // 예정 필터
+            + "     (:progress = 'completed' AND p.endDate < CURRENT_LocalDateTime)) " // 완료된 필터
             + "ORDER BY (p.fundsReceive / p.targetFunding) DESC"
     )
 

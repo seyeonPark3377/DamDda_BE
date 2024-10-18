@@ -18,7 +18,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -62,7 +62,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
         // 3. progress 필터
         if (progress != null) {
-            Timestamp now = new Timestamp(System.currentTimeMillis());
+            LocalDateTime now = LocalDateTime.now();
             if ("ongoing".equals(progress)) {
                 builder.and(project.startDate.before(now).and(project.endDate.after(now)));
             } else if ("upcoming".equals(progress)) {

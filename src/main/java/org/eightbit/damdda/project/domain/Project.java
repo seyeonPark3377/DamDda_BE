@@ -8,7 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -46,8 +46,8 @@ public class Project {
 //    @Column(length = 10000000)
     @Column(columnDefinition = "TEXT")
     private String descriptionDetail;
-    private Timestamp startDate;
-    private Timestamp endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private Long targetFunding;
     @ColumnDefault("0")
     private Long fundsReceive;
@@ -58,12 +58,12 @@ public class Project {
     @ColumnDefault("0")
     private Long likeCnt;
     private String thumbnailUrl;
-    private Timestamp submitAt;
+    private LocalDateTime submitAt;
     @CreatedDate
     @Column(updatable = false)
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
-    private Timestamp deletedAt;
+    private LocalDateTime deletedAt;
 
 
 //    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval=true)

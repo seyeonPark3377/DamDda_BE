@@ -1,12 +1,11 @@
 package org.eightbit.damdda.admin.domain;
 
 import lombok.*;
-import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.project.domain.Project;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * 관리자 승인(AdminApproval) 엔티티. 'admin_approvals' 테이블과 매핑됨.
@@ -50,5 +49,5 @@ public class AdminApproval {
     /**
      * 승인 처리 시간
      */
-    private Timestamp approvalAt;
+    private LocalDateTime approvalAt;
 }

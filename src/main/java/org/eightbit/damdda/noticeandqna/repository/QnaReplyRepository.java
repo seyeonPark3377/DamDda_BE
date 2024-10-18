@@ -16,6 +16,6 @@ public interface QnaReplyRepository extends JpaRepository<QnaReply, Long> {
     List<QnaReply> findAllByDeletedAtIsNullAndQnaQuestionId(Long qnaQuestionId);
     @Modifying
     @Transactional
-    @Query("UPDATE QnaReply q SET q.deletedAt = CURRENT_TIMESTAMP WHERE q.id = :qnaReplyId")
+    @Query("UPDATE QnaReply q SET q.deletedAt = CURRENT_LocalDateTime WHERE q.id = :qnaReplyId")
     int softDeleteQnaReply(@Param("qnaReplyId") Long qnaReplyId);
 }

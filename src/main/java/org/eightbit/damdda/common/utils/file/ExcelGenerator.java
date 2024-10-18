@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -107,8 +108,6 @@ public class ExcelGenerator {
             cell.setCellValue((Boolean) value);
         } else if (value instanceof LocalDateTime) {
             cell.setCellValue(((LocalDateTime) value).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        } else if (value instanceof Timestamp) {
-            cell.setCellValue(((Timestamp) value).toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         } else if (value instanceof Date) {
             cell.setCellValue((Date) value);
             cell.setCellStyle(dateCellStyle);

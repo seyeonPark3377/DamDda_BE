@@ -5,7 +5,7 @@ import org.eightbit.damdda.member.domain.Member;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "liked_projects")
@@ -27,5 +27,5 @@ public class LikedProject {
 
     @CreatedDate
     @Column(updatable = true)
-    private Timestamp likedAt;
+    private LocalDateTime likedAt;
 }

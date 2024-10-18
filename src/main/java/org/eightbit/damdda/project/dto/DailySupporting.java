@@ -2,10 +2,10 @@ package org.eightbit.damdda.project.dto;
 
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 public class DailySupporting {
-    private Timestamp supportedAt;
+    private LocalDateTime supportedAt;
     private Integer totalPrice;
 }
