@@ -52,7 +52,7 @@ public class PackageServiceImpl implements PackageService {
         List<PackageRewards> newPackageRewards = new ArrayList<>();
         for (RewardDTO rewardDTO : packageDTO.getRewardList()) {
             List<PackageRewards> packageRewards = packageRewardsRepository.findPackageRewardByRewardId(rewardDTO.getId());
-            for(PackageRewards pr : packageRewards){
+            for (PackageRewards pr : packageRewards) {
                 PackageRewards newpackageRewards = PackageRewards.builder().projectPackage(projectPackage).projectReward(pr.getProjectReward()).rewardCount(rewardDTO.getCount()).project(pr.getProject()).build();
                 newPackageRewards.add(newpackageRewards);
             }
@@ -68,7 +68,7 @@ public class PackageServiceImpl implements PackageService {
 
     //패키지에 해당하는 선물 보여주는 기능
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<RewardDTO> viewRewardByPackage(Long package_id) {
         //패키지와 연관된 리워드 리스트를 보여줌.
         List<ProjectRewards> projectRewards = packageRewardsRepository.findRewardsByPackageId(package_id);
@@ -86,7 +86,7 @@ public class PackageServiceImpl implements PackageService {
 
     //프로젝트에 해당하는 리워드 보여주는 기능. 화면 설계서 17번, 19번
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<RewardDTO> viewRewardByProject(Long project_id) {
         //프로젝트와 연관된 리워드 리스트를 보여줌
         List<RewardDTO> rewardDTOList = packageRewardsRepository.findRewardsByProjectId(project_id).stream().map(reward -> {
@@ -102,20 +102,22 @@ public class PackageServiceImpl implements PackageService {
 
     //전체 프로젝트에 해당하는 패키지 보여줌.
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<PackageDTO> viewPackage(Long project_id) throws JsonProcessingException {
         List<PackageDTO> packageDTOList = new ArrayList<>();
         List<PackageRewards> packageRewardList = packageRewardsRepository.findAllRewardsByProjectIdWithProjectReward(project_id);
-        //PackageRewards(id=95, rewardCount=1, projectPackage=ProjectPackage(id=94, packageName='이불세트', packagePrice=2, quantityLimited=0), projectReward=ProjectReward(id=92, rewardName='이불', optionType='select', optionList=[줄무늬, 물방울]), project=Project(id=1, title='project_title'))]
-        Map<ProjectPackage, List<ProjectRewards>> packageRewardsMap = packageRewardList.stream().map(PackageRewards::getProjectPackage).filter(Objects::nonNull).distinct()
-                .collect(Collectors.toMap(projectPackage -> projectPackage,projectPackage -> packageRewardList.stream().filter(pr -> pr != null && pr.getProjectPackage() != null &&
-                        pr.getProjectPackage().getId() != null &&pr.getProjectPackage().getId().equals(projectPackage.getId())).map(PackageRewards::getProjectReward).collect(Collectors.toList())));
+        Map<ProjectPackage, List<ProjectRewards>> packageRewardsMap = packageRewardList.stream()
+                .map(PackageRewards::getProjectPackage)
+                .filter(Objects::nonNull).distinct()
+                .collect(Collectors.toMap(projectPackage -> projectPackage, projectPackage -> packageRewardList.stream().filter(pr -> pr != null && pr.getProjectPackage() != null &&
+                                pr.getProjectPackage().getId() != null && pr.getProjectPackage().getId().equals(projectPackage.getId()))
+                        .map(PackageRewards::getProjectReward).collect(Collectors.toList())));
         //projectReward -> rewardDTO
-        packageRewardsMap.forEach((projectPackage,projectReward) -> {
+        packageRewardsMap.forEach((projectPackage, projectReward) -> {
             List<RewardDTO> rewardDTOList = projectReward.stream()
                     .map(pr -> {
                         try {
-                            return rewardEntityToDto(pr, packageRewardList);
+                            return rewardEntityToDto(pr, packageRewardList, projectPackage.getId());
                         } catch (JsonProcessingException e) {
                             throw new RuntimeException(e);
                         }
@@ -123,7 +125,6 @@ public class PackageServiceImpl implements PackageService {
                     .collect(Collectors.toList());
             packageDTOList.add(packageEntityToDTO(projectPackage, rewardDTOList));
         });
-
         return packageDTOList;
     }
 
@@ -133,9 +134,9 @@ public class PackageServiceImpl implements PackageService {
     @Transactional
     public void modifyPackage(PackageDTO packageDTO, Long project_id) {
         // 기존의 projectPackage 조회
-        ProjectPackage projectPackage = packageRepository.findById(packageDTO.getId()).orElseThrow(()-> new NoSuchElementException("그런 패키지는 없음"));
+        ProjectPackage projectPackage = packageRepository.findById(packageDTO.getId()).orElseThrow(() -> new NoSuchElementException("그런 패키지는 없음"));
         List<ProjectRewards> projectRewards = packageRewardsRepository.findRewardsByProjectId(project_id);
-        Map<Long, ProjectRewards> projectRewardsMap = projectRewards.stream().collect(Collectors.toMap(ProjectRewards::getId,reward->reward));
+        Map<Long, ProjectRewards> projectRewardsMap = projectRewards.stream().collect(Collectors.toMap(ProjectRewards::getId, reward -> reward));
         //새로운 packageReward 생성
         List<PackageRewards> newPackageRewards = packageDTO.getRewardList().stream()
                 .map(reward -> {

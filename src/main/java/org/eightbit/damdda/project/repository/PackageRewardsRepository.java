@@ -23,12 +23,12 @@ public interface PackageRewardsRepository extends JpaRepository<PackageRewards,L
     @Query("SELECT DISTINCT pr.projectReward FROM PackageRewards pr WHERE pr.projectPackage.id = :packageId")
     List<ProjectRewards> findRewardsByPackageId(@Param("packageId") Long packageId);
 
-    @Query("SELECT pr FROM PackageRewards pr JOIN FETCH pr.projectReward WHERE pr.project.id = :projectId")
+    @Query("SELECT pr FROM PackageRewards pr JOIN FETCH pr.projectReward WHERE pr.project.id = :projectId and pr.projectPackage.id != null")
     List<PackageRewards> findAllRewardsByProjectIdWithProjectReward(@Param("projectId") Long projectId);
 
     @Query("select pr.rewardCount from PackageRewards pr where pr.projectPackage.id =:packageId AND pr.projectReward.id=:rewardId")
     int findRewardCountByRewardId(@Param("packageId") Long packageId, @Param("rewardId") Long rewardId);
 
-    @Query("select pr from PackageRewards pr where  pr.projectReward.id=:rewardId")
+    @Query("select pr from PackageRewards pr where  pr.projectReward.id=:rewardId and pr.projectPackage.id = null")
     List<PackageRewards> findPackageRewardByRewardId(@Param("rewardId") Long rewardId);
 }

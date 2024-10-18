@@ -28,13 +28,13 @@ public interface PackageService {
                 .build();
     }
     //ProjectReward -> RewardDTO
-    default RewardDTO rewardEntityToDto(ProjectRewards pr, List<PackageRewards> packageRewardList ) throws JsonProcessingException {
+    default RewardDTO rewardEntityToDto(ProjectRewards pr, List<PackageRewards> packageRewardList, Long packageId ) throws JsonProcessingException {
         return RewardDTO.builder()
                 .id(pr.getId())
                 .name(pr.getRewardName())
                 .count(packageRewardList.stream()
                         .filter(packageReward ->
-                                packageReward.getProjectReward().getId().equals(pr.getId())
+                                packageReward.getProjectReward().getId().equals(pr.getId()) && packageReward.getProjectPackage().getId().equals(packageId)
                         )
                         .mapToInt(PackageRewards::getRewardCount).sum())
                 .optionType(pr.getOptionType())
