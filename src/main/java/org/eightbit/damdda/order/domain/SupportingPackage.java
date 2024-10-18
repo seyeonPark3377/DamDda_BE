@@ -1,7 +1,6 @@
 package org.eightbit.damdda.order.domain;
 
 import lombok.*;
-import org.eightbit.damdda.project.domain.ProjectPackage;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -31,7 +30,7 @@ public class  SupportingPackage {
     private String packageName;
     private Long packagePrice;
     private Long packageCount;
-    
+
 
 }
 

@@ -1,6 +1,6 @@
 package org.eightbit.damdda.security.util;
 
-import org.eightbit.damdda.noticeandqna.exception.UnauthenticatedMemberException;
+import org.eightbit.damdda.common.exception.UnauthorizedAccessException;
 import org.eightbit.damdda.security.user.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +13,7 @@ public class SecurityContextUtil {
      * 사용자 ID를 추출합니다. 인증되지 않은 사용자인 경우 예외를 던짐.
      *
      * @return 인증된 사용자의 ID (Long).
-     * @throws UnauthenticatedMemberException 인증되지 않은 경우 예외 발생.
+     * @throws UnauthorizedAccessException 인증되지 않은 경우 예외 발생.
      */
     public static Long getAuthenticatedMemberId() {
         // 현재 요청의 SecurityContext에서 인증 정보 가져오기.
@@ -26,6 +26,6 @@ public class SecurityContextUtil {
 
         // 인증되지 않은 사용자인 경우 예외를 던짐.
         String user = (authentication != null) ? authentication.getName() : "Anonymous";
-        throw new UnauthenticatedMemberException(String.format("Unauthenticated access attempt by user: %s", user));
+        throw new UnauthorizedAccessException(String.format("Unauthenticated access attempt by user: %s", user));
     }
 }

@@ -3,8 +3,6 @@ package org.eightbit.damdda.common.exception;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eightbit.damdda.noticeandqna.exception.UnauthenticatedMemberException;
-import org.eightbit.damdda.noticeandqna.exception.UnauthorizedAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -60,19 +58,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedAccessException.class)
     public ResponseEntity<String> handleOrganizerMismatchException(UnauthorizedAccessException ex) {
         return buildResponseEntity(HttpStatus.FORBIDDEN, ex.getMessage());
-    }
-
-    /**
-     * UnauthenticatedMemberException 예외를 처리하는 메서드.
-     * 인증되지 않은 사용자가 보호된 리소스에 접근할 때 발생하며,
-     * HTTP 401 상태 코드를 반환.
-     *
-     * @param ex 처리할 UnauthenticatedMemberException 예외 객체.
-     * @return HTTP 상태 코드 401과 예외 메시지를 포함한 ResponseEntity.
-     */
-    @ExceptionHandler(UnauthenticatedMemberException.class)
-    public ResponseEntity<String> handleUnauthenticatedMemberException(UnauthenticatedMemberException ex) {
-        return buildResponseEntity(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     /**

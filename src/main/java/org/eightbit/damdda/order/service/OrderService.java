@@ -269,7 +269,7 @@ public class OrderService {
 
     public String generateUploadAndGetPresignedUrlForSupportersExcel(Long projectId) throws IOException {
         // Generate the file name for the Excel file
-        String fileName = generateSupportersExcelFileName(projectId);
+        String fileName = "후원자_관리_" + projectId;
         String fileType = ".xlsx";
 
         // Upload the generated Excel file to the S3 bucket
@@ -338,11 +338,6 @@ public class OrderService {
         return supportingPackages.stream()
                 .map(mapper)
                 .collect(Collectors.joining(", "));
-    }
-
-    private String generateSupportersExcelFileName(Long projectId) {
-        // Create a unique file name based on the project ID
-        return "후원자_관리_" + projectId;
     }
 
 }
