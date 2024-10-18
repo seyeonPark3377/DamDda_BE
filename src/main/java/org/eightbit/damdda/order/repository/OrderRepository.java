@@ -24,6 +24,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT p FROM Project p WHERE p.member.id = :memberId")
     List<Project> findProjectsByMemberId(@Param("memberId") Long memberId);
 
+    @Query("SELECT o FROM Order o WHERE o.payment.paymentId=:paymentId")
+    Order findByPaymentId(@Param("paymentId") Long paymentId);
     /**
      * Fetches all orders associated with the given project ID.
      *
@@ -31,5 +33,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      * @return a list of orders for the specified project
      */
     List<Order> findAllBySupportingProject_Project_Id(Long projectId);
+
 
 }

@@ -18,9 +18,13 @@ public interface SupportingProjectRepository extends JpaRepository<SupportingPro
     List<SupportingProject> findAllByUser_Id(Long userId);
 
     // 일별 후원액 가져오는 쿼리
-    @Query("SELECT pr.supportedAt, SUM(pa.packagePrice) "+
+    @Query("SELECT pr.supportedAt, SUM(pa.projectPackage.packagePrice) "+
             "FROM SupportingProject pr INNER JOIN SupportingPackage pa " +
             "ON pr.supportingProjectId = pa.supportingProject.supportingProjectId " +
             "WHERE pr.project.id = :projectId GROUP BY pr.supportedAt")
     List<?> getDailySupportingByProjectId(@Param("projectId") Long projectId);
+
+    @Query("SELECT sp FROM SupportingProject sp WHERE sp.payment.paymentId=:paymentId")
+    SupportingProject findByPaymentId(@Param("paymentId") Long paymentId);
+
 }

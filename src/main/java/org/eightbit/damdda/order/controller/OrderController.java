@@ -1,6 +1,7 @@
 package org.eightbit.damdda.order.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.security.user.User;
 import org.eightbit.damdda.order.domain.Order;
 import org.eightbit.damdda.order.dto.OrderDTO;
@@ -20,16 +21,20 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+
+@SessionAttributes("supportingPackage")
+@Log4j2
 @RequestMapping("/order")
+
 public class OrderController {
 
     private final OrderService orderService;
 
     //주문 생성
     @PostMapping("/create")
-    public ResponseEntity<Order> createOrder(@RequestBody OrderDTO orderDTO, @AuthenticationPrincipal User user){
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO, @AuthenticationPrincipal User user){
         orderDTO.getSupportingProject().getUser().setId(user.getMemberId());
-        Order createdOrder = orderService.createOrder(orderDTO);
+        OrderDTO createdOrder = orderService.createOrder(orderDTO);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
 
@@ -63,7 +68,9 @@ public class OrderController {
     public ResponseEntity<String> cancelPayment(@PathVariable Long paymentId,@RequestBody Map<String, Object> requestBody) {
         try {
             String status = (String) requestBody.get("paymentStatus");
-            orderService.cancelPayment(paymentId, status);
+            // 서비스에서 결제 상태 취소 처리**********
+            /*paymentId -> paymentId가 들어가서 repository바꿈.*/
+            String message=orderService.cancelPayment(paymentId, status);
             return ResponseEntity.ok("Payment canceled successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel payment");
@@ -72,10 +79,10 @@ public class OrderController {
 
     // Supporting 모든 주문 정보 - 모든 주문 정보를 가져오는 API 엔드포인트
     @GetMapping("/all")
-        public ResponseEntity<List<OrderDTO>> getAllOrders() {
-            List<OrderDTO> orders = orderService.getAllOrders();
-            return new ResponseEntity<>(orders, HttpStatus.OK);
-        }
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> orders = orderService.getAllOrders();
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
 
     //프로젝트 id 가져오기
     @GetMapping("/user/project")
@@ -100,13 +107,11 @@ public class OrderController {
     public ResponseEntity<String> generateAndGetSupportersExcel(@PathVariable Long projectId) throws IOException {
         // Generate the presigned URL by calling the service method
         String presignedUrl = orderService.generateUploadAndGetPresignedUrlForSupportersExcel(projectId);
-
         // Return the presigned URL as a response
         return ResponseEntity.ok(presignedUrl);
     }
 
 }
-
 
 
 

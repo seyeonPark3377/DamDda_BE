@@ -4,6 +4,7 @@ import org.eightbit.damdda.project.domain.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -11,6 +12,17 @@ import java.util.List;
 
 
 public interface ProjectRepository extends JpaRepository<Project, Long>, ProjectRepositoryCustom  {
+
+//    @Query("SELECT p FROM Project p WHERE p.deletedAt IS NULL")
+//    List<Project> findAllActiveProjects();
+
+//    @Query("select p from Project p where p.member.id = :memberId" )
+//    Page<Project> listOfProjectBoxHost(@Param("memberId") Long memberId, Pageable pageable);
+
+    @Modifying
+    @Query("update Project p set p.fundsReceive = p.fundsReceive + :fundsReceive ,p.supporterCnt = p.supporterCnt+:increment WHERE  p.id=:projectId")
+    void updateProjectStatus(@Param("fundsReceive") Long fundsReceive, @Param("projectId") Long projectId, @Param("increment") Long increment);
+
     @Query("select p from Project p where p.member.id = :memberId and p.deletedAt is null and p.submitAt is NOT null")
     Page<Project> listOfProjectBoxHost(@Param("memberId") Long memberId, Pageable pageable);
 
