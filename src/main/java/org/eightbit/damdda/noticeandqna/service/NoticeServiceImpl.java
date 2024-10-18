@@ -1,6 +1,7 @@
 package org.eightbit.damdda.noticeandqna.service;
 
 import lombok.RequiredArgsConstructor;
+import org.eightbit.damdda.common.utils.validation.ProjectValidator;
 import org.eightbit.damdda.noticeandqna.domain.Notice;
 import org.eightbit.damdda.noticeandqna.dto.NoticeDTO;
 import org.eightbit.damdda.common.exception.custom.UnauthorizedAccessException;
@@ -25,6 +26,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final ModelMapper modelMapper;
     private final NoticeRepository noticeRepository;
+    private final ProjectValidator projectValidator;
 
     /**
      * 공지사항을 저장하거나 수정하는 메서드.
@@ -37,7 +39,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Transactional
     public NoticeDTO saveNotice(NoticeDTO noticeDTO) {
         Long memberId = SecurityContextUtil.getAuthenticatedMemberId();  // 현재 로그인된 사용자 ID를 조회.
-        validateMemberIsOrganizer(memberId, noticeDTO.getProjectId());  // 현재 사용자가 프로젝트의 진행자인지 검증.
+        projectValidator.validateMemberIsOrganizer(memberId, noticeDTO.getProjectId());  // 현재 사용자가 프로젝트의 진행자인지 검증.
         Notice notice = modelMapper.map(noticeDTO, Notice.class);  // DTO를 엔티티로 변환.
         Notice savedNotice = noticeRepository.save(notice);  // 공지사항을 저장.
         return modelMapper.map(savedNotice, NoticeDTO.class);  // 저장된 엔티티를 DTO로 변환하여 반환.
@@ -56,7 +58,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Transactional
     public boolean softDeleteNotice(Long noticeId, Long projectId) {
         Long memberId = SecurityContextUtil.getAuthenticatedMemberId();  // 현재 로그인된 사용자 ID를 조회.
-        validateMemberIsOrganizer(memberId, projectId);  // 현재 사용자가 프로젝트의 진행자인지 검증.
+        projectValidator.validateMemberIsOrganizer(memberId, projectId);  // 현재 사용자가 프로젝트의 진행자인지 검증.
         int deleteResult = noticeRepository.softDeleteNotice(noticeId);  // 소프트 삭제 수행.
 
         // 공지사항이 존재하지 않으면 예외를 발생.
@@ -94,25 +96,4 @@ public class NoticeServiceImpl implements NoticeService {
         return notice.getProject().getId();  // 프로젝트 ID 반환.
     }
 
-    /**
-     * 주어진 프로젝트의 진행자가 현재 로그인된 회원인지 검증하는 메서드.
-     * 진행자가 일치하지 않으면 예외를 발생.
-     *
-     * @param memberId 현재 로그인된 사용자의 ID.
-     * @param projectId 공지사항이 속한 프로젝트의 ID.
-     * @throws UnauthorizedAccessException 현재 사용자가 해당 프로젝트의 진행자가 아닌 경우 발생.
-     */
-    private void validateMemberIsOrganizer(Long memberId, Long projectId) {
-        Long organizerId = getOrganizerIdByProjectId(projectId);  // 프로젝트의 진행자 ID 조회.
-        if (!memberId.equals(organizerId)) {
-            throw new UnauthorizedAccessException("Member ID unauthorized for notice " + projectId);  // 진행자가 일치하지 않으면 예외 발생.
-        }
-    }
-
-    // ------------------------------------------------------------------
-    // TODO: 프로젝트 진행자 ID를 가져오는 로직을 구현해야 함.
-    private Long getOrganizerIdByProjectId(Long projectId) {
-        return 8L;  // 임시 null 반환 (구현 필요).
-    }
-    // ------------------------------------------------------------------
 }

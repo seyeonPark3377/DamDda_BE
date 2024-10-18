@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 
@@ -19,7 +20,7 @@ public interface QnaQuestionRepository extends JpaRepository<QnaQuestion, Long> 
      * 특정 Q&A 질문의 작성자(memberId)를 가져오는 메서드.
      * QnaQuestion 엔티티의 id를 기반으로 작성자의 memberId를 조회.
      *
-     * @param qnaQuestionId Q&A 질문의 ID.
+     * @param qnaQuestionId 삭제할 질문의 ID.
      * @return 작성자의 memberId.
      */
     Long findMemberIdById(Long qnaQuestionId);
@@ -37,11 +38,11 @@ public interface QnaQuestionRepository extends JpaRepository<QnaQuestion, Long> 
     /**
      * 특정 Q&A 질문을 소프트 삭제(실제 삭제 대신 deletedAt 필드에 현재 시간 기록)하는 메서드.
      *
-     * @param questionId 삭제할 질문의 ID.
+     * @param qnaQuestionId 삭제할 질문의 ID.
      * @return 성공적으로 업데이트된 행의 수.
      */
     @Modifying
     @Transactional
-    @Query("UPDATE QnaQuestion q SET q.deletedAt = CURRENT_TIMESTAMP WHERE q.id = :questionId")
-    int softDeleteQnaQuestion(Long questionId);
+    @Query("UPDATE QnaQuestion q SET q.deletedAt = CURRENT_TIMESTAMP WHERE q.id = :qnaQuestionId")
+    int softDeleteQnaQuestion(@Param("qnaQuestionId") Long qnaQuestionId);
 }

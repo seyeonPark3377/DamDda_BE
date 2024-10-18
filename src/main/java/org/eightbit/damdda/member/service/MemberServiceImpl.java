@@ -34,9 +34,7 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final RegisterRepository registerRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
     private final AmazonS3 amazonS3;
     @Value("${cloud.aws.credentials.bucket}")
     private String bucketName;

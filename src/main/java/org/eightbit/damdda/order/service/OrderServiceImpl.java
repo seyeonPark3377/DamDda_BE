@@ -3,6 +3,7 @@ package org.eightbit.damdda.order.service;
 import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.common.utils.file.ExcelGenerator;
 import org.eightbit.damdda.common.utils.cloud.S3Util;
+import org.eightbit.damdda.common.utils.validation.ProjectValidator;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.order.domain.*;
 
@@ -24,6 +25,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.eightbit.damdda.security.util.SecurityContextUtil.getAuthenticatedMemberId;
+
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -35,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
     private final org.eightbit.damdda.order.repository.SupportingPackageRepository supportingPackageRepository;
     private final org.eightbit.damdda.project.repository.ProjectRepository projectRepository;
     private final org.eightbit.damdda.member.repository.MemberRepository memberRepository;
+    private final ProjectValidator projectValidator;
     private final S3Util s3Util;
     private final ExcelGenerator excelGenerator;
     @Value("${s3.url.expiration.minutes}")
@@ -281,6 +285,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String generateUploadAndGetPresignedUrlForSupportersExcel(Long projectId) throws IOException {
+        // Validate that the currently authenticated user is the organizer of the given project.
+        // Throws UnauthorizedAccessException if the user is not the organizer.
+        projectValidator.validateMemberIsOrganizer(getAuthenticatedMemberId(), projectId);
+
+
         // Generate the file name for the Excel file
         String fileName = "후원자_관리_" + projectId;
         String fileType = ".xlsx";

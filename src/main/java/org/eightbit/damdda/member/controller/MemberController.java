@@ -155,7 +155,7 @@ public class MemberController {
         }
     }
 
-    @PutMapping("/{id}/Photo")
+    @PutMapping("/{id}/photo")
     public ResponseEntity<String> updateProfilePhoto(@RequestBody MultipartFile imageUrl, HttpSession session) throws IOException {
         try {
 

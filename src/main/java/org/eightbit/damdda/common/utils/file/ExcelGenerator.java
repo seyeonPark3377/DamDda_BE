@@ -105,13 +105,13 @@ public class ExcelGenerator {
             cell.setCellValue((Double) value);
         } else if (value instanceof Boolean) {
             cell.setCellValue((Boolean) value);
-        } else if (value instanceof Date) {
-            cell.setCellValue((Date) value);
-            cell.setCellStyle(dateCellStyle);
         } else if (value instanceof LocalDateTime) {
             cell.setCellValue(((LocalDateTime) value).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         } else if (value instanceof Timestamp) {
             cell.setCellValue(((Timestamp) value).toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        } else if (value instanceof Date) {
+            cell.setCellValue((Date) value);
+            cell.setCellStyle(dateCellStyle);
         } else if (value instanceof BigDecimal) {
             cell.setCellValue(((BigDecimal) value).doubleValue());
         } else if (value != null) {

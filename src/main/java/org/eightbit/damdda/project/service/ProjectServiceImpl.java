@@ -104,7 +104,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Long getMemberId(Long projectId){
+    public Long getOrganizerId(Long projectId){
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("해당 아이디와 일치하는 프로젝트 없음! Project not found with ID: " + projectId));
         return project.getMember().getId();

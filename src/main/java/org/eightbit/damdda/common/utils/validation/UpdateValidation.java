@@ -1,4 +1,4 @@
-package org.eightbit.damdda.noticeandqna.dto.validation;
+package org.eightbit.damdda.common.utils.validation;
 
 /**
  * 업데이트(Update) 시에 적용되는 유효성 검사 그룹.

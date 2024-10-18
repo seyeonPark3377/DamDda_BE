@@ -6,7 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * 공지사항(Notice) 엔티티 클래스.
@@ -52,7 +52,7 @@ public class Notice {
 
     @CreatedDate
     @Column(updatable = false)
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
-    private Timestamp deletedAt;
+    private LocalDateTime deletedAt;
 }

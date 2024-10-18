@@ -1,10 +1,14 @@
 package org.eightbit.damdda.noticeandqna.service;
 
 import lombok.RequiredArgsConstructor;
+import org.eightbit.damdda.member.domain.Member;
+import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.noticeandqna.domain.QnaQuestion;
 import org.eightbit.damdda.noticeandqna.dto.QnaQuestionDTO;
 import org.eightbit.damdda.common.exception.custom.UnauthorizedAccessException;
 import org.eightbit.damdda.noticeandqna.repository.QnaQuestionRepository;
+import org.eightbit.damdda.project.domain.Project;
+import org.eightbit.damdda.project.service.ProjectService;
 import org.eightbit.damdda.security.util.SecurityContextUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -19,12 +23,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class QnaQuestionServiceImpl {
+public class QnaQuestionServiceImpl implements QnaQuestionService {
     // TODO: 생성, 수정 시에 memberId를 서비스 단에서 넣기.
     // TODO: 사용자 정보 (이름, 프로필 사진)도 같이 리턴해주기.
 
     private final ModelMapper modelMapper;
     private final QnaQuestionRepository qnaQuestionRepository;
+    private final MemberService memberService;
+    private final ProjectService projectService;
 
     /**
      * Q&A 질문을 저장하는 메서드.
@@ -35,24 +41,39 @@ public class QnaQuestionServiceImpl {
      * @return 저장된 Q&A 질문의 DTO.
      */
     @Transactional
+    @Override
     public QnaQuestionDTO saveQnaQuestion(QnaQuestionDTO qnaQuestionDTO) {
         Long qnaQuestionId = qnaQuestionDTO.getId();
         Long memberId = SecurityContextUtil.getAuthenticatedMemberId();
 
+        // 현재 로그인한 사용자의 ID를 DTO에 설정
         qnaQuestionDTO.setMemberId(memberId);
 
-        QnaQuestion qnaQuestion = modelMapper.map(qnaQuestionDTO, QnaQuestion.class);
+        // 이미 존재하는 멤버를 가져와서 빌더에 포함
+        Member existingMember = memberService.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
 
-        // 기존 질문이 존재하는 경우 작성자가 일치하는지 확인.
+        Project existingProject = projectService.findById(qnaQuestionDTO.getProjectId());
+
+        // 빌더 패턴을 사용하여 QnaQuestion 객체 생성
+        QnaQuestion qnaQuestion = QnaQuestion.builder()
+                .id(qnaQuestionId)
+                .project(existingProject)
+                .title(qnaQuestionDTO.getTitle())
+                .content(qnaQuestionDTO.getContent())
+                .member(existingMember)  // member도 빌더로 설정
+                .visibility(qnaQuestionDTO.getVisibility())
+                .build();
+
+        // 기존 질문이 존재하는 경우 작성자가 일치하는지 확인
         if (qnaQuestionId != null && qnaQuestionRepository.existsById(qnaQuestionId)) {
-
             validateMemberIsQuestioner(memberId, qnaQuestionId);
         }
 
-        // Q&A 질문 저장.
+        // Q&A 질문 저장
         QnaQuestion savedQnaQuestion = qnaQuestionRepository.save(qnaQuestion);
 
-        // 저장된 Q&A 질문을 DTO로 변환하여 반환.
+        // 저장된 Q&A 질문을 DTO로 변환하여 반환
         return modelMapper.map(savedQnaQuestion, QnaQuestionDTO.class);
     }
 
@@ -65,6 +86,7 @@ public class QnaQuestionServiceImpl {
      * @return 삭제 성공 여부.
      */
     @Transactional
+    @Override
     public boolean softDeleteQnaQuestion(Long qnaQuestionId) {
         Long memberId = SecurityContextUtil.getAuthenticatedMemberId();
         validateMemberIsQuestioner(memberId, qnaQuestionId);  // 작성자 확인.
@@ -88,6 +110,7 @@ public class QnaQuestionServiceImpl {
      * @param pageable 페이징 정보.
      * @return 페이징된 Q&A 질문 목록.
      */
+    @Override
     public Page<QnaQuestionDTO> getQnaQuestionsByProjectId(Long projectId, Pageable pageable) {
         // 삭제되지 않은 Q&A 질문 조회.
         Page<QnaQuestion> qnaQuestions = qnaQuestionRepository.findAllByDeletedAtIsNullAndProjectId(projectId, pageable);
@@ -109,14 +132,13 @@ public class QnaQuestionServiceImpl {
      * @param memberId 현재 로그인된 사용자의 ID.
      * @param qnaQuestionId 질문의 ID.
      */
-    private void validateMemberIsQuestioner(Long memberId, Long qnaQuestionId) {
+    public void validateMemberIsQuestioner(Long memberId, Long qnaQuestionId) {
         // 질문 작성자 ID 조회.
-        Long questionerId = qnaQuestionRepository.findMemberIdById(qnaQuestionId);
+        Long questionerId = qnaQuestionRepository.findById(qnaQuestionId).orElseThrow().getMember().getId();
 
         // 작성자 불일치 또는 작성자가 없는 경우 예외 발생.
         if (questionerId == null) throw new NoSuchElementException("Author not found for the given question.");
         if (!memberId.equals(questionerId)) throw new UnauthorizedAccessException("Member ID unauthorized for qna question " + qnaQuestionId);
     }
-
 
 }
