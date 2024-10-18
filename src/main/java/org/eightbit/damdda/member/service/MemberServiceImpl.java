@@ -130,6 +130,7 @@ public class MemberServiceImpl implements MemberService {
         memberDTO.setAddress(memberDTO.getAddress());
         memberDTO.setDetailedAddress(memberDTO.getDetailedAddress());
         memberDTO.setPostCode(memberDTO.getPostCode());
+        memberDTO.setImageUrl(memberDTO.getImageUrl());
 
         this.memberRepository.save(memberDTO.toEntity());
         memberDTO.setPassword(null);

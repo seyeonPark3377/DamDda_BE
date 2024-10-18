@@ -2,6 +2,7 @@ package org.eightbit.damdda.member.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import org.eightbit.damdda.common.utils.validation.MemberValidator;
 import org.eightbit.damdda.member.dto.MemberSearchDTO;
 import org.eightbit.damdda.member.dto.PasswordDTO;
 import org.eightbit.damdda.security.user.AccountCredentials;
@@ -27,13 +28,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
-
-import java.io.IOException;
-
 
 @Log4j2
 @RestController
@@ -46,6 +43,7 @@ public class MemberController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final LoginService loginService;
+    private final MemberValidator memberValidator;
 
     @GetMapping("/userinfo")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal User user){
@@ -154,20 +152,16 @@ public class MemberController {
         }
     }
 
-    @PutMapping("/{id}/photo")
-    public ResponseEntity<String> updateProfilePhoto(@RequestBody MultipartFile imageUrl, HttpSession session) throws IOException {
-        try {
-            String fileName = memberService.uploadFile(imageUrl);
-            return ResponseEntity.ok(fileName);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
-
     @PutMapping("/{id}")
-    public ResponseEntity<MemberDTO> updateProfile (@RequestBody MemberDTO memberDTO){
+    public ResponseEntity<?> updateProfile (@PathVariable Long id, @RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "member") MemberDTO memberDTO){
+        memberValidator.validateMemberIdForLoginUser(id);
         try {
-            return ResponseEntity.ok(memberService.updateMember(memberDTO));
+            if (image != null) {
+                String fileName = memberService.uploadFile(image);
+                memberDTO.setImageUrl(fileName);
+            }
+            MemberDTO updateInfo = memberService.updateMember(memberDTO);
+            return ResponseEntity.ok(updateInfo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (Exception e) {
@@ -193,6 +187,7 @@ public class MemberController {
             @PathVariable Long id,
             @RequestBody PasswordDTO passwordDTO
     ){
+        memberValidator.validateMemberIdForLoginUser(id);
         try {
             boolean result = loginService.modifyPassword(id, passwordDTO.getPassword());
             return ResponseEntity.ok(Map.of("isSuccess", result));
@@ -206,7 +201,8 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteMember(@AuthenticationPrincipal User user){
+    public ResponseEntity<Map<String, Boolean>> deleteMember(@PathVariable Long id, @AuthenticationPrincipal User user){
+        memberValidator.validateMemberIdForLoginUser(id);
         try{
             memberService.deleteMember(user.getMemberId());
             return ResponseEntity.ok(Map.of("isSuccess", true));
