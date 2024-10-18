@@ -1,6 +1,6 @@
 package org.eightbit.damdda.security.util;
 
-import org.eightbit.damdda.common.exception.UnauthorizedAccessException;
+import org.eightbit.damdda.common.exception.custom.UnauthorizedAccessException;
 import org.eightbit.damdda.security.user.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

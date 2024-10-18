@@ -1,8 +1,9 @@
-package org.eightbit.damdda.common.exception;
+package org.eightbit.damdda.common.exception.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eightbit.damdda.common.exception.custom.UnauthorizedAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

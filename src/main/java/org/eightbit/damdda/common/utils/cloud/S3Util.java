@@ -1,4 +1,4 @@
-    package org.eightbit.damdda.common.util;
+    package org.eightbit.damdda.common.utils.cloud;
 
     import com.amazonaws.HttpMethod;
     import com.amazonaws.services.s3.AmazonS3;

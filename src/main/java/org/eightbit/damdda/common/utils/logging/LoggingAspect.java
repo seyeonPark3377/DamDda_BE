@@ -1,4 +1,4 @@
-package org.eightbit.damdda.common.util;
+package org.eightbit.damdda.common.utils.logging;
 
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.ProceedingJoinPoint;

@@ -1,4 +1,4 @@
-package org.eightbit.damdda.common.exception;
+package org.eightbit.damdda.common.exception.custom;
 
 // 허가되지 않은 접근을 시도할 때 발생하는 커스텀 예외.
 public class UnauthorizedAccessException extends RuntimeException{

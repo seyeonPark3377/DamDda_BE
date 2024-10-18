@@ -3,7 +3,7 @@ package org.eightbit.damdda.noticeandqna.service;
 import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.noticeandqna.domain.QnaQuestion;
 import org.eightbit.damdda.noticeandqna.dto.QnaQuestionDTO;
-import org.eightbit.damdda.common.exception.UnauthorizedAccessException;
+import org.eightbit.damdda.common.exception.custom.UnauthorizedAccessException;
 import org.eightbit.damdda.noticeandqna.repository.QnaQuestionRepository;
 import org.eightbit.damdda.security.util.SecurityContextUtil;
 import org.modelmapper.ModelMapper;

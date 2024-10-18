@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping("/project")
 @Log4j2
 @RequiredArgsConstructor
-public class ProjectApiController {
+public class ProjectController {
 
     private final ProjectService projectService;
     private final LikedProjectService likedProjectService;
