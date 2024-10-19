@@ -2,20 +2,16 @@ package org.eightbit.damdda.project.repository;
 
 
 import org.eightbit.damdda.project.domain.PackageRewards;
-import org.eightbit.damdda.project.domain.ProjectPackage;
 import org.eightbit.damdda.project.domain.ProjectRewards;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Repository
-public interface PackageRewardsRepository extends JpaRepository<PackageRewards,Long> {
+public interface PackageRewardsRepository extends JpaRepository<PackageRewards, Long> {
 
     @Query("SELECT DISTINCT pr.projectReward FROM PackageRewards pr WHERE pr.project.id = :projectId")
     List<ProjectRewards> findRewardsByProjectId(@Param("projectId") Long projectId);

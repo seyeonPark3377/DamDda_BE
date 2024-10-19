@@ -36,30 +36,30 @@
 
 ### 데이터베이스 생성
 
-1.  “Connect to a database”.
-2.  “MariaDB” 선택.
-3.  “Connect to a database” 정보 입력 (Password: damdda).
+1. “Connect to a database”.
+2. “MariaDB” 선택.
+3. “Connect to a database” 정보 입력 (Password: damdda).
 
-    ![DBeaver_create_database.png](DBeaver_create_database.png)
+   ![DBeaver_create_database.png](DBeaver_create_database.png)
 
-4.  “Test Connection” 확인.
-5.  “[localhost](http://localhost)” (생성된 localhost) 선택.
-6.  “Databases” 우클릭.
-7.  “Create New Database” 선택.
-8.  “Database name: damdda
-    Charset: utf8mb4
-    Collation: utf8mb4_general_ci”
-    정보 입력.
+4. “Test Connection” 확인.
+5. “[localhost](http://localhost)” (생성된 localhost) 선택.
+6. “Databases” 우클릭.
+7. “Create New Database” 선택.
+8. “Database name: damdda
+   Charset: utf8mb4
+   Collation: utf8mb4_general_ci”
+   정보 입력.
 
 ### 사용자 계정 생성
 
-1.  “Users” 우클릭.
-2.  “Users” 선택.
-3.  “Create New User” 선택.
-4.  User Name: damdda
-    Host: %
-    Password: damdda
-    Confirm: damdda
-    정보 입력.
-5.  “Check All” 선택.
-6.  “Save” 선택.
+1. “Users” 우클릭.
+2. “Users” 선택.
+3. “Create New User” 선택.
+4. User Name: damdda
+   Host: %
+   Password: damdda
+   Confirm: damdda
+   정보 입력.
+5. “Check All” 선택.
+6. “Save” 선택.

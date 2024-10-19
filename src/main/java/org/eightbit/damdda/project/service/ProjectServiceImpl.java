@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -46,7 +45,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final SecurityContextUtil securityContextUtil;
 
     @Override
-    public ProjectRegisterDetailDTO getProjectDetail(Long projectId){
+    public ProjectRegisterDetailDTO getProjectDetail(Long projectId) {
         projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("해당 아이디와 일치하는 프로젝트 없음! Project not found with ID: " + projectId));
@@ -92,7 +91,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Long getOrganizerId(Long projectId){
+    public Long getOrganizerId(Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("해당 아이디와 일치하는 프로젝트 없음! Project not found with ID: " + projectId));
         return project.getMember().getId();
@@ -470,7 +469,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     protected List<FileDTO> fileInputMeta(List<MetaDTO> filesMeta, List<MultipartFile> files) {
-        if(filesMeta == null || files == null) {
+        if (filesMeta == null || files == null) {
             return null;
         }
 
@@ -507,7 +506,7 @@ public class ProjectServiceImpl implements ProjectService {
                               List<MetaDTO> updateProductImage,
                               List<MetaDTO> updateDescriptionImage,
                               List<MetaDTO> updateDocs
-                              ) {
+    ) {
 
         List<FileDTO> productImagesFile = fileInputMeta(productImagesMeta, productImages);
         List<FileDTO> descriptionImagesFile = fileInputMeta(descriptionImagesMeta, descriptionImages);
@@ -544,21 +543,21 @@ public class ProjectServiceImpl implements ProjectService {
 
         log.info("check productImagesFile files : " + productImagesFile);
         log.info("check productImagesFile files : " + productImagesFile);
-        if(productImagesFile != null && productImagesFile.size() > 0) {
+        if (productImagesFile != null && productImagesFile.size() > 0) {
             imgService.saveImages(project, productImagesFile, 1L);
         }
 
-        if(descriptionImagesFile != null && descriptionImagesFile.size() > 0) {
+        if (descriptionImagesFile != null && descriptionImagesFile.size() > 0) {
             imgService.saveImages(project, descriptionImagesFile, 3L);
         }
 
         ProjectImage thumbnailImage = projectImageRepository.findByProject_IdAndOrdAndImageType_Id(projectId, 1, 1L);
-        if(thumbnailImage != null) {
+        if (thumbnailImage != null) {
             log.info("thumbnailImage : " + thumbnailImage);
             project.setThumbnailUrl(imgService.saveThumbnailImages(project, thumbnailImage));
         }
 
-        if(docsFile != null && docsFile.size() > 0) {
+        if (docsFile != null && docsFile.size() > 0) {
             docService.saveDocs(project, docsFile);
         }
 
@@ -586,6 +585,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<?> getDailySupportingByProjectId(Long projectId) {
-       return supportingProjectService.getDailySupportingByProjectId(projectId);
+        return supportingProjectService.getDailySupportingByProjectId(projectId);
     }
 }

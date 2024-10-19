@@ -3,7 +3,6 @@ package org.eightbit.damdda.order.dto;
 import lombok.Data;
 
 /**
- *
  * 결제 요청 시 카카오에게 받음
  */
 @Data

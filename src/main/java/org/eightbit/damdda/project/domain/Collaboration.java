@@ -3,14 +3,12 @@ package org.eightbit.damdda.project.domain;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.jshell.Snippet;
+import io.swagger.v3.core.util.Json;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlIDREF;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Collaboration {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate savedAt;
@@ -36,13 +34,13 @@ public class Collaboration {
     private String userId;
 
     @ManyToOne
-    @JoinColumn(name="projectId")
+    @JoinColumn(name = "projectId")
     private Project project;
 
     private Date approvalDate;
 
     @Builder.Default
-    private String approval="대기";
+    private String approval = "대기";
 
     private String collaborationText;
     private String name; //프로젝트 제목. -> 나중에 바꾸기.
@@ -58,21 +56,31 @@ public class Collaboration {
     public void addSenderDeletedAt() {
         this.senderDeletedAt = LocalDate.now();
     }
+
     public void addReceiverDeletedAt() {
         this.receiverDeletedAt = LocalDate.now();
+    }
+
+    //json 역직렬화
+    public List<String> getCollabDocList() throws JsonProcessingException {
+        if(this.collabDocList == null || this.collabDocList.isEmpty()){
+            return new ArrayList<>();
+        }
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(this.collabDocList, new TypeReference<List<String>>() {
+            });
+        }catch (JsonProcessingException e){
+            return new ArrayList<>();
+        }
     }
 
     public void setCollabDocList(List<String> collabs) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         this.collabDocList = objectMapper.writeValueAsString(collabs);
     }
-    //json 역직렬화
-    public List<String> getCollabDocList() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(this.collabDocList,new TypeReference<List<String>>(){});
-    }
 
-    public void removeCollabDocList(){
+    public void removeCollabDocList() {
         this.collabDocList = null;
     }
 

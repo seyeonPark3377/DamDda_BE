@@ -1,14 +1,12 @@
 package org.eightbit.damdda.order.repository;
 
 import org.eightbit.damdda.order.domain.SupportingPackage;
-import org.eightbit.damdda.project.dto.DailySupporting;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -43,9 +41,6 @@ public interface SupportingPackageRepository extends JpaRepository<SupportingPac
     //목표금액 가져오는 쿼리
     @Query("SELECT p.targetFunding FROM Project p WHERE p.id = :projectId")
     Long getTargetFundingByProjectId(@Param("projectId") Long projectId);
-
-
-
 
 
 }

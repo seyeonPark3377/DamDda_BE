@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 
-public interface ProjectRepository extends JpaRepository<Project, Long>, ProjectRepositoryCustom  {
+public interface ProjectRepository extends JpaRepository<Project, Long>, ProjectRepositoryCustom {
 
 //    @Query("SELECT p FROM Project p WHERE p.deletedAt IS NULL")
 //    List<Project> findAllActiveProjects();
@@ -47,7 +47,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
             + "     (:progress = 'completed' AND p.endDate < CURRENT_LocalDateTime)) " // 완료된 필터
             + "ORDER BY (p.fundsReceive / p.targetFunding) DESC"
     )
-
     List<Project> findAllSortedByFundingRatio(@Param("category") String category,
                                               @Param("search") String search,
                                               @Param("progress") String progress);

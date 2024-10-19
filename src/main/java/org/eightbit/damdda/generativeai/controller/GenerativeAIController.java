@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/generative-ai")
 @RequiredArgsConstructor
 @Tag(name = "Generative AI API", description = "생성형 AI가 제공하는 정보를 관리하는 API입니다.")
-public class    GenerativeAIController {
+public class GenerativeAIController {
 
     // GenerativeAIServiceImpl 인스턴스를 주입받아 사용
     private final GenerativeAIService generativeAIService;

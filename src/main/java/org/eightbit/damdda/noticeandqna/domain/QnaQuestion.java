@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EntityListeners(value={AuditingEntityListener.class})
+@EntityListeners(value = {AuditingEntityListener.class})
 public class QnaQuestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,6 +62,18 @@ public class QnaQuestion {
      */
     @Column(length = 500, nullable = false)
     private String content;
+    /**
+     * Q&A 질문의 공개 설정 (PUBLIC/PRIVATE).
+     * - ENUM 타입을 데이터베이스에 문자열로 저장.
+     * - 필수 항목으로 null일 수 없음.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "ENUM('PUBLIC', 'PRIVATE')", nullable = false)
+    private Visibility visibility;
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+    private LocalDateTime deletedAt;
 
     /**
      * 공개 설정 옵션 (Enum 타입).
@@ -71,19 +83,4 @@ public class QnaQuestion {
         PUBLIC,  // 공개.
         PRIVATE; // 비공개.
     }
-
-    /**
-     * Q&A 질문의 공개 설정 (PUBLIC/PRIVATE).
-     * - ENUM 타입을 데이터베이스에 문자열로 저장.
-     * - 필수 항목으로 null일 수 없음.
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "ENUM('PUBLIC', 'PRIVATE')", nullable = false)
-    private Visibility visibility;
-
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    private LocalDateTime deletedAt;
 }

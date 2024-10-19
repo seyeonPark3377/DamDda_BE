@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectRewards  {
+public class ProjectRewards {
 
 
     @Id
@@ -24,7 +24,7 @@ public class ProjectRewards  {
     Long id;
 
     @Builder.Default
-    @OneToMany(mappedBy="projectReward", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "projectReward", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     List<PackageRewards> packageRewards = new ArrayList<>();
 
@@ -37,23 +37,25 @@ public class ProjectRewards  {
     private String optionType;
 
     //setter 함수
-    public void setPackageReward(Project project){
+    public void setPackageReward(Project project) {
         PackageRewards packageRewards1 = PackageRewards.builder()
                 .projectReward(this)
                 .project(project)
                 .build();
         packageRewards.add(packageRewards1);
     }
-    public void setOptionList(List<String> options) throws JsonProcessingException{
+
+    //json 역직렬화
+    public List<String> getOptionList() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(this.optionList, new TypeReference<List<String>>() {
+        });
+    }
+
+    public void setOptionList(List<String> options) throws JsonProcessingException {
         //List<OptionDTO> -> json문자열
         ObjectMapper objectMapper = new ObjectMapper();
         this.optionList = objectMapper.writeValueAsString(options);
-    }
-
-    //json 역직렬화
-    public List<String> getOptionList() throws  JsonProcessingException{
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(this.optionList, new TypeReference<List<String>>(){});
     }
 
     //packageReward와의 양방향 연관관계로 인한 순환 참조 문제 -> @ToString 사용 불가능.

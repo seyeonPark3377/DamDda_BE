@@ -3,7 +3,6 @@ package org.eightbit.damdda.member.dto;
 
 import lombok.*;
 import org.eightbit.damdda.member.domain.Member;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 

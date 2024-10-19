@@ -6,6 +6,7 @@ import org.eightbit.damdda.project.domain.Project;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "supporting_projects")
 @Data
@@ -20,11 +21,11 @@ public class SupportingProject {
 
     private LocalDateTime supportedAt; // 후원 시간
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "payment_id")
     private Payment payment;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 

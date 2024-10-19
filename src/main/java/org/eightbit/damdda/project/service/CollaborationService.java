@@ -11,7 +11,6 @@ import org.eightbit.damdda.project.dto.PageResponseDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,18 +18,27 @@ import java.util.stream.Collectors;
 public interface CollaborationService {
 
     String uploadFile(MultipartFile file) throws IOException;
+
     S3ObjectInputStream downloadFIle(String fileName);
+
     void deleteFile(String fileName);
-    void register(CollaborationDetailDTO collab,Long project_id) throws JsonProcessingException;
+
+    void register(CollaborationDetailDTO collab, Long project_id) throws JsonProcessingException;
+
     CollaborationDetailDTO readDetail(Long rno) throws JsonProcessingException;
-    PageResponseDTO<CollaborationDTO> readReceive(PageRequestDTO pageRequestDTO,String userId);
-    PageResponseDTO<CollaborationDTO> readRequest(PageRequestDTO pageRequestDTO,String userId);
+
+    PageResponseDTO<CollaborationDTO> readReceive(PageRequestDTO pageRequestDTO, String userId);
+
+    PageResponseDTO<CollaborationDTO> readRequest(PageRequestDTO pageRequestDTO, String userId);
+
     int delete(List<Long> cnoList, String user_id) throws JsonProcessingException;
+
     void approvalRequest(List<Long> idList);
+
     void rejectRequest(List<Long> idList);
 
-    default Collaboration collabDtoToEntiy(CollaborationDetailDTO collabDTO, Project project){
-        return  Collaboration.builder()
+    default Collaboration collabDtoToEntiy(CollaborationDetailDTO collabDTO, Project project) {
+        return Collaboration.builder()
                 .savedAt(collabDTO.getCollaborationDTO().getCollaborateDate())
                 .userId(collabDTO.getUser_id())
                 .project(project)
@@ -42,7 +50,7 @@ public interface CollaborationService {
     }
 
     default CollaborationDetailDTO collabEntityToDto(Collaboration collaboration) throws JsonProcessingException {
-        List<Object> collabDocList = collaboration.getCollabDocList()==null ? new ArrayList<>() : collaboration.getCollabDocList().stream().map(String.class::cast).collect(Collectors.toList());
+        List<Object> collabDocList = collaboration.getCollabDocList() == null ? new ArrayList<>() : collaboration.getCollabDocList().stream().map(String.class::cast).collect(Collectors.toList());
         return CollaborationDetailDTO.builder()
                 .collaborationDTO(CollaborationDTO.builder().id(collaboration.getId()).title(collaboration.getProject().getTitle()).approval(collaboration.getApproval()).CollaborateDate(collaboration.getSavedAt()).name(collaboration.getName()).build())
                 .phoneNumber(collaboration.getPhoneNumber())
@@ -54,7 +62,7 @@ public interface CollaborationService {
     }
 
 
-    default CollaborationDTO collabEntityToDtoList(Collaboration collaboration){
+    default CollaborationDTO collabEntityToDtoList(Collaboration collaboration) {
         return CollaborationDTO.builder()
                 .id(collaboration.getId())
                 .title(collaboration.getProject().getTitle())

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EntityListeners(value={AuditingEntityListener.class})
+@EntityListeners(value = {AuditingEntityListener.class})
 public class QnaReply {
 
     @Id

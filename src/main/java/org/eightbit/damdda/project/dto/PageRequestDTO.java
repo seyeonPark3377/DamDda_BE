@@ -25,10 +25,12 @@ public class PageRequestDTO {
     private String type;        // 검색종류 : t, c, w, tc, tw, twc
 
     private String keyword;     // 검색어
+    // 검색 조건/페이징 조건을 문자열로 구성
+    private String link;
 
     // ex) "twc"문자열을 각각 ["t", "w", "c"]로 저장한다.
-    public String[] getTypes(){
-        if(type==null || type.isEmpty())
+    public String[] getTypes() {
+        if (type == null || type.isEmpty())
             return null;
 
         return type.split("");
@@ -42,30 +44,28 @@ public class PageRequestDTO {
 
     Sort.by(props).descending() : props에 전달된 매개변수 순서대로 ORDER BY desc 하게 된다.
     * */
-    public Pageable getPageable(String...props){
+    public Pageable getPageable(String... props) {
         if (props == null || props.length == 0) {
             return PageRequest.of(this.page - 1, this.size);  // 기본 정렬 없음
         }
         return PageRequest.of(this.page - 1, this.size, Sort.by(props).descending());
     }
 
-    // 검색 조건/페이징 조건을 문자열로 구성
-    private String link;
-
-    public String getLink(){
-        if(link == null){
+    public String getLink() {
+        if (link == null) {
             StringBuilder builder = new StringBuilder();
             builder.append("page=" + this.page);
             builder.append("&size=" + this.size);
 
-            if(type!=null && type.length() > 0){
+            if (type != null && type.length() > 0) {
                 builder.append("&type=" + type);
             }
 
-            if(keyword != null){
-                try{
+            if (keyword != null) {
+                try {
                     builder.append("&keyword=" + URLEncoder.encode(keyword, "UTF-8"));
-                }catch(UnsupportedEncodingException e){}
+                } catch (UnsupportedEncodingException e) {
+                }
             }
             link = builder.toString();
         }

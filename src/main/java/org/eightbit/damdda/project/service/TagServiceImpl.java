@@ -22,12 +22,10 @@ import java.util.stream.Collectors;
 @Transactional
 public class TagServiceImpl implements TagService {
 
-    @PersistenceContext
-    private EntityManager entityManager;  // EntityManager를 통해 엔티티를 관리
-
-
     private final TagRepository tagRepository;
     private final ProjectRepository projectRepository;
+    @PersistenceContext
+    private EntityManager entityManager;  // EntityManager를 통해 엔티티를 관리
 
     public List<Tag> registerTags(List<TagDTO> tags) {
         List<String> tagNames = tags.stream()
@@ -71,7 +69,7 @@ public class TagServiceImpl implements TagService {
 
         List<Tag> projectTags = project.getTags();
 
-        for(TagDTO tagDTO : tagDTOs) {
+        for (TagDTO tagDTO : tagDTOs) {
 
         }
 
@@ -168,7 +166,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public String delProjectFromTag(String tagName, Project project){
+    public String delProjectFromTag(String tagName, Project project) {
         // 태그가 존재하는지 확인
         Tag tag = tagRepository.findByName(tagName);
 

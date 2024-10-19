@@ -3,10 +3,6 @@ package org.eightbit.damdda.order.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.order.repository.SupportingProjectRepository;
-import org.eightbit.damdda.project.domain.Project;
-import org.eightbit.damdda.project.dto.DailySupporting;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

@@ -19,7 +19,7 @@ public class User implements UserDetails {
         return member;
     }
 
-    public String getNickname(){
+    public String getNickname() {
         return member.getNickname();
     }
 
@@ -41,6 +41,7 @@ public class User implements UserDetails {
     public String getLoginId() {
         return member.getLoginId();
     }
+
     public Long getMemberId() {
         return member.getId();
     }

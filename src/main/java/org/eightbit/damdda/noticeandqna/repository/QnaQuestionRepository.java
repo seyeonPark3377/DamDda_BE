@@ -30,7 +30,7 @@ public interface QnaQuestionRepository extends JpaRepository<QnaQuestion, Long> 
      * deletedAt이 null인 질문들만 반환.
      *
      * @param projectId 프로젝트 ID.
-     * @param pageable 페이징 정보.
+     * @param pageable  페이징 정보.
      * @return 페이징된 Q&A 질문 목록.
      */
     Page<QnaQuestion> findAllByDeletedAtIsNullAndProjectId(Long projectId, Pageable pageable);

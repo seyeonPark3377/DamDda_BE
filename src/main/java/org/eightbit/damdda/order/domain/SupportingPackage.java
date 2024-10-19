@@ -1,6 +1,5 @@
 package org.eightbit.damdda.order.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.eightbit.damdda.project.domain.ProjectPackage;
 
@@ -32,9 +31,6 @@ public class  SupportingPackage {
 
     private Integer packageCount;
 
-    //선택한 옵션
     @Column(columnDefinition = "json")
     private String OptionList;
-
-
 }

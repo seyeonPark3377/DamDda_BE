@@ -10,13 +10,21 @@ import java.util.Optional;
 
 public interface MemberService {
     String uploadFile(MultipartFile file) throws IOException;
+
     Map<String, Object> getUserInfo(Long member_id);
+
     void deleteFIle(String fileName);
+
     Optional<Member> findById(Long memberId);
+
     Member getById(Long memberId);
+
     MemberDTO getMember(String loginId);
+
     MemberDTO updateMember(MemberDTO memberDTO);
+
     MemberDTO confirmPw(String loginId, String password);
+
     // 탈퇴 기능 추가
     void deleteMember(Long memberId);
 }

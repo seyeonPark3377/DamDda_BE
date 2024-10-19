@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
 import javax.transaction.Transactional;
 
 @Service
@@ -18,15 +19,14 @@ import javax.transaction.Transactional;
 public class KakaoPayServiceImpl implements KakaoPayService {
 
 
+    static final String cid = "TC0ONETIME"; // 가맹점 테스트 코드
     @Value("${KAKAO_ADMIN_KEY}")
     private String KAKAO_ADMIN_KEY;
-
-    static final String cid = "TC0ONETIME"; // 가맹점 테스트 코드
     private KakaoReadyResponse kakaoReady;
 
     // 결제 준비
     @Override
-    public KakaoReadyResponse kakaoPayReady(Long orderId, String authorizationHeader) {
+    public KakaoReadyResponse kakaoPayReady(Long orderId) {
 
         // 카카오페이 요청 양식
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -43,7 +43,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         parameters.add("fail_url", String.format("http://localhost:9000/damdda/payment/kakao/fail?orderId=%d", orderId));
 
         // 파라미터, 헤더
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters,this.getHeaders(authorizationHeader));
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
 
         // 외부에 보낼 url
         RestTemplate restTemplate = new RestTemplate();
@@ -58,7 +58,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 
     // 결제 승인
     @Override
-    public KakaoApproveResponse approveResponse(String pgToken, Long orderId, String authorizationHeader) {
+    public KakaoApproveResponse approveResponse(String pgToken, Long orderId) {
         System.out.println("pg_token: " + pgToken);
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -68,7 +68,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         parameters.add("partner_user_id", 0);
         parameters.add("pg_token", pgToken);
 
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders(authorizationHeader));
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
 
         RestTemplate restTemplate = new RestTemplate();
         KakaoApproveResponse approveResponse = restTemplate.postForObject(
@@ -82,7 +82,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
     /**
      * 카카오 요구 헤더값
      */
-    private HttpHeaders getHeaders(String damddaAuth) {
+    private HttpHeaders getHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         String auth = "KakaoAK " + KAKAO_ADMIN_KEY;

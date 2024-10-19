@@ -16,16 +16,15 @@ import java.util.List;
 @NoArgsConstructor
 public class ProjectPackage {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     /************************중요*******************/
     /*quantityLimited 줄어드는 메소드 필요.*/
 
     @Builder.Default // 초기값을 빌더에서 사용하기 위해 추가.
     @OneToMany(mappedBy = "projectPackage", cascade = CascadeType.ALL, orphanRemoval = true)
     List<PackageRewards> packageRewards = new ArrayList<>();//초기화 안 하면 add 불가능
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String packageName;
 
     private int packagePrice;

@@ -1,6 +1,8 @@
 package org.eightbit.damdda.member.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.eightbit.damdda.member.domain.Member;
 
 import javax.validation.constraints.NotNull;
@@ -37,6 +39,19 @@ public class RegisterDTO {
     // int -> Integer로 변경
     private Integer postCode;
 
+    @Builder
+    public RegisterDTO(String loginId, String password, String nickname, String name, String email, String phoneNumber, String address, String detailedAddress, int postCode) {
+        this.loginId = loginId;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.detailedAddress = detailedAddress;
+        this.postCode = postCode;
+    }
+
     public Member toEntity() {
         return Member.builder()
                 .loginId(loginId)
@@ -49,18 +64,5 @@ public class RegisterDTO {
                 .detailedAddress(detailedAddress)
                 .postCode(postCode)
                 .build();
-    }
-
-    @Builder
-    public RegisterDTO(String loginId, String password, String nickname, String name, String email, String phoneNumber, String address, String detailedAddress, int postCode) {
-        this.loginId = loginId;
-        this.password = password;
-        this.nickname = nickname;
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.detailedAddress = detailedAddress;
-        this.postCode = postCode;
     }
 }
