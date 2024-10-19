@@ -14,7 +14,7 @@ public class MemberSearchDTO {
     private String name;
     private String email;
 
-    public Member toEntity(){
+    public Member toEntity() {
         return Member.builder()
                 .loginId(loginId)
                 .name(name)

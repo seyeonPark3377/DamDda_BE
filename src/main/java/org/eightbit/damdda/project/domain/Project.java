@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = {"category", "tags"})
-@EntityListeners(value={AuditingEntityListener.class})
+@EntityListeners(value = {AuditingEntityListener.class})
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +43,7 @@ public class Project {
     private String title;
     private String description;
 
-//    @Column(length = 10000000)
+    //    @Column(length = 10000000)
     @Column(columnDefinition = "TEXT")
     private String descriptionDetail;
     private LocalDateTime startDate;

@@ -11,7 +11,6 @@ import org.eightbit.damdda.common.utils.file.ExcelGenerator;
 import org.eightbit.damdda.common.utils.validation.ProjectValidator;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.order.domain.*;
-
 import org.eightbit.damdda.order.dto.OrderDTO;
 import org.eightbit.damdda.order.dto.ProjectStatisticsDTO;
 import org.eightbit.damdda.order.dto.SupportingPackageDTO;
@@ -21,13 +20,11 @@ import org.eightbit.damdda.project.domain.ProjectPackage;
 import org.eightbit.damdda.project.dto.PackageDTO;
 import org.eightbit.damdda.project.dto.RewardDTO;
 import org.eightbit.damdda.security.util.SecurityContextUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,7 +36,7 @@ import java.util.stream.Collectors;
 @Log4j2
 @Service
 @RequiredArgsConstructor
-public class OrderServiceImpl implements  OrderService{
+public class OrderServiceImpl implements OrderService {
 
     private final org.eightbit.damdda.order.repository.OrderRepository orderRepository;
     private final org.eightbit.damdda.order.repository.DeliveryRepository deliveryRepository;
@@ -68,15 +65,15 @@ public class OrderServiceImpl implements  OrderService{
 
         // 프로젝트 id를 받아서 저장한 후-> 해당 프로젝트와 연결****
         Long projectId = orderDTO.getSupportingProject().getProject().getId();  // Project 엔티티의 ID를 가져옴
-        Project project=projectRepository.findById(projectId)
+        Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("프로젝트를 찾을 수 없습니다."));
 
         //userId로 user찾기****
         Long userId = orderDTO.getSupportingProject().getUser().getId();  // User(Member) 엔티티의 ID를 가져옴
-        System.out.println(userId+"!");
+        System.out.println(userId + "!");
 
-        Member member=memberRepository.getById(userId);
-        System.out.println("order service member"+member);
+        Member member = memberRepository.getById(userId);
+        System.out.println("order service member" + member);
 
 
         SupportingProject supportingProject = SupportingProject.builder()
@@ -86,7 +83,7 @@ public class OrderServiceImpl implements  OrderService{
                 .payment(payment)
                 .delivery(delivery)
                 .build();
-        System.out.println("log: order service supporting project"+supportingProject);
+        System.out.println("log: order service supporting project" + supportingProject);
         supportingProjectRepository.save(supportingProject);
 
 
@@ -94,9 +91,9 @@ public class OrderServiceImpl implements  OrderService{
         Set<SupportingPackage> supportingPackages = new HashSet<>();
 
 
-        orderDTO.getSupportingPackages().stream().forEach((sp)-> {
+        orderDTO.getSupportingPackages().stream().forEach((sp) -> {
 
-            ProjectPackage projectPackage = packageRepository.findById(sp.getPackageDTO().getId()).orElseThrow(()->new RuntimeException("해당 패키지를 찾을 수 없습니다."));
+            ProjectPackage projectPackage = packageRepository.findById(sp.getPackageDTO().getId()).orElseThrow(() -> new RuntimeException("해당 패키지를 찾을 수 없습니다."));
             SupportingPackage supportingPackage = null;
             try {
                 supportingPackage = SupportingPackage.builder()
@@ -127,7 +124,7 @@ public class OrderServiceImpl implements  OrderService{
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        Order savedOrder=orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
         orderDTO.setOrderId(savedOrder.getOrderId());
         return orderDTO;
     }
@@ -201,8 +198,8 @@ public class OrderServiceImpl implements  OrderService{
         // 결제 상태 업데이트
         order.getSupportingProject().getPayment().setPaymentStatus(paymentStatus);
         //project의 후원자 수, 후원금액 업데이트
-        Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp-> (long) sp.getPackageCount() *sp.getProjectPackage().getPackagePrice()).sum();
-        projectRepository.updateProjectStatus(fundsReceive,order.getSupportingProject().getProject().getId(),1L);
+        Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp -> (long) sp.getPackageCount() * sp.getProjectPackage().getPackagePrice()).sum();
+        projectRepository.updateProjectStatus(fundsReceive, order.getSupportingProject().getProject().getId(), 1L);
         orderRepository.save(order);  // 변경된 상태를 저장
     }
 
@@ -211,15 +208,15 @@ public class OrderServiceImpl implements  OrderService{
     public String cancelPayment(Long paymentId, String paymentStatus) {
         // paymentId로 결제를 찾아 해당 결제 정보를 가져옵니다.
         SupportingProject supportingProject = supportingProjectRepository.findByPaymentId(paymentId);
-        if (supportingProject!=null) {
+        if (supportingProject != null) {
             // 결제 상태 업데이트
             if (supportingProject.getPayment() != null) {
                 supportingProject.getPayment().setPaymentStatus(paymentStatus); // 결제 상태 업데이트
                 supportingProjectRepository.save(supportingProject); // 변경된 상태를 저장
                 Order order = orderRepository.findByPaymentId(paymentId);
-                Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp-> (long) sp.getPackageCount() *sp.getProjectPackage().getPackagePrice()).sum();
-                fundsReceive = fundsReceive *-1L;
-                projectRepository.updateProjectStatus(fundsReceive,order.getSupportingProject().getProject().getId(),-1L);
+                Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp -> (long) sp.getPackageCount() * sp.getProjectPackage().getPackagePrice()).sum();
+                fundsReceive = fundsReceive * -1L;
+                projectRepository.updateProjectStatus(fundsReceive, order.getSupportingProject().getProject().getId(), -1L);
                 return "결제 취소됨";
             } else {
                 throw new IllegalArgumentException("Payment not found for this supporting project");
@@ -283,7 +280,7 @@ public class OrderServiceImpl implements  OrderService{
                 .orElseThrow(() -> new EntityNotFoundException("Project not found"));
 
         //2. 총 후원 금액가져오기->
-        List<String> packagePrices=supportingPackageRepository.findPackagePricesByProjectId(projectId);
+        List<String> packagePrices = supportingPackageRepository.findPackagePricesByProjectId(projectId);
 
         // String을 Integer로 변환한 후, 합계를 계산
         Long totalAmount = packagePrices.stream()
@@ -293,7 +290,7 @@ public class OrderServiceImpl implements  OrderService{
                 .sum();  // 합계 계산
 
         //3. 후원자 수 가져오기
-        Long totalSupporters =supportingPackageRepository.getTotalSupporters(projectId);
+        Long totalSupporters = supportingPackageRepository.getTotalSupporters(projectId);
 
         // 4. 남은 기간 계산
         LocalDate today = LocalDate.now();
@@ -312,7 +309,7 @@ public class OrderServiceImpl implements  OrderService{
         LocalDateTime createdAtTime = createdAtLocalDateTime.toLocalDate().atStartOfDay();
         LocalDate createdAt = createdAtTime.toLocalDate();
         // 5. target Funding
-        Long targetFunding=supportingPackageRepository.getTargetFundingByProjectId(projectId);
+        Long targetFunding = supportingPackageRepository.getTargetFundingByProjectId(projectId);
         // 5. DTO로 통계 정보를 반환
         return ProjectStatisticsDTO.builder()
                 .startDate(createdAtLocalDateTime) // created_at 값을 LocalDateTime로 사용
@@ -405,11 +402,11 @@ public class OrderServiceImpl implements  OrderService{
                 .collect(Collectors.joining(", "));
     }
 
-    public Set<SupportingPackageDTO> packageEntityToDto(Set<SupportingPackage> supportingPackage){
-        Set<SupportingPackageDTO> supportingPackageDTOS = supportingPackage.stream().map( pac-> {
+    public Set<SupportingPackageDTO> packageEntityToDto(Set<SupportingPackage> supportingPackage) {
+        Set<SupportingPackageDTO> supportingPackageDTOS = supportingPackage.stream().map(pac -> {
 
                     ObjectMapper objectMapper = new ObjectMapper();
-                    log.info("null이게요 아니게요"+pac.getOptionList());
+                    log.info("null이게요 아니게요" + pac.getOptionList());
                     PackageDTO packageDTO = PackageDTO.builder()
                             .id(pac.getProjectPackage().getId())
                             .name(pac.getProjectPackage().getPackageName())
@@ -426,7 +423,8 @@ public class OrderServiceImpl implements  OrderService{
                                                     )
                                                     .mapToInt(PackageRewards::getRewardCount).sum())
                                             .optionType(pr.getProjectReward().getOptionType())
-                                            .OptionList(objectMapper.readValue(pac.getOptionList(), new TypeReference<List<String>>(){}))
+                                            .OptionList(objectMapper.readValue(pac.getOptionList(), new TypeReference<List<String>>() {
+                                            }))
                                             .build();
                                 } catch (JsonProcessingException e) {
                                     throw new RuntimeException(e);

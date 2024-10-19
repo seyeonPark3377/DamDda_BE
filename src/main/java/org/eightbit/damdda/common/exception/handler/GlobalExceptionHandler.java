@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     /**
      * 주어진 상태, 메시지, 세부 정보를 포함하는 ResponseEntity를 생성합니다.
      *
-     * @param status HTTP 상태 코드.
+     * @param status  HTTP 상태 코드.
      * @param message 오류 메시지.
      * @param details 응답 본문에 추가할 세부 정보.
      * @return 주어진 상태와 메시지를 포함한 ResponseEntity.

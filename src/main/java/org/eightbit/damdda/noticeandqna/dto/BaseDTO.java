@@ -32,7 +32,7 @@ public class BaseDTO {
     /**
      * 엔티티가 저장된 시각.
      * - 저장된 시간은 과거 또는 현재 시점이어야 하며,
-     *   미래의 시간 값은 허용되지 않음.
+     * 미래의 시간 값은 허용되지 않음.
      */
     @PastOrPresent(message = "저장된 시간은 과거 또는 현재 시점이어야 합니다.")
     private LocalDateTime createdAt;

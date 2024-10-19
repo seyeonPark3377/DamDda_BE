@@ -9,8 +9,12 @@ import java.util.List;
 
 public interface LikedProjectRepository extends JpaRepository<LikedProject, Long> {
     void deleteByProjectIdAndMemberId(Long projectId, Long memberId);
+
     List<LikedProject> findAllByMemberId(Long memberId);
+
     Page<LikedProject> findAllByMember_Id(Long memberId, Pageable pageable);
+
     boolean existsByMember_IdAndProject_Id(Long memberId, Long projectId);
+
     Long countByProjectId(Long projectId);
 }

@@ -1,8 +1,5 @@
 package org.eightbit.damdda.order.service;
 
-import org.eightbit.damdda.project.domain.Project;
-import org.eightbit.damdda.project.dto.DailySupporting;
-
 import java.util.List;
 
 public interface SupportingProjectService {

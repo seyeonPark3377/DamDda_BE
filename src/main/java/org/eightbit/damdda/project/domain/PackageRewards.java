@@ -1,6 +1,9 @@
 package org.eightbit.damdda.project.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -22,7 +25,7 @@ public class PackageRewards {
     private ProjectPackage projectPackage;
 
     @ManyToOne
-    @JoinColumn(name="reward_id")
+    @JoinColumn(name = "reward_id")
     private ProjectRewards projectReward;
 
     @ManyToOne
@@ -32,7 +35,9 @@ public class PackageRewards {
     private int rewardCount; //선물 갯수
 
 
-    public void setProject(Project project){this.project = project;}
+    public void setProject(Project project) {
+        this.project = project;
+    }
 
     // toString 메서드 대신 별도의 메서드 사용 -> toString 순환 참조 문제.
     public String getProjectPackageInfo() {

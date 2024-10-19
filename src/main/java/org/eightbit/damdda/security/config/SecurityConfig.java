@@ -2,10 +2,10 @@ package org.eightbit.damdda.security.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.security.jwt.AuthEntryPoint;
-import org.eightbit.damdda.security.jwt.JwtService;
 import org.eightbit.damdda.security.filter.JwtAuthenticationFilter;
 import org.eightbit.damdda.security.filter.LoginFilter;
+import org.eightbit.damdda.security.jwt.AuthEntryPoint;
+import org.eightbit.damdda.security.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
     private final AuthEntryPoint authEntryPoint;
+    @Value("${app.cors.allowed-origins}")
+    private String[] allowedOrigins;  // Allowed origins from external configuration
 
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -81,9 +83,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)  // JWT 필터 추가
                 .exceptionHandling().authenticationEntryPoint(authEntryPoint);
     }
-
-    @Value("${app.cors.allowed-origins}")
-    private String[] allowedOrigins;  // Allowed origins from external configuration
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

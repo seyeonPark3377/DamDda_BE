@@ -4,16 +4,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.common.utils.validation.CreateValidation;
 import org.eightbit.damdda.common.utils.validation.UpdateValidation;
-import org.eightbit.damdda.noticeandqna.dto.QnaQuestionDTO;
 import org.eightbit.damdda.noticeandqna.dto.QnaReplyDTO;
 import org.eightbit.damdda.noticeandqna.service.QnaReplyService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,7 +35,7 @@ public class QnaReplyController {
 
     @DeleteMapping("/{qnaQuestionId}")
     @Operation(summary = "Q&A 답글 삭제", description = "Q&A 질문에 대한 답글을 삭제합니다.")
-    public ResponseEntity<Void> deleteQna(@PathVariable("qnaQuestionId") Long qnaReplyId){
+    public ResponseEntity<Void> deleteQna(@PathVariable("qnaQuestionId") Long qnaReplyId) {
         boolean deleted = qnaReplyService.softDeleteQnaReply(qnaReplyId);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
@@ -46,7 +43,7 @@ public class QnaReplyController {
     @PutMapping("/{qnaReplyId}")
     @Operation(summary = "Q&A 답글 수정", description = "Q&A 질문에 대한 답글을 수정합니다.")
     public ResponseEntity<QnaReplyDTO> modifyQna(@Validated(UpdateValidation.class) @RequestBody QnaReplyDTO qnaReplyDTO,
-                                                 @PathVariable("qnaReplyId") Long qnaReplyId){
+                                                 @PathVariable("qnaReplyId") Long qnaReplyId) {
         qnaReplyDTO.setId(qnaReplyId);
         QnaReplyDTO updateQnaReply = qnaReplyService.saveQnaReply(qnaReplyDTO);
         return ResponseEntity.ok(updateQnaReply);

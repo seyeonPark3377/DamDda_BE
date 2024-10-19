@@ -9,12 +9,9 @@ import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.dto.MemberDTO;
 import org.eightbit.damdda.member.repository.MemberRepository;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,43 +34,44 @@ public class MemberServiceImpl implements MemberService {
     @Value("${cloud.aws.credentials.bucket}")
     private String bucketName;
 
-        @Override
-        public Map<String, Object> getUserInfo(Long member_id){
-            Member member = memberRepository.findById(member_id).orElseThrow();
-            Map<String, Object> userInfo = new HashMap<>();
-            userInfo.put("id",member.getLoginId());
-            userInfo.put("key",member.getId());
-            userInfo.put("imageUrl",member.getImageUrl());
-            userInfo.put("nickname",member.getNickname());
-            userInfo.put("name",member.getName());
+    @Override
+    public Map<String, Object> getUserInfo(Long member_id) {
+        Member member = memberRepository.findById(member_id).orElseThrow();
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("id", member.getLoginId());
+        userInfo.put("key", member.getId());
+        userInfo.put("imageUrl", member.getImageUrl());
+        userInfo.put("nickname", member.getNickname());
+        userInfo.put("name", member.getName());
 
-            return userInfo;
-        }
+        return userInfo;
+    }
 
     @Override
     @Transactional
     public String uploadFile(MultipartFile file) throws IOException {
 
-        String fileName = "profile/"+file.getOriginalFilename();
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,fileName,file.getInputStream(),null).withCannedAcl(CannedAccessControlList.PublicRead);
+        String fileName = "profile/" + file.getOriginalFilename();
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, file.getInputStream(), null).withCannedAcl(CannedAccessControlList.PublicRead);
         amazonS3.putObject(putObjectRequest);
-        return amazonS3.getUrl(bucketName,fileName).toString();
+        return amazonS3.getUrl(bucketName, fileName).toString();
 
     }
 
     @Override
     @Transactional
-    public void deleteFIle(String fileName){
-        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName,fileName);
+    public void deleteFIle(String fileName) {
+        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, fileName);
         amazonS3.deleteObject(deleteObjectRequest);
     }
+
     @Override
-    public Optional<Member> findById(Long memberId){
+    public Optional<Member> findById(Long memberId) {
         return memberRepository.findById(memberId);
     }
 
     @Override
-    public Member getById(Long memberId){
+    public Member getById(Long memberId) {
         return memberRepository.getById(memberId);
     }
 
@@ -86,10 +84,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO confirmPw(String loginId, String password) {
         Optional<Member> optionalMember = memberRepository.findByLoginId(loginId);
-        if(optionalMember.isPresent()) {
+        if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
             String encodedPassword = member.getPassword();
-            if(passwordEncoder.matches(password, encodedPassword)) {
+            if (passwordEncoder.matches(password, encodedPassword)) {
                 MemberDTO memberDTO = MemberDTO.of(member);
                 memberDTO.setPassword(null);
                 return memberDTO;

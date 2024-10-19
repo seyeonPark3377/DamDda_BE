@@ -3,22 +3,21 @@ package org.eightbit.damdda.project.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.catalina.valves.rewrite.RewriteCond;
-import org.eightbit.damdda.project.domain.*;
+import org.eightbit.damdda.project.domain.PackageRewards;
+import org.eightbit.damdda.project.domain.Project;
+import org.eightbit.damdda.project.domain.ProjectPackage;
+import org.eightbit.damdda.project.domain.ProjectRewards;
 import org.eightbit.damdda.project.dto.PackageDTO;
 import org.eightbit.damdda.project.dto.RewardDTO;
 import org.eightbit.damdda.project.repository.PackageRepository;
 import org.eightbit.damdda.project.repository.PackageRewardsRepository;
 import org.eightbit.damdda.project.repository.ProjectRepository;
 import org.eightbit.damdda.project.repository.RewardRepository;
-import org.hibernate.validator.internal.constraintvalidators.bv.time.past.PastValidatorForCalendar;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
-
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.stream.Collectors;
 
 @Service

@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    @Value("${recommendation.url}")
+    private String recommendationUrl;
 
     public ProjectRepositoryImpl(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
@@ -145,9 +147,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         return orderSpecifiers.toArray(new OrderSpecifier<?>[0]);
     }
 
-    @Value("${recommendation.url}")
-    private String recommendationUrl;
-
     public Page<Project> getProjectByRecommendOrder(Long memberId, String category, String search, String progress, List<String> sortConditions, Pageable pageable) {
         if (memberId == 0L) {
             return findProjects(memberId, category, search, progress, Arrays.asList("likeCnt"), pageable);
@@ -182,7 +181,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                             .toList()
                             .stream()
                             .map(id -> {
-                                        Long projectId = Long.valueOf((Integer)id);
+                                        Long projectId = Long.valueOf((Integer) id);
                                         BooleanBuilder builder = new BooleanBuilder();
                                         builder.and(project.id.eq(projectId));
                                         return queryFactory

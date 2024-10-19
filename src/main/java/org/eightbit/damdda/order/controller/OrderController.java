@@ -2,17 +2,14 @@ package org.eightbit.damdda.order.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.security.user.User;
-import org.eightbit.damdda.order.domain.Order;
 import org.eightbit.damdda.order.dto.OrderDTO;
 import org.eightbit.damdda.order.dto.ProjectStatisticsDTO;
 import org.eightbit.damdda.order.service.OrderService;
+import org.eightbit.damdda.security.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,7 +29,7 @@ public class OrderController {
 
     //주문 생성
     @PostMapping("/create")
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO, @AuthenticationPrincipal User user){
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO, @AuthenticationPrincipal User user) {
         orderDTO.getSupportingProject().getUser().setId(user.getMemberId());
         OrderDTO createdOrder = orderService.createOrder(orderDTO);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
@@ -65,12 +62,12 @@ public class OrderController {
     }
 
     @PutMapping("/{paymentId}/cancel")
-    public ResponseEntity<String> cancelPayment(@PathVariable Long paymentId,@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<String> cancelPayment(@PathVariable Long paymentId, @RequestBody Map<String, Object> requestBody) {
         try {
             String status = (String) requestBody.get("paymentStatus");
             // 서비스에서 결제 상태 취소 처리**********
             /*paymentId -> paymentId가 들어가서 repository바꿈.*/
-            String message=orderService.cancelPayment(paymentId, status);
+            String message = orderService.cancelPayment(paymentId, status);
             return ResponseEntity.ok("Payment canceled successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel payment");

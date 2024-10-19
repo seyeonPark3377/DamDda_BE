@@ -13,22 +13,31 @@ import java.util.List;
 @Service
 public interface PackageService {
     Long registerReward(RewardDTO rewardDTO, Long project_id) throws JsonProcessingException;
-    Long registerPackage(PackageDTO packageDTO,Long project_id);
+
+    Long registerPackage(PackageDTO packageDTO, Long project_id);
+
     List<RewardDTO> viewRewardByPackage(Long package_id);
+
     List<RewardDTO> viewRewardByProject(Long project_id);
+
     List<PackageDTO> viewPackage(Long project_id) throws JsonProcessingException;
-    void modifyPackage(PackageDTO packageDTO,  Long project_id);    void deleteReward(Long reward_id);
+
+    void modifyPackage(PackageDTO packageDTO, Long project_id);
+
+    void deleteReward(Long reward_id);
+
     void deletePackage(Long package_id);
 
     //rewardDTo -> ProjectReward
-    default ProjectRewards rewardDtoToEntity(RewardDTO rewardDTO){
+    default ProjectRewards rewardDtoToEntity(RewardDTO rewardDTO) {
         return ProjectRewards.builder()
                 .rewardName(rewardDTO.getName())
                 .optionType(rewardDTO.getOptionType())
                 .build();
     }
+
     //ProjectReward -> RewardDTO
-    default RewardDTO rewardEntityToDto(ProjectRewards pr, List<PackageRewards> packageRewardList, Long packageId ) throws JsonProcessingException {
+    default RewardDTO rewardEntityToDto(ProjectRewards pr, List<PackageRewards> packageRewardList, Long packageId) throws JsonProcessingException {
         return RewardDTO.builder()
                 .id(pr.getId())
                 .name(pr.getRewardName())
@@ -43,7 +52,7 @@ public interface PackageService {
     }
 
     //PackageDTO -> ProjectPackage Entity
-    default ProjectPackage packageDTOToEntity(PackageDTO packageDTO){
+    default ProjectPackage packageDTOToEntity(PackageDTO packageDTO) {
         return ProjectPackage.builder()
                 .packagePrice(packageDTO.getPrice())
                 .packageName(packageDTO.getName())
@@ -52,8 +61,9 @@ public interface PackageService {
 
 
     }
+
     //ProjectPackage -> ProjectDTO
-    default PackageDTO packageEntityToDTO(ProjectPackage projectPackage, List<RewardDTO>rewardDTOList){
+    default PackageDTO packageEntityToDTO(ProjectPackage projectPackage, List<RewardDTO> rewardDTOList) {
         return PackageDTO.builder()
                 .id(projectPackage.getId())
                 .name(projectPackage.getPackageName())
@@ -62,8 +72,6 @@ public interface PackageService {
                 .RewardList(rewardDTOList)
                 .build();
     }
-
-
 
 
 }

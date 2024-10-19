@@ -1,11 +1,11 @@
 package org.eightbit.damdda.noticeandqna.service;
 
 import lombok.RequiredArgsConstructor;
+import org.eightbit.damdda.common.exception.custom.UnauthorizedAccessException;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.noticeandqna.domain.QnaQuestion;
 import org.eightbit.damdda.noticeandqna.dto.QnaQuestionDTO;
-import org.eightbit.damdda.common.exception.custom.UnauthorizedAccessException;
 import org.eightbit.damdda.noticeandqna.repository.QnaQuestionRepository;
 import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.service.ProjectService;
@@ -108,7 +108,7 @@ public class QnaQuestionServiceImpl implements QnaQuestionService {
      * 읽기 전용 트랜잭션으로 처리하여 성능 최적화를 진행.
      *
      * @param projectId 프로젝트 ID.
-     * @param pageable 페이징 정보.
+     * @param pageable  페이징 정보.
      * @return 페이징된 Q&A 질문 목록.
      */
     @Override
@@ -130,7 +130,7 @@ public class QnaQuestionServiceImpl implements QnaQuestionService {
      * - 현재 로그인된 사용자가 해당 질문의 작성자인지 확인.
      * - 작성자가 일치하지 않을 경우 UnauthorizedAccessException 예외를 던짐.
      *
-     * @param memberId 현재 로그인된 사용자의 ID.
+     * @param memberId      현재 로그인된 사용자의 ID.
      * @param qnaQuestionId 질문의 ID.
      */
     public void validateMemberIsQuestioner(Long memberId, Long qnaQuestionId) {
@@ -139,7 +139,8 @@ public class QnaQuestionServiceImpl implements QnaQuestionService {
 
         // 작성자 불일치 또는 작성자가 없는 경우 예외 발생.
         if (questionerId == null) throw new NoSuchElementException("Author not found for the given question.");
-        if (!memberId.equals(questionerId)) throw new UnauthorizedAccessException("Member ID unauthorized for qna question " + qnaQuestionId);
+        if (!memberId.equals(questionerId))
+            throw new UnauthorizedAccessException("Member ID unauthorized for qna question " + qnaQuestionId);
     }
 
 }

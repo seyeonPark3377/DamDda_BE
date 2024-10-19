@@ -26,7 +26,7 @@ public class PageResponseDTO<E> {
 
     @Builder(builderMethodName = "withAll")
     public PageResponseDTO(PageRequestDTO pageRequestDTO, List<E> dtoList, int total) {
-        if(total <= 0) return;
+        if (total <= 0) return;
 
         this.page = pageRequestDTO.getPage();
         this.size = pageRequestDTO.getSize();
@@ -36,11 +36,11 @@ public class PageResponseDTO<E> {
 
         // Math.ceil은 소수점에 10.1이 있으면 11로 값을 올린다.
         // 올림 함수
-        this.end = (int)(Math.ceil(this.page / 10.0)) * 10;
+        this.end = (int) (Math.ceil(this.page / 10.0)) * 10;
 
         this.start = this.end - 9;
 
-        int last = (int)(Math.ceil((total/(double)size)));
+        int last = (int) (Math.ceil((total / (double) size)));
 
         this.end = end > last ? last : end;
 

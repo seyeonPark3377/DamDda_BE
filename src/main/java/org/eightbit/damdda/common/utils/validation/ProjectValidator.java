@@ -1,6 +1,5 @@
 package org.eightbit.damdda.common.utils.validation;
 
-import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.common.exception.custom.UnauthorizedAccessException;
 import org.eightbit.damdda.project.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +15,12 @@ public class ProjectValidator {
     public ProjectValidator(@Lazy ProjectService projectService) {
         this.projectService = projectService;
     }
+
     /**
      * 주어진 프로젝트의 진행자가 현재 로그인된 회원인지 검증하는 메서드.
      * 진행자가 일치하지 않으면 예외를 발생.
      *
-     * @param memberId 현재 로그인된 사용자의 ID.
+     * @param memberId  현재 로그인된 사용자의 ID.
      * @param projectId 검증할 프로젝트의 ID.
      * @throws UnauthorizedAccessException 현재 사용자가 해당 프로젝트의 진행자가 아닌 경우 발생.
      */

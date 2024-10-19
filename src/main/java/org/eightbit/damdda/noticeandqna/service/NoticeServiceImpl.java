@@ -50,7 +50,7 @@ public class NoticeServiceImpl implements NoticeService {
      * 소프트 삭제는 공지사항의 삭제 여부만 변경하며, 데이터를 물리적으로 삭제하지 않음.
      * 현재 로그인된 사용자가 프로젝트의 진행자인지 확인한 후 삭제를 수행.
      *
-     * @param noticeId 삭제할 공지사항의 ID.
+     * @param noticeId  삭제할 공지사항의 ID.
      * @param projectId 공지사항이 속한 프로젝트 ID.
      * @return 삭제 성공 여부.
      */

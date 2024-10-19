@@ -52,7 +52,7 @@ public class QnaReplyServiceImpl implements QnaReplyService {
                 .orderPosition(qnaReplyDTO.getOrderPosition())
                 .build();
 
-        if(qnaReplyId != null && qnaReplyRepository.existsById(qnaReplyId)) {
+        if (qnaReplyId != null && qnaReplyRepository.existsById(qnaReplyId)) {
             validateQnaReply(memberId, qnaReplyId);
         }
 
@@ -68,7 +68,7 @@ public class QnaReplyServiceImpl implements QnaReplyService {
 
         int deleteResult = qnaReplyRepository.softDeleteQnaReply(qnaReplyId);
 
-        if(deleteResult == 0) {
+        if (deleteResult == 0) {
             throw new NoSuchElementException("QnaReply with ID " + qnaReplyId + " not found");
         }
 
@@ -89,7 +89,7 @@ public class QnaReplyServiceImpl implements QnaReplyService {
     public void validateQnaReply(Long memberId, Long qnaReplyId) {
         Long replyerId = qnaReplyRepository.findById(qnaReplyId).orElseThrow().getMember().getId();
 
-        if(replyerId == null) {
+        if (replyerId == null) {
             throw new NoSuchElementException("Author not found for the given reply");
         }
         if (!memberId.equals(replyerId)) {

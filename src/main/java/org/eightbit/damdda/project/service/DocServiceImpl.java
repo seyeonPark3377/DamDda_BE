@@ -22,15 +22,12 @@ import java.util.List;
 @Transactional
 public class DocServiceImpl implements DocService {
 
+    private final ProjectRepository projectRepository;
+    private final ProjectDocumentRepository projectDocumentRepository;
     @Value("${org.eightbit.damdda.path}")
     private String basePath;
 
-    private final ProjectRepository projectRepository;
-    private final ProjectDocumentRepository projectDocumentRepository;
-
-
-
-    public boolean deleteDocFiles(List<ProjectDocument> docs){
+    public boolean deleteDocFiles(List<ProjectDocument> docs) {
         log.info("delete doc files" + docs);
         boolean result = true;
 
@@ -41,7 +38,7 @@ public class DocServiceImpl implements DocService {
             if (file.exists()) {
                 boolean isDelete = file.delete();
                 result = result && isDelete; // 파일 삭제
-                if (isDelete){
+                if (isDelete) {
                     projectDocumentRepository.delete(doc);
                 }
             } else {
@@ -56,7 +53,7 @@ public class DocServiceImpl implements DocService {
         return result;  // 파일이 존재하지 않으면 false 반환
     }
 
-    public void saveDocs(Project project, List<FileDTO> docs){
+    public void saveDocs(Project project, List<FileDTO> docs) {
         String uploadDirectory = basePath + "/projects/" + project.getId();
         File uploadDir = new File(uploadDirectory);
 

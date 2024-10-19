@@ -1,6 +1,5 @@
 package org.eightbit.damdda.project.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +9,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Builder
 @Data
@@ -23,16 +21,16 @@ public class CollaborationDTO {
     private String title;
 
     @Builder.Default
-    @NotBlank(message="승인 상태는 필수 값입니다.")
-    private String approval="대기";
+    @NotBlank(message = "승인 상태는 필수 값입니다.")
+    private String approval = "대기";
 
-    @NotBlank(message="날짜는 필수 값입니다.")
+    @NotBlank(message = "날짜는 필수 값입니다.")
     /*중요 -> 시분초도 넣는 것인가?*/
-    @DateTimeFormat(pattern ="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("CollaborateDate")
     private LocalDate CollaborateDate;
 
     //제안자의 이름.
-    @NotBlank(message="이름은 필수 값입니다.")
+    @NotBlank(message = "이름은 필수 값입니다.")
     private String name;
 }

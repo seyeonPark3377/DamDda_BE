@@ -27,12 +27,11 @@ import java.util.List;
 @Transactional
 public class ImgServiceImpl implements ImgService {
 
-    @Value("${org.eightbit.damdda.path}")
-    private String basePath;
-
     private final ProjectRepository projectRepository;
     private final ProjectImageRepository projectImageRepository;
     private final ProjectImageTypeRepository projectImageTypeRepository;
+    @Value("${org.eightbit.damdda.path}")
+    private String basePath;
 
     @Override
     public boolean deleteImageFiles(List<ProjectImage> images) {
@@ -52,7 +51,7 @@ public class ImgServiceImpl implements ImgService {
                 if (file.exists()) {
                     boolean isDelete = file.delete();
                     result = result && isDelete; // 파일 삭제
-                    if (isDelete){
+                    if (isDelete) {
                         projectImageRepository.delete(img);
                     }
                 } else {
@@ -165,15 +164,14 @@ public class ImgServiceImpl implements ImgService {
 
 
             // 이후 repository를 통해 projectImage를 저장 가능
-             projectImageRepository.save(newThumbnailImage);
-             return newThumbnailImage.getUrl();
+            projectImageRepository.save(newThumbnailImage);
+            return newThumbnailImage.getUrl();
         } catch (IOException e) {
             // 예외 처리 로직 작성 (로그 기록 또는 사용자에게 알림 등)
             e.printStackTrace();
         }
         return null;
     }
-
 
 
     @Override

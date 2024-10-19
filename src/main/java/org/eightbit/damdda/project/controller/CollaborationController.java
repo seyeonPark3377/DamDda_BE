@@ -7,12 +7,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.eightbit.damdda.security.user.User;
 import org.eightbit.damdda.project.dto.CollaborationDTO;
 import org.eightbit.damdda.project.dto.CollaborationDetailDTO;
 import org.eightbit.damdda.project.dto.PageRequestDTO;
 import org.eightbit.damdda.project.dto.PageResponseDTO;
 import org.eightbit.damdda.project.service.CollaborationService;
+import org.eightbit.damdda.security.user.User;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +42,7 @@ public class CollaborationController {
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDisposition(ContentDisposition.builder("attachment")
                 .filename(URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString())).build());
-        return new ResponseEntity<>(bytes,headers,HttpStatus.OK);
+        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
 
     @PostMapping("/register/{projectId}")
@@ -54,7 +54,7 @@ public class CollaborationController {
 
         collaborationDetailDTO.setCollabDocList(convertToObjectList(collabDocList));
         collaborationDetailDTO.setUser_id(user.getLoginId());
-        collaborationService.register(collaborationDetailDTO,projectId);
+        collaborationService.register(collaborationDetailDTO, projectId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -68,21 +68,21 @@ public class CollaborationController {
     @GetMapping("/read/receive")
     public ResponseEntity<?> readReceive(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @AuthenticationPrincipal User user) {
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(page).size(size).build();
-        PageResponseDTO<CollaborationDTO> collaborationDTOPageResponseDTO = collaborationService.readReceive(pageRequestDTO,user.getLoginId());
-        return new ResponseEntity<>(collaborationDTOPageResponseDTO,HttpStatus.OK);
+        PageResponseDTO<CollaborationDTO> collaborationDTOPageResponseDTO = collaborationService.readReceive(pageRequestDTO, user.getLoginId());
+        return new ResponseEntity<>(collaborationDTOPageResponseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/read/request")
     public ResponseEntity<?> readRequest(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @AuthenticationPrincipal User user) {
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(page).size(size).build();
-        PageResponseDTO<CollaborationDTO> collaborationDTOPageResponseDTO = collaborationService.readRequest(pageRequestDTO,user.getLoginId());
-        return new ResponseEntity<>(collaborationDTOPageResponseDTO,HttpStatus.OK);
+        PageResponseDTO<CollaborationDTO> collaborationDTOPageResponseDTO = collaborationService.readRequest(pageRequestDTO, user.getLoginId());
+        return new ResponseEntity<>(collaborationDTOPageResponseDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete(@RequestBody List<Long> cno, @AuthenticationPrincipal User user) throws JsonProcessingException {
-        Integer response = collaborationService.delete(cno,user.getLoginId());
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        Integer response = collaborationService.delete(cno, user.getLoginId());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/approval")
@@ -96,6 +96,7 @@ public class CollaborationController {
         collaborationService.rejectRequest(cnoList);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     //multipart -> object로 변환하는 함수.
     private List<Object> convertToObjectList(List<MultipartFile> multipartFiles) {
         List<Object> objectList = new ArrayList<>();

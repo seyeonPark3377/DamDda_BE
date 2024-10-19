@@ -6,7 +6,6 @@ import lombok.extern.log4j.Log4j2;
 import org.eightbit.damdda.project.dto.PackageDTO;
 import org.eightbit.damdda.project.dto.RewardDTO;
 import org.eightbit.damdda.project.service.PackageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,21 +23,21 @@ public class PackageController {
 
     //package 등록
     @PostMapping("/{projectId}")
-    public ResponseEntity<?> registerPackage(@Valid @RequestBody PackageDTO packageDTO, @PathVariable("projectId") Long projectId){
-        Long id = packageService.registerPackage(packageDTO,projectId);
-        return new ResponseEntity<>(id,HttpStatus.CREATED);
+    public ResponseEntity<?> registerPackage(@Valid @RequestBody PackageDTO packageDTO, @PathVariable("projectId") Long projectId) {
+        Long id = packageService.registerPackage(packageDTO, projectId);
+        return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
     //특정 프로젝트의 PACKAGE 조회
     @GetMapping("/{projectId}")
-    public ResponseEntity<?> viewPackage(@PathVariable("projectId") Long projectId) throws JsonProcessingException{
+    public ResponseEntity<?> viewPackage(@PathVariable("projectId") Long projectId) throws JsonProcessingException {
         List<PackageDTO> packages = packageService.viewPackage(projectId);
         return new ResponseEntity<>(packages, HttpStatus.OK);
     }
 
     //package 수정
     @PutMapping("/{projectId}")
-    public ResponseEntity<?> modifyPackage(@Valid @RequestBody PackageDTO packageDTO, @PathVariable("projectId") Long projectId){
+    public ResponseEntity<?> modifyPackage(@Valid @RequestBody PackageDTO packageDTO, @PathVariable("projectId") Long projectId) {
         packageService.modifyPackage(packageDTO, projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -52,10 +51,11 @@ public class PackageController {
 
     // Reward 등록
     @PostMapping("/rewards/{projectId}")
-    public ResponseEntity<?> registerReward(@Valid @RequestBody RewardDTO rewardDTO,@PathVariable("projectId") Long projectId) throws JsonProcessingException {
+    public ResponseEntity<?> registerReward(@Valid @RequestBody RewardDTO rewardDTO, @PathVariable("projectId") Long projectId) throws JsonProcessingException {
         Long id = packageService.registerReward(rewardDTO, projectId);
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
+
     @GetMapping("/rewards/package/{packageId}")
     public ResponseEntity<?> viewRewardByPackage(@PathVariable("packageId") Long packageId) {
         List<RewardDTO> rewards = packageService.viewRewardByPackage(packageId);

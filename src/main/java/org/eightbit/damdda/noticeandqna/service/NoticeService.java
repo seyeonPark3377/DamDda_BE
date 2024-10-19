@@ -22,7 +22,7 @@ public interface NoticeService {
      * 공지사항을 소프트 삭제하는 메서드.
      * 소프트 삭제는 공지사항의 삭제 여부만 변경하며, 데이터를 물리적으로 삭제하지 않음.
      *
-     * @param noticeId 삭제할 공지사항의 ID.
+     * @param noticeId  삭제할 공지사항의 ID.
      * @param projectId 공지사항이 속한 프로젝트의 ID.
      * @return 삭제 성공 여부.
      */

@@ -2,7 +2,6 @@ package org.eightbit.damdda.order.repository;
 
 import org.eightbit.damdda.order.domain.SupportingProject;
 import org.eightbit.damdda.project.domain.Project;
-import org.eightbit.damdda.project.dto.DailySupporting;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,7 +17,7 @@ public interface SupportingProjectRepository extends JpaRepository<SupportingPro
     List<SupportingProject> findAllByUser_Id(Long userId);
 
     // 일별 후원액 가져오는 쿼리
-    @Query("SELECT pr.supportedAt, SUM(pa.projectPackage.packagePrice) "+
+    @Query("SELECT pr.supportedAt, SUM(pa.projectPackage.packagePrice) " +
             "FROM SupportingProject pr INNER JOIN SupportingPackage pa " +
             "ON pr.supportingProjectId = pa.supportingProject.supportingProjectId " +
             "WHERE pr.project.id = :projectId GROUP BY pr.supportedAt")

@@ -1,7 +1,6 @@
 package org.eightbit.damdda.project.dto;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
