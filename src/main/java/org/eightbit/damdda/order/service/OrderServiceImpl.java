@@ -41,7 +41,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements  OrderService{
 
-    @Autowired
     private final org.eightbit.damdda.order.repository.OrderRepository orderRepository;
     private final org.eightbit.damdda.order.repository.DeliveryRepository deliveryRepository;
     private final org.eightbit.damdda.order.repository.PaymentRepository paymentRepository;
@@ -361,18 +360,17 @@ public class OrderServiceImpl implements  OrderService{
 
             // Add order details
             rowData.put("후원번호", order.getOrderId());
-            rowData.put("이름", order.getSupportingProject().getUser().getName());
+//            rowData.put("이름", order.getSupportingProject().getUser().getName());
             rowData.put("후원일시", order.getCreatedAt());
 
             // Add package details
             rowData.put("패키지 이름", joinSupportingPackageDetails(order.getSupportingPackage(), supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackageName())));
-            //rowData.put("패키지 이름", joinSupportingPackageDetails(order.getSupportingPackage().stream().map(sp->sp.getProjectPackage().getPackageName()), SupportingPackage::getPackageName));
-            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackage(),
-                    supportingPackage -> String.valueOf(supportingPackage.getPackageCount())));
-            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackage(),
-                    supportingPackage -> String.valueOf(supportingPackage.getPackageCount())));
-            rowData.put("패키지 가격", joinSupportingPackageDetails(order.getSupportingPackage(),
-                    supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackagePrice())));
+//            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackage(),
+//                    supportingPackage -> String.valueOf(supportingPackage.getPackageCount())));
+//            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackage(),
+//                    supportingPackage -> String.valueOf(supportingPackage.getPackageCount())));
+//            rowData.put("패키지 가격", joinSupportingPackageDetails(order.getSupportingPackage(),
+//                    supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackagePrice())));
 
             // TODO: 옵션 정보 추가 필요
 
@@ -406,7 +404,6 @@ public class OrderServiceImpl implements  OrderService{
                 .map(mapper)
                 .collect(Collectors.joining(", "));
     }
-
 
     public Set<SupportingPackageDTO> packageEntityToDto(Set<SupportingPackage> supportingPackage){
         Set<SupportingPackageDTO> supportingPackageDTOS = supportingPackage.stream().map( pac-> {
