@@ -37,18 +37,18 @@ public class MemberServiceImpl implements MemberService {
     @Value("${cloud.aws.credentials.bucket}")
     private String bucketName;
 
-    @Override
-    public Map<String, Object> getUserInfo(Long member_id){
-        Member member = memberRepository.findById(member_id).orElseThrow();
-        Map<String, Object> userInfo = new HashMap<>();
-        userInfo.put("id",member.getLoginId());
-        userInfo.put("key",member.getId());
-        userInfo.put("imageUrl",member.getImageUrl());
-        userInfo.put("nickname",member.getNickname());
-        userInfo.put("name",member.getName());
+        @Override
+        public Map<String, Object> getUserInfo(Long member_id){
+            Member member = memberRepository.findById(member_id).orElseThrow();
+            Map<String, Object> userInfo = new HashMap<>();
+            userInfo.put("id",member.getLoginId());
+            userInfo.put("key",member.getId());
+            userInfo.put("imageUrl",member.getImageUrl());
+            userInfo.put("nickname",member.getNickname());
+            userInfo.put("name",member.getName());
 
-        return userInfo;
-    }
+            return userInfo;
+        }
 
     @Override
     @Transactional

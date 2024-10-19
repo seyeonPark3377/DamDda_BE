@@ -87,7 +87,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login (@RequestBody AccountCredentials credentials){
+    public ResponseEntity<Map<String, String>> login (@RequestBody AccountCredentials credentials){
         try {
             UsernamePasswordAuthenticationToken creds =         // 인증 아직 안됨
                     new UsernamePasswordAuthenticationToken(
@@ -103,12 +103,12 @@ public class MemberController {
                     .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
                     .body(Map.of("X-Nickname", currentUserNickname));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         }
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request){
+    public ResponseEntity<String> logout(){
         return ResponseEntity.ok("logout");
     }
 
@@ -134,13 +134,11 @@ public class MemberController {
 
     // GetMapping -> PostMapping으로 변경, 매개변수 @RequestParams String password -> @RequestBody PasswordDTO password로 변경
     @PostMapping("/confirmpw")
-    public ResponseEntity<?> confirmPassword (@RequestBody PasswordDTO password){
+    public ResponseEntity<MemberDTO> confirmPassword (@RequestBody PasswordDTO password){
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String loginId = user.getMember().getLoginId();
-            System.out.println(loginId + " " + password);
             MemberDTO memberDTO = memberService.confirmPw(loginId, password.getPassword());
-            // password -> password.getPassword()로 변경
 
             if(memberDTO != null){
                 return ResponseEntity.ok(memberDTO);
@@ -148,7 +146,7 @@ public class MemberController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
             }
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
