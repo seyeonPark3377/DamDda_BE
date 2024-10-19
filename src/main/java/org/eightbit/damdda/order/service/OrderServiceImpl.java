@@ -98,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
             try {
                 supportingPackage = SupportingPackage.builder()
                         .packageCount(sp.getPackageCount())
-                        .OptionList(objectMapper.writeValueAsString(sp.getPackageDTO().getRewardList().stream().map(reward -> {
+                        .optionList(objectMapper.writeValueAsString(sp.getPackageDTO().getRewardList().stream().map(reward -> {
                                             // 첫 번째 배열의 첫 번째 요소만 가져옵니다.
                                             return reward.getOptionList().get(0);
                                         })
@@ -120,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
                 .delivery(delivery)
                 .payment(payment)
                 .supportingProject(supportingProject)
-                .supportingPackage(supportingPackages)
+                .supportingPackages(supportingPackages)
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -137,7 +137,7 @@ public class OrderServiceImpl implements OrderService {
                         .delivery(order.getDelivery())  // 배송 정보
                         .payment(order.getPayment())    // 결제 정보
                         .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                        .supportingPackages(packageEntityToDto(order.getSupportingPackage()))  // 선물 구성 정보
+                        .supportingPackages(packageEntityToDto(order.getSupportingPackages()))  // 선물 구성 정보
                         .build())
                 .collect(Collectors.toList());  // List<OrderDTO>로 변환
     }
@@ -152,7 +152,7 @@ public class OrderServiceImpl implements OrderService {
                     .delivery(order.getDelivery())  // 배송 정보
                     .payment(order.getPayment())    // 결제 정보
                     .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                    .supportingPackages(packageEntityToDto(order.getSupportingPackage()))  // 선물 구성 정보
+                    .supportingPackages(packageEntityToDto(order.getSupportingPackages()))  // 선물 구성 정보
                     .build();
         });
     }
@@ -174,7 +174,7 @@ public class OrderServiceImpl implements OrderService {
                         .delivery(order.getDelivery())  // 배송 정보
                         .payment(order.getPayment())    // 결제 정보
                         .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                        .supportingPackages(packageEntityToDto(order.getSupportingPackage()))  // 선물 구성 정보
+                        .supportingPackages(packageEntityToDto(order.getSupportingPackages()))  // 선물 구성 정보
                         .build())
                 .collect(Collectors.toList());
     }
@@ -198,7 +198,7 @@ public class OrderServiceImpl implements OrderService {
         // 결제 상태 업데이트
         order.getSupportingProject().getPayment().setPaymentStatus(paymentStatus);
         //project의 후원자 수, 후원금액 업데이트
-        Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp -> (long) sp.getPackageCount() * sp.getProjectPackage().getPackagePrice()).sum();
+        Long fundsReceive = order.getSupportingPackages().stream().mapToLong(sp -> (long) sp.getPackageCount() * sp.getProjectPackage().getPackagePrice()).sum();
         projectRepository.updateProjectStatus(fundsReceive, order.getSupportingProject().getProject().getId(), 1L);
         orderRepository.save(order);  // 변경된 상태를 저장
     }
@@ -214,7 +214,7 @@ public class OrderServiceImpl implements OrderService {
                 supportingProject.getPayment().setPaymentStatus(paymentStatus); // 결제 상태 업데이트
                 supportingProjectRepository.save(supportingProject); // 변경된 상태를 저장
                 Order order = orderRepository.findByPaymentId(paymentId);
-                Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp -> (long) sp.getPackageCount() * sp.getProjectPackage().getPackagePrice()).sum();
+                Long fundsReceive = order.getSupportingPackages().stream().mapToLong(sp -> (long) sp.getPackageCount() * sp.getProjectPackage().getPackagePrice()).sum();
                 fundsReceive = fundsReceive * -1L;
                 projectRepository.updateProjectStatus(fundsReceive, order.getSupportingProject().getProject().getId(), -1L);
                 return "결제 취소됨";
@@ -241,7 +241,7 @@ public class OrderServiceImpl implements OrderService {
                 .delivery(order.getDelivery())
                 .payment(order.getPayment())
                 .supportingProject(order.getSupportingProject())
-                .supportingPackages(packageEntityToDto(order.getSupportingPackage()))
+                .supportingPackages(packageEntityToDto(order.getSupportingPackages()))
                 .build();
     }
 
@@ -255,7 +255,7 @@ public class OrderServiceImpl implements OrderService {
                     .delivery(order.getDelivery())  // 배송 정보
                     .payment(order.getPayment())    // 결제 정보
                     .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                    .supportingPackages(packageEntityToDto(order.getSupportingPackage()))  // 선물 구성 정보
+                    .supportingPackages(packageEntityToDto(order.getSupportingPackages()))  // 선물 구성 정보
                     .build();
         }).collect(Collectors.toList());
     }
@@ -361,7 +361,7 @@ public class OrderServiceImpl implements OrderService {
             rowData.put("후원일시", order.getCreatedAt());
 
             // Add package details
-            rowData.put("패키지 이름", joinSupportingPackageDetails(order.getSupportingPackage(), supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackageName())));
+            rowData.put("패키지 이름", joinSupportingPackageDetails(order.getSupportingPackages(), supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackageName())));
 //            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackage(),
 //                    supportingPackage -> String.valueOf(supportingPackage.getPackageCount())));
 //            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackage(),

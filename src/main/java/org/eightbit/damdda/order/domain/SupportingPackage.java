@@ -12,7 +12,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-
 public class SupportingPackage {
 
     @Id
@@ -27,6 +26,7 @@ public class SupportingPackage {
     @JoinColumn(name = "supporting_project_id")
     private SupportingProject supportingProject;
 
+    // 양방향 매핑 설정, ManyToOne 관계
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
@@ -34,6 +34,5 @@ public class SupportingPackage {
     private Integer packageCount;
 
     @Column(columnDefinition = "json")
-    private String OptionList;
-
+    private String optionList;
 }

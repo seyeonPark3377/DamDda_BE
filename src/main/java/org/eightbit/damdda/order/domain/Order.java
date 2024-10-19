@@ -37,12 +37,12 @@ public class Order {
     @JoinColumn(name = "supporting_project_id", nullable = false)
     private SupportingProject supportingProject;
 
-    @OneToMany
-    @JoinColumn(name = "supporting_package_id")
-    private Set<SupportingPackage> supportingPackage;
+    // 양방향 관계 설정, mappedBy 사용
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SupportingPackage> supportingPackages;
 
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;  // 주문 수정 시간
+    private LocalDateTime updatedAt;
 }
