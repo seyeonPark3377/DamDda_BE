@@ -24,110 +24,86 @@ public class GlobalExceptionHandler {
     private static final Logger log = LogManager.getLogger(GlobalExceptionHandler.class);
 
     /**
-     * 공통적으로 ResponseEntity를 생성하는 메서드.
-     * HTTP 상태 코드와 메시지를 받아 ResponseEntity를 생성하여 반환.
+     * 주어진 상태, 메시지, 세부 정보를 포함하는 ResponseEntity를 생성합니다.
      *
      * @param status HTTP 상태 코드.
-     * @param message 반환할 예외 메시지.
-     * @return HTTP 상태 코드와 메시지를 담은 ResponseEntity.
+     * @param message 오류 메시지.
+     * @param details 응답 본문에 추가할 세부 정보.
+     * @return 주어진 상태와 메시지를 포함한 ResponseEntity.
      */
-    private ResponseEntity<String> buildResponseEntity(HttpStatus status, String message) {
-        return ResponseEntity.status(status).body(message);
+    private ResponseEntity<Object> buildResponseEntity(HttpStatus status, String message, Map<String, Object> details) {
+        Map<String, Object> responseBody = new HashMap<>(details);
+        responseBody.put("timestamp", LocalDateTime.now());
+        responseBody.put("status", status.value());
+        responseBody.put("error", status.getReasonPhrase());
+        responseBody.put("message", message);
+        return ResponseEntity.status(status).body(responseBody);
     }
 
     /**
-     * NoSuchElementException 예외를 처리하는 메서드.
-     * 주로 데이터 조회 시 해당 요소를 찾지 못했을 때 발생하며,
-     * HTTP 404 상태 코드를 반환.
-     *
-     * @param ex 처리할 NoSuchElementException 예외 객체.
-     * @return HTTP 상태 코드 404와 예외 메시지를 포함한 ResponseEntity.
+     * NoSuchElementException을 처리하고 404 상태를 반환합니다.
      */
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
-        return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage());
+    public ResponseEntity<Object> handleNoSuchElementException(NoSuchElementException ex) {
+        log.error("NoSuchElementException 발생: ", ex);
+        return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage(), new HashMap<>());
     }
 
     /**
-     * UnauthorizedAccessException 예외를 처리하는 메서드.
-     * 주로 허가되지 않은 사용자가 특정 행위를 시도할 때 발생하며,
-     * HTTP 403 상태 코드를 반환.
-     *
-     * @param ex 처리할 UnauthorizedAccessException 예외 객체.
-     * @return HTTP 상태 코드 403과 예외 메시지를 포함한 ResponseEntity.
+     * UnauthorizedAccessException을 처리하고 403 상태를 반환합니다.
      */
     @ExceptionHandler(UnauthorizedAccessException.class)
-    public ResponseEntity<String> handleOrganizerMismatchException(UnauthorizedAccessException ex) {
-        return buildResponseEntity(HttpStatus.FORBIDDEN, ex.getMessage());
+    public ResponseEntity<Object> handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+        log.error("UnauthorizedAccessException 발생: ", ex);
+        return buildResponseEntity(HttpStatus.FORBIDDEN, ex.getMessage(), new HashMap<>());
     }
 
     /**
-     * IOException 처리 메서드.
-     * 주로 파일 입출력 시 발생하며, HTTP 500 상태 코드를 반환.
-     *
-     * @param ex 처리할 IOException 예외 객체.
-     * @return HTTP 상태 코드 500과 예외 메시지를 포함한 ResponseEntity.
+     * IOException을 처리하고 500 상태를 반환합니다.
      */
     @ExceptionHandler(IOException.class)
-    public ResponseEntity<String> handleIOException(IOException ex) {
-        log.error("IOException occurred: {}", ex.getMessage());
-        return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, "File processing error: " + ex.getMessage());
+    public ResponseEntity<Object> handleIOException(IOException ex) {
+        log.error("IOException 발생: ", ex);
+        return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, "파일 처리 오류", new HashMap<>());
     }
 
     /**
-     * MethodArgumentNotValidException 예외를 처리하는 메서드.
-     * 입력 데이터 유효성 검사 실패 시 발생하며, HTTP 400 상태 코드를 반환.
-     *
-     * @param ex 처리할 MethodArgumentNotValidException 예외 객체.
-     * @return HTTP 상태 코드 400과 검증 오류 메시지를 포함한 ResponseEntity.
+     * MethodArgumentNotValidException을 처리하고 400 상태를 반환합니다.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, Object> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
+        ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            errors.put("LocalDateTime", LocalDateTime.now());
             errors.put(fieldName, errorMessage);
         });
 
-        return ResponseEntity.badRequest().body(errors);
+        log.error("유효성 검사 오류: ", ex);
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, "유효성 검사 실패", errors);
     }
 
     /**
-     * JsonProcessingException 예외를 처리하는 메서드.
-     * JSON 데이터 처리 중 오류가 발생하면 HTTP 400 상태 코드를 반환.
-     *
-     * @param ex 처리할 JsonProcessingException 예외 객체.
-     * @param request WebRequest 객체를 통해 요청 정보를 전달.
-     * @return HTTP 상태 코드 400과 예외 메시지를 포함한 ResponseEntity.
+     * JsonProcessingException을 처리하고 400 상태를 반환합니다.
      */
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<Object> handleJsonProcessingException(JsonProcessingException ex, WebRequest request) {
-        Map<String, Object> errors = new HashMap<>();
-        errors.put("LocalDateTime", LocalDateTime.now());
-        errors.put("message", "Error processing Json Data");
-        errors.put("path", request.getDescription(false));
+        Map<String, Object> details = new HashMap<>();
+        details.put("path", request.getDescription(false));
 
-        log.error("Error processing JSON data: {}", ex.getMessage());
-        return ResponseEntity.badRequest().body(errors);
+        log.error("JSON 데이터 처리 오류: ", ex);
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, "JSON 데이터 처리 오류", details);
     }
 
     /**
-     * 모든 예외를 처리하는 메서드. 알려지지 않은 예외에 대해 HTTP 500 상태 코드를 반환.
-     *
-     * @param ex 처리할 Exception 예외 객체.
-     * @param request WebRequest 객체를 통해 요청 정보를 전달.
-     * @return HTTP 상태 코드 500과 예외 메시지를 포함한 ResponseEntity.
+     * 모든 기타 예외를 처리하고 500 상태를 반환합니다.
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
-        Map<String, Object> errors = new HashMap<>();
-        errors.put("LocalDateTime", LocalDateTime.now());
-        errors.put("message", "An error occurred");
-        errors.put("path", request.getDescription(false));
+        Map<String, Object> details = new HashMap<>();
+        details.put("path", request.getDescription(false));
 
-        log.error("An unexpected error occurred: {}", ex.getMessage());
-        return new ResponseEntity<>(errors, HttpStatus.INTERNAL_SERVER_ERROR);
+        log.error("예기치 않은 오류 발생: ", ex);
+        return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, "오류가 발생했습니다.", details);
     }
 }
