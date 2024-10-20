@@ -30,6 +30,7 @@ public class AdminApprovalServiceImpl implements AdminApprovalService {
     @Transactional
     public void submitProject(Project project) {
         AdminApproval adminApproval = AdminApproval.builder()
+                .approval(0)
                 .project(project)
                 .build();
         adminApprovalRepository.save(adminApproval);

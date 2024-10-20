@@ -31,7 +31,5 @@ public interface SupportingPackageRepository extends JpaRepository<SupportingPac
             "ORDER BY spProj.supportedAt") // 지원 날짜 순으로 결과 정렬
     List<Object[]> findTotalPackagePriceByProjectIdGroupedByDate(@Param("projectId") Long projectId);
 
-
-
     Set<SupportingPackage> findByOrder_OrderId(@Param("orderId") Long orderId);
 }

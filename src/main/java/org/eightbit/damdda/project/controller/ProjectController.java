@@ -69,7 +69,6 @@ public class ProjectController {
         return projectService.getListProjectBoxHostDTO(memberId, pageRequestDTO);
     }
 
-
     @GetMapping("/{projectId}")
     public ProjectResponseDetailDTO readProjectDetail(@AuthenticationPrincipal User user,
                                                       @PathVariable Long projectId) {
