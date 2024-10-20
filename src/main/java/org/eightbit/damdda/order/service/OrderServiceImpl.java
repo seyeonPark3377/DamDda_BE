@@ -179,7 +179,7 @@ public class OrderServiceImpl implements  OrderService{
                 supportingProject.getPayment().setPaymentStatus(paymentStatus); // 결제 상태 업데이트
                 supportingProjectRepository.save(supportingProject); // 변경된 상태를 저장
                 Order order = orderRepository.findByPaymentId(paymentId);
-                Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp-> (long) sp.getPackageCount() *sp.getProjectPackage().getPackagePrice()).sum();
+                long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp-> (long) sp.getPackageCount() *sp.getProjectPackage().getPackagePrice()).sum();
                 fundsReceive = fundsReceive *-1L;
                 projectRepository.updateProjectStatus(fundsReceive,order.getSupportingProject().getProject().getId(),-1L);
                 //package의 salesQuantity,

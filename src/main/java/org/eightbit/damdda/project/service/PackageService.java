@@ -20,7 +20,7 @@ public interface PackageService {
 
     List<RewardDTO> viewRewardByProject(Long project_id);
 
-    List<PackageDTO> viewPackage(Long project_id) throws JsonProcessingException;
+    List<PackageDTO> viewPackage(Long project_id);
 
     void modifyPackage(PackageDTO packageDTO, Long project_id);
 

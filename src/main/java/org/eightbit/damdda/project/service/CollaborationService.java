@@ -25,13 +25,13 @@ public interface CollaborationService {
 
     void register(CollaborationDetailDTO collab, Long project_id) throws JsonProcessingException;
 
-    CollaborationDetailDTO readDetail(Long rno) throws JsonProcessingException;
+    CollaborationDetailDTO readDetail(Long rno);
 
     PageResponseDTO<CollaborationDTO> readReceive(PageRequestDTO pageRequestDTO, String userId);
 
     PageResponseDTO<CollaborationDTO> readRequest(PageRequestDTO pageRequestDTO, String userId);
 
-    int delete(List<Long> cnoList, String user_id) throws JsonProcessingException;
+    int delete(List<Long> cnoList, String user_id);
 
     void approvalRequest(List<Long> idList);
 
