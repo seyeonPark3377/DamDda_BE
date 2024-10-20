@@ -190,7 +190,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                             ).collect(Collectors.toList());
                     return new PageImpl<>(content, pageable, jsonArray.length());
                 }
-
             } else {
                 log.info("[project] GET Request failed, response code is {}", responseCode);
             }

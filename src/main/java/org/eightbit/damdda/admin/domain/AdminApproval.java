@@ -38,14 +38,12 @@ public class AdminApproval {
     @ColumnDefault("0")
     private Integer approval;
 
-    // TODO: 확인 필요
     /**
      * 승인 관련 설명 (기본값: '프로젝트 승인 대기 중...')
      */
     @ColumnDefault("'프로젝트 승인 대기 중...'")
     private String approvalText;
 
-    // TODO: 자동 저장이 아니라 수동 저장?
     /**
      * 승인 처리 시간
      */

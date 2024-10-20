@@ -59,8 +59,6 @@ public class KakaoPayServiceImpl implements KakaoPayService {
     // 결제 승인
     @Override
     public KakaoApproveResponse approveResponse(String pgToken, Long orderId) {
-        System.out.println("pg_token: " + pgToken);
-
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("cid", cid);
         parameters.add("tid", kakaoReady.getTid());
