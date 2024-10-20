@@ -91,32 +91,27 @@ public class OrderController {
         }
     }
 
-    // ProjectStatistics 후원 프로젝트의 시작일, 마감일, 달성률, 총 후원 금액, 후원자 수, 남은 기간을 가져옴
+    // 프로젝트의 통계 정보를 조회하는 엔드포인트
+    // - projectId에 해당하는 프로젝트의 시작일, 마감일, 달성률, 총 후원 금액, 후원자 수, 남은 기간을 반환
     @GetMapping("/statistics/{projectId}")
     public ResponseEntity<ProjectStatisticsDTO> getProjectStatistics(@PathVariable Long projectId) {
-        ProjectStatisticsDTO statistics = orderService.getProjectStatistics(projectId);
-        return new ResponseEntity<>(statistics, HttpStatus.OK);
+        return ResponseEntity.ok(orderService.getProjectStatistics(projectId));
     }
 
-    // 엑셀 파일을 생성하고 S3에 업로드하여 presigned URL을 반환하는 엔드포인트
+    // 엑셀 파일을 생성하여 S3에 업로드하고, presigned URL을 반환하는 엔드포인트
+    // - projectId에 해당하는 후원자 데이터를 엑셀 파일로 생성하고 S3에 업로드
+    // - 생성된 엑셀 파일에 대한 presigned URL을 반환
     @GetMapping("/{projectId}/supporters/excel")
     public ResponseEntity<String> generateAndGetSupportersExcel(@PathVariable Long projectId) throws IOException {
-        // 서비스 메서드를 호출하여 presigned URL 생성
-        String presignedUrl = orderService.generateUploadAndGetPresignedUrlForSupportersExcel(projectId);
-        // 생성된 presigned URL을 HTTP 응답으로 반환
-        return ResponseEntity.ok(presignedUrl);
+        return ResponseEntity.ok(orderService.generateUploadAndGetPresignedUrlForSupportersExcel(projectId));
     }
 
     // 후원자 데이터를 JSON 형식으로 반환하는 엔드포인트
+    // - projectId에 해당하는 프로젝트의 후원자 정보를 JSON 형식의 리스트로 반환
     @GetMapping("/{projectId}/supporters")
     public ResponseEntity<List<Map<String, Object>>> getSupportersData(@PathVariable Long projectId) {
-        // 서비스 메서드를 호출하여 후원자 데이터를 가져옴
-        List<Map<String, Object>> supportersData = orderService.getSupportersData(projectId);
-        // 후원자 데이터를 HTTP 응답으로 반환
-        return ResponseEntity.ok(supportersData);
+        return ResponseEntity.ok(orderService.getSupportersData(projectId));
     }
 
+
 }
-
-
-

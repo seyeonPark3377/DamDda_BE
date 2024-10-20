@@ -40,4 +40,16 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
                                               @Param("search") String search,
                                               @Param("progress") String progress);
 
+    @Query("SELECT p.fundsReceive, p.targetFunding, p.supporterCnt, p.startDate, p.endDate " +
+            "FROM Project p WHERE p.id = :projectId")
+    Object[] findProjectDetailsForStatisticsByProjectId(@Param("projectId") Long projectId);
+    // 프로젝트의 통계 정보를 조회하는 쿼리
+    // - p.fundsReceive: 현재까지 받은 총 후원 금액
+    // - p.targetFunding: 목표 후원 금액
+    // - p.supporterCnt: 후원자 수
+    // - p.startDate: 프로젝트 시작일
+    // - p.endDate: 프로젝트 종료일
+    // 특정 프로젝트 ID에 해당하는 정보를 조회하여 Object[] 배열로 반환
+    // 반환되는 배열의 순서는 [fundsReceive, targetFunding, supporterCnt, startDate, endDate]
+
 }

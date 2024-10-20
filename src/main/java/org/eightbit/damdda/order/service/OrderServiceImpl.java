@@ -64,16 +64,13 @@ public class OrderServiceImpl implements  OrderService{
         Delivery delivery = deliveryRepository.save(orderDTO.getDelivery());
         Payment payment = paymentRepository.save(orderDTO.getPayment());
 
-        // 프로젝트 id를 받아서 저장한 후-> 해당 프로젝트와 연결****
         Long projectId = orderDTO.getSupportingProject().getProject().getId();  // Project 엔티티의 ID를 가져옴
         Project project=projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("프로젝트를 찾을 수 없습니다."));
 
-        //userId로 user찾기****
         Long userId = orderDTO.getSupportingProject().getUser().getId();  // User(Member) 엔티티의 ID를 가져옴
 
         Member member=memberRepository.getById(userId);
-
 
         SupportingProject supportingProject = SupportingProject.builder()
                 .user(member)
@@ -84,10 +81,8 @@ public class OrderServiceImpl implements  OrderService{
                 .build();
         supportingProjectRepository.save(supportingProject);
 
-
         // 여러 개의 SupportingPackage를 처리할 수 있도록 Set을 사용
         Set<SupportingPackage> supportingPackages = new HashSet<>();
-
 
         orderDTO.getPaymentPackageDTO().forEach((sp)-> {
 
@@ -224,99 +219,62 @@ public class OrderServiceImpl implements  OrderService{
         }
         return null; // 프로젝트가 없으면 null 반환
     }
-    // ProjectStatistics 후원 프로젝트의 시작일, 마감일, 달성률, 총 후원 금액, 후원자 수, 남은 기간을 가져옴
-    //프로젝트 통계 정보를 가져오는 서비스 메서드
+
+    // 내가 진행한 프로젝트 후원 관련 통계 정보 조회
     @Override
     public ProjectStatisticsDTO getProjectStatistics(Long projectId) {
+        // 프로젝트가 존재하는지 확인 (존재하지 않으면 예외 발생)
+        validateProjectExistenceForProjectId(projectId);
 
-        //1. 내 프로젝트 ID 찾기
-        projectRepository.findById(projectId)
-                .orElseThrow(() -> new EntityNotFoundException("Project not found"));
+        // 사용자가 해당 프로젝트의 주최자인지 검증
+        projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
 
-        //2. 총 후원 금액가져오기->
-        List<String> packagePrices = supportingPackageRepository.findPackagePricesByProjectId(projectId);
+        // 프로젝트의 세부 정보를 조회
+        // projectDetails 배열에는 [fundsReceive, targetFunding, supporterCnt, startDate, endDate] 순서로 데이터가 담긴 내부 배열이 포함됨
+        Object[] projectDetails = projectRepository.findProjectDetailsForStatisticsByProjectId(projectId);
 
-        // String을 Integer로 변환한 후, 합계를 계산
-        Long totalAmount = packagePrices.stream()
-                .filter(price -> price != null && !price.isEmpty())  // null과 빈 문자열을 체크하여 제외
-                .map(Integer::parseInt)  // String을 Integer로 변환
-                .mapToLong(Integer::longValue)  // Integer를 Long으로 변환
-                .sum();  // 합계 계산
+        if (projectDetails == null || projectDetails.length == 0 || !(projectDetails[0] instanceof Object[])) {
+            throw new IllegalStateException("프로젝트의 세부 정보를 찾을 수 없습니다.");
+        }
 
-        //3. 후원자 수 가져오기
-        Long totalSupporters = supportingPackageRepository.getTotalSupporters(projectId);
+        // 조회된 프로젝트가 여러개인 경우를 대비하여 배열 안에 배열을 리턴 받음
+        Object[] detailsArray = (Object[]) projectDetails[0];
 
-        // 4. 남은 기간 계산
-        LocalDate today = LocalDate.now();
+        if (detailsArray.length < 5) {
+            throw new IllegalStateException("프로젝트의 세부 정보가 불완전합니다.");
+        }
 
-        // 프로젝트 종료일을 SupportingPackage에서 가져옴
-        LocalDateTime endDateLocalDateTime = supportingPackageRepository.findProjectEndDateByProjectId(projectId);
-        // LocalDateTime를 LocalDateTime으로 변환 후 LocalDate로 변환
-        LocalDateTime endDateTime = endDateLocalDateTime.toLocalDate().atStartOfDay();
-        LocalDate endDate = endDateTime.toLocalDate();
+        // 일별 후원 금액 합계를 조회하고, 결과를 Map으로 변환
+        // dailyFundings 맵은 각 날짜(LocalDate)와 해당 날짜의 총 후원 금액(Long)을 매핑함
+        Map<LocalDate, Long> dailyFundings = supportingPackageRepository
+                .findTotalPackagePriceByProjectIdGroupedByDate(projectId)
+                .stream()
+                .collect(Collectors.toMap(
+                        result -> ((LocalDateTime) result[0]).toLocalDate(), // 후원 날짜를 LocalDate로 변환
+                        result -> (Long) result[1], // 해당 날짜의 총 후원 금액
+                        (existing, replacement) -> existing, // 중복 키가 있을 경우 기존 값을 유지
+                        LinkedHashMap::new // 순서를 유지하기 위해 LinkedHashMap 사용
+                ));
 
-        // 종료일과 오늘 날짜 사이의 남은 일수 계산
-        long remainingDays = ChronoUnit.DAYS.between(today, endDate);
-
-        // 4. created_at 가져오기
-        LocalDateTime createdAtLocalDateTime = supportingPackageRepository.getCreatedAtByProjectId(projectId);
-
-        // 5. target Funding
-        Long targetFunding = supportingPackageRepository.getTargetFundingByProjectId(projectId);
-
-        // 5. DTO로 통계 정보를 반환
+        // ProjectStatisticsDTO 객체를 빌드하여 반환
+        // 각 필드는 detailsArray 배열의 데이터를 사용하여 초기화
         return ProjectStatisticsDTO.builder()
-                .startDate(createdAtLocalDateTime) // created_at 값을 LocalDateTime로 사용
-                .endDate(endDateLocalDateTime)     // endDate 값을 LocalDateTime로 사용
-                .totalSupportAmount(totalAmount)
-                .totalSupporters(totalSupporters != null ? totalSupporters : 0)
-                .remainingDays(Math.max(remainingDays, 0)) // 남은 기간이 음수면 0
-                .targetFunding(targetFunding)
+                .currentFundingReceived(((Number) detailsArray[0]).longValue()) // 현재 총 후원 금액
+                .targetFundingGoal(((Number) detailsArray[1]).longValue())      // 목표 후원 금액
+                .currentSupportersCount(((Number) detailsArray[2]).longValue()) // 현재 후원자 수
+                .projectStartDate(((LocalDateTime) detailsArray[3]).toLocalDate()) // 프로젝트 시작일
+                .projectEndDate(((LocalDateTime) detailsArray[4]).toLocalDate())   // 프로젝트 종료일
+                .daysRemaining(Math.max(ChronoUnit.DAYS.between(LocalDate.now(), ((LocalDateTime) detailsArray[4]).toLocalDate()), 0)) // 남은 일수 계산
+                .dailyFundings(dailyFundings) // 일별 후원 금액 정보
                 .build();
+
     }
 
-    @Override
-    public String generateUploadAndGetPresignedUrlForSupportersExcel(Long projectId) throws IOException {
-        // 후원자 데이터를 가져옴
-        List<Map<String, Object>> supportersData = getSupportersData(projectId);
-        // 후원자 데이터가 비어있는지 확인
-        if (supportersData.isEmpty()) {
-            throw new IllegalStateException("후원자 데이터가 없거나 비어 있습니다.");
-        }
 
-        // 엑셀 파일의 이름과 형식을 설정
-        String fileName = "Supporter_Management_" + projectId;
-        String fileType = ".xlsx";
-
-        // 엑셀 파일을 생성하고, 생성이 실패한 경우 예외 처리
-        File excelFile = excelGenerator.generateExcelFile(fileName, supportersData);
-        if (excelFile == null) {
-            throw new IllegalStateException("엑셀 파일 생성에 실패했습니다.");
-        }
-
-        // 생성된 파일이 존재하는지, 크기가 0이 아닌지 확인
-        if (!excelFile.exists() || excelFile.length() == 0) {
-            throw new IllegalStateException("생성된 엑셀 파일이 존재하지 않거나 비어 있습니다.");
-        }
-
-        // S3Util 인스턴스가 초기화되었는지 확인
-        if (s3Util == null) {
-            throw new IllegalStateException("S3Util이 초기화되지 않았습니다.");
-        }
-
-        // 생성된 엑셀 파일을 S3 버킷에 업로드
-        s3Util.uploadFileToS3(fileName, fileType, excelFile);
-
-        // 업로드된 파일에 대한 presigned URL을 생성하여 반환 (유효 시간 설정)
-        return s3Util.generatePresignedUrlWithExpiration(fileName, fileType, s3UrlExpirationMinutes);
-    }
-
+    // 후원자(배송, 후원, 주문 등) 정보 조회
     @Override
     public List<Map<String, Object>> getSupportersData(Long projectId) {
-        // projectId가 null인지 검증
-        if (projectId == null) {
-            throw new IllegalArgumentException("projectId는 null일 수 없습니다.");
-        }
+        validateProjectExistenceForProjectId(projectId);
 
         // 사용자가 해당 프로젝트의 주최자인지 검증
         projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
@@ -370,6 +328,45 @@ public class OrderServiceImpl implements  OrderService{
         return data;
     }
 
+    // 내가 진행중인 프로젝트의 후원자(배송, 후원, 주문 등) 정보 엑셀 파일 생성 및 조회
+    @Override
+    public String generateUploadAndGetPresignedUrlForSupportersExcel(Long projectId) throws IOException {
+        // 후원자 데이터를 가져옴
+        List<Map<String, Object>> supportersData = getSupportersData(projectId);
+
+        // 후원자 데이터가 비어있는지 확인
+        if (supportersData.isEmpty()) {
+            throw new IllegalStateException("후원자 데이터가 없거나 비어 있습니다.");
+        }
+
+        // 엑셀 파일의 이름과 형식을 설정
+        String fileName = "Supporter_Management_" + projectId;
+        String fileType = ".xlsx";
+
+        // 엑셀 파일을 생성하고, 생성이 실패한 경우 예외 처리
+        File excelFile = excelGenerator.generateExcelFile(fileName, supportersData);
+        if (excelFile == null) {
+            throw new IllegalStateException("엑셀 파일 생성에 실패했습니다.");
+        }
+
+        // 생성된 파일이 존재하는지, 크기가 0이 아닌지 확인
+        if (!excelFile.exists() || excelFile.length() == 0) {
+            throw new IllegalStateException("생성된 엑셀 파일이 존재하지 않거나 비어 있습니다.");
+        }
+
+        // S3Util 인스턴스가 초기화되었는지 확인
+        if (s3Util == null) {
+            throw new IllegalStateException("S3Util이 초기화되지 않았습니다.");
+        }
+
+        // 생성된 엑셀 파일을 S3 버킷에 업로드
+        s3Util.uploadFileToS3(fileName, fileType, excelFile);
+
+        // 업로드된 파일에 대한 presigned URL을 생성하여 반환 (유효 시간 설정)
+        return s3Util.generatePresignedUrlWithExpiration(fileName, fileType, s3UrlExpirationMinutes);
+    }
+    
+    // Set으로 이루어진 여러개의 패키지 정보 "," 기준으로 병합
     private String joinSupportingPackageDetails(Set<SupportingPackage> supportingPackages, Function<SupportingPackage, String> mapper) {
         // 패키지 정보를 단일 문자열로 변환, 각 항목은 쉼표로 구분됨
         return supportingPackages.stream()
@@ -377,8 +374,7 @@ public class OrderServiceImpl implements  OrderService{
                 .collect(Collectors.joining(", "));
     }
 
-
-    public Set<PaymentPackageDTO> packageEntityToDto(Set<SupportingPackage> supportingPackage){
+    private Set<PaymentPackageDTO> packageEntityToDto(Set<SupportingPackage> supportingPackage){
 
         return supportingPackage.stream().map(pac-> PaymentPackageDTO.builder()
                 .id(pac.getProjectPackage().getId())
@@ -390,6 +386,12 @@ public class OrderServiceImpl implements  OrderService{
                         .selectOption(pac.getOptionList())
                         .build()).collect(Collectors.toList()))
                 .build()).collect(Collectors.toSet());
+    }
+
+    // 해당 프로젝트 아이디의 프로젝트가 존재하는지 유효성 확인
+    private void validateProjectExistenceForProjectId(Long projectId) {
+        projectRepository.findById(projectId)
+                .orElseThrow(() -> new EntityNotFoundException("Project not found"));
     }
 
 }

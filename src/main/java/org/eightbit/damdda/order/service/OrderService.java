@@ -30,8 +30,14 @@ public interface OrderService {
     //member id를 통해 프로젝트 id 가져오기
     Long getUserProjectId(Long memberId);
 
-    // ProjectStatistics 후원 프로젝트의 시작일, 마감일, 달성률, 총 후원 금액, 후원자 수, 남은 기간을 가져옴
-    //프로젝트 통계 정보를 가져오는 서비스 메서드
+    /**
+     * 프로젝트 통계 정보를 조회합니다.
+     *
+     * @param projectId 조회할 프로젝트의 ID
+     * @return ProjectStatisticsDTO 객체, 프로젝트의 통계 정보가 포함됩니다.
+     * @throws IllegalStateException 프로젝트 세부 정보를 찾을 수 없는 경우
+     * @throws IllegalArgumentException 프로젝트가 존재하지 않거나, 사용자가 해당 프로젝트의 주최자가 아닌 경우
+     */
     ProjectStatisticsDTO getProjectStatistics(Long projectId);
 
     /**

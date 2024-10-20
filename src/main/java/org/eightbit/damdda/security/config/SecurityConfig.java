@@ -72,6 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "^/package/\\d+$",                              // 프로젝트 선물 구성 조회 (숫자만 매칭)
                         "^/order/\\d+/supporters/excel$",               // 후원자 리스트 엑셀 파일 조회
                         "^/order/\\d+/supporters$",
+                        "^/order/statistics/\\d+$",
                         "^/payment/kakao/.+$",
                         "^/payment/toss/.+$"
                 ).permitAll()
