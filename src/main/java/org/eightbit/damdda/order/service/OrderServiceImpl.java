@@ -39,7 +39,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements  OrderService{
 
-
     private final org.eightbit.damdda.order.repository.OrderRepository orderRepository;
     private final org.eightbit.damdda.order.repository.DeliveryRepository deliveryRepository;
     private final org.eightbit.damdda.order.repository.PaymentRepository paymentRepository;
@@ -48,11 +47,12 @@ public class OrderServiceImpl implements  OrderService{
     private final org.eightbit.damdda.project.repository.ProjectRepository projectRepository;
     private final org.eightbit.damdda.member.repository.MemberRepository memberRepository;
     private final org.eightbit.damdda.project.repository.PackageRepository packageRepository;
-    private final SecurityContextUtil securityContextUtil;
 
+    private final SecurityContextUtil securityContextUtil;
     private final ProjectValidator projectValidator;
     private final S3Util s3Util;
     private final ExcelGenerator excelGenerator;
+
     @Value("${s3.url.expiration.minutes}")
     private int s3UrlExpirationMinutes;
 
@@ -197,13 +197,6 @@ public class OrderServiceImpl implements  OrderService{
 
     }
 
-
-    //order 테이블 가져오기
-    @Override
-    public List<Order> getOrdersBySupportingProject(SupportingProject supportingProject) {
-        return orderRepository.findAllBySupportingProject(supportingProject);
-    }
-
     private OrderDTO convertToOrderDTO(Order order) {
         return OrderDTO.builder()
                 .orderId(order.getOrderId())
@@ -289,7 +282,6 @@ public class OrderServiceImpl implements  OrderService{
                 .build();
 
     }
-
 
     // 후원자(배송, 후원, 주문 등) 정보 조회
     @Override
@@ -396,18 +388,13 @@ public class OrderServiceImpl implements  OrderService{
 
 
     private Set<PaymentPackageDTO> packageEntityToDto(Set<SupportingPackage> supportingPackage){
-
-        Set<PaymentPackageDTO> paymentPackageDTOs = supportingPackage.stream().map( pac-> {
-            return PaymentPackageDTO.builder()
-                    .id(pac.getProjectPackage().getId())
-                    .name(pac.getProjectPackage().getPackageName())
-                    .price(pac.getProjectPackage().getPackagePrice())
-                    .count(pac.getPackageCount())
-                    .rewardList(convertToPaymentRewardDTOList(pac.getProjectPackage().getPackageRewards(), pac.getOptionList()))
-                    .build();
-        }).collect(Collectors.toSet());
-        return paymentPackageDTOs;
-
+        return supportingPackage.stream().map(pac-> PaymentPackageDTO.builder()
+                .id(pac.getProjectPackage().getId())
+                .name(pac.getProjectPackage().getPackageName())
+                .price(pac.getProjectPackage().getPackagePrice())
+                .count(pac.getPackageCount())
+                .rewardList(convertToPaymentRewardDTOList(pac.getProjectPackage().getPackageRewards(), pac.getOptionList()))
+                .build()).collect(Collectors.toSet());
     }
 
     private List<PaymentRewardDTO> convertToPaymentRewardDTOList(List<PackageRewards> packageRewards, String optionList) {
