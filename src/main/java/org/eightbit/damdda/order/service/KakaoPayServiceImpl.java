@@ -22,7 +22,8 @@ public class KakaoPayServiceImpl implements KakaoPayService {
     @Value("${KAKAO_ADMIN_KEY}")
     private String KAKAO_ADMIN_KEY;
     private KakaoReadyResponse kakaoReady;
-
+    @Value("${server.backend.base-url}")
+    private String backendBaseUrl;
     // 결제 준비
     @Override
     public KakaoReadyResponse kakaoPayReady(Long orderId) {
@@ -37,9 +38,9 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         parameters.add("total_amount", 10000);
         parameters.add("vat_amount", 100);
         parameters.add("tax_free_amount", 0);
-        parameters.add("approval_url", String.format("http://localhost:9000/damdda/payment/kakao/success/%d", orderId));
-        parameters.add("cancel_url", String.format("http://localhost:9000/damdda/payment/kakao/cancel?orderId=%d", orderId));
-        parameters.add("fail_url", String.format("http://localhost:9000/damdda/payment/kakao/fail?orderId=%d", orderId));
+        parameters.add("approval_url", String.format(backendBaseUrl+"/damdda/payment/kakao/success/%d", orderId));
+        parameters.add("cancel_url", String.format(backendBaseUrl+"/damdda/payment/kakao/cancel?orderId=%d", orderId));
+        parameters.add("fail_url", String.format(backendBaseUrl+"/damdda/payment/kakao/fail?orderId=%d", orderId));
 
         // 파라미터, 헤더
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());

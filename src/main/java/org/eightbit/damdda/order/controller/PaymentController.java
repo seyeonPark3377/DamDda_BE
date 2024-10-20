@@ -7,6 +7,7 @@ import org.eightbit.damdda.order.dto.KakaoReadyResponse;
 import org.eightbit.damdda.order.dto.TossResponse;
 import org.eightbit.damdda.order.service.KakaoPayService;
 import org.eightbit.damdda.order.service.TossPayService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,9 @@ public class PaymentController {
     private final KakaoPayService kakaoPayService;
     private final TossPayService tossPayService;
 
+    @Value("${server.client.base-url}")
+    private String clientBaseUrl;
+
     @GetMapping("/toss/success")
     public ResponseEntity<TossResponse> tossSuccess(
             @RequestParam("paymentKey") String paymentKey,
@@ -36,10 +40,10 @@ public class PaymentController {
             if (tossResponse.getStatus().equals("DONE")) {
                 String orderIdNew = orderId.replace("DAMDDA-ORDER-", "");
                 // 결제 성공 시 /toss/success/getOrder로 리다이렉트
-                response.sendRedirect("http://localhost:3000/payment/success?orderId=" + Long.parseLong(orderIdNew));
+                response.sendRedirect(clientBaseUrl+"/payment/success?orderId=" + Long.parseLong(orderIdNew));
             } else {
                 // 결제 실패 시 /toss/success/getOrder로 실패 ID 1로 리다이렉트
-                response.sendRedirect("http://localhost:3000/payment/success?orderId=" + orderId);
+                response.sendRedirect(clientBaseUrl+"/payment/success?orderId=" + orderId);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -64,7 +68,7 @@ public class PaymentController {
         KakaoApproveResponse kakaoApproveResponse = kakaoPayService.approveResponse(pgToken, orderId);
         // 결제 성공 시 React의 결제 완료 페이지로 리다이렉트
         try {
-            response.sendRedirect("http://localhost:3000/payment/success?orderId=" + orderId);
+            response.sendRedirect(clientBaseUrl+"/payment/success?orderId=" + orderId);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

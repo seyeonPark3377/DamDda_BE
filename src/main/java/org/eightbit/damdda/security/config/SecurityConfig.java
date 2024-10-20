@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         LoginFilter loginFilter = new LoginFilter(authenticationManagerBean(), jwtService); // 로그인 필터
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtService, userDetailsService); // JWT 인증 필터
-
+        // TODO: Cloud 업로드 이후 수정 필요
         http.csrf().disable()
                 .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -70,12 +70,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "^/files/.*",                                   // 프로젝트 목록 조회
                         "^/project/\\d+$",                              // 프로젝트 상세 조회 (숫자만 매칭)
                         "^/package/\\d+$",                              // 프로젝트 선물 구성 조회 (숫자만 매칭)
-                        "^/order/\\d+/supporters/excel$",               // 후원자 리스트 엑셀 파일 조회 (TODO: 삭제 필요)
+                        "^/order/\\d+/supporters/excel$",               // 후원자 리스트 엑셀 파일 조회
                         "^/payment/kakao/.+$",
                         "^/payment/toss/.+$"
                 ).permitAll()
                 .regexMatchers(HttpMethod.PUT,
-                        "^/member/\\d+/password$"                       // 비밀번호 변경 (TODO: 수정 필요 (세연))
+                        "^/member/\\d+/password$"                       // 비밀번호 변경
                 ).permitAll()
                 .anyRequest().authenticated().and()
                 .logout()
