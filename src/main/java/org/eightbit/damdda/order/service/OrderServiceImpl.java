@@ -161,7 +161,7 @@ public class OrderServiceImpl implements  OrderService{
         // userId로 SupportingProject 가져오기
 
         List<SupportingProject> supportingProjects = supportingProjectRepository.findAllByUser_Id(userId);
-        
+
         // 각 후원 프로젝트에 속한 주문을 모두 조회
         return supportingProjects.stream()
                 .flatMap(supportingProject -> orderRepository.findAllBySupportingProject(supportingProject).stream())
@@ -377,14 +377,14 @@ public class OrderServiceImpl implements  OrderService{
             rowData.put("후원일시", order.getCreatedAt());
 
             // Add package details
-            rowData.put("패키지 이름", joinSupportingPackageDetails(order.getSupportingPackages(), supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackageName())));
-            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackages(),
+            rowData.put("패키지 이름", joinSupportingPackageDetails(order.getSupportingPackage(), supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackageName())));
+            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackage(),
                     supportingPackage -> String.valueOf(supportingPackage.getPackageCount())));
-            rowData.put("패키지 가격", joinSupportingPackageDetails(order.getSupportingPackages(),
+            rowData.put("패키지 가격", joinSupportingPackageDetails(order.getSupportingPackage(),
                     supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackagePrice())));
 
             // Add option details
-            rowData.put("패키지 옵션 정보", joinSupportingPackageDetails(order.getSupportingPackages(), supportingPackage -> String.valueOf(supportingPackage.getOptionList())));
+            rowData.put("패키지 옵션 정보", joinSupportingPackageDetails(order.getSupportingPackage(), supportingPackage -> String.valueOf(supportingPackage.getOptionList())));
 
             // Add payment details, if available
             if (order.getPayment() != null) {
@@ -437,3 +437,5 @@ public class OrderServiceImpl implements  OrderService{
 
 }
 
+message.txt
+22KB
