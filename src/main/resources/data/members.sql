@@ -80,3 +80,5 @@ VALUES (1, 'user1', '$2a$10$tl.WBrLqtKjOWK6bbNxrPexsia2kgEjoOr5.XDeOMUoFrQW62EGk
         'daniel.kang@example.com', '010-1234-5639', '/users/user39.png', '서울시 서대문구', '연세로 248', 03722),
        (40, 'user40', '$2a$10$tl.WBrLqtKjOWK6bbNxrPexsia2kgEjoOr5.XDeOMUoFrQW62EGke', 'nick40', 'Yoo Jeongyeon',
         'jeongyeon.yoo@example.com', '010-1234-5640', '/users/user40.png', '서울시 양천구', '목동동로 367', 07964);
+
+INSERT INTO admins(login_id, password) VALUES ('admin', '$2a$10$.6QPyzS7LKfLnK4fUpEhOeWCo1f3rD1ul/xOditdcAAM1IMJ5fJoS');
