@@ -323,7 +323,7 @@ public class OrderServiceImpl implements  OrderService{
 
             // 배송 정보가 있을 경우 추가
             if (order.getDelivery() != null) {
-                rowData.put("닉네임", order.getDelivery().getDeliveryName());
+                rowData.put("배송지명", order.getDelivery().getDeliveryName());
                 rowData.put("전화번호", order.getDelivery().getDeliveryPhoneNumber());
                 rowData.put("이메일", order.getDelivery().getDeliveryEmail());
                 rowData.put("주소", order.getDelivery().getDeliveryAddress());
