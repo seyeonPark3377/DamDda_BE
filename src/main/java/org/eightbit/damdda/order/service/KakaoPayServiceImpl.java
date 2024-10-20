@@ -26,7 +26,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 
     // 결제 준비
     @Override
-    public KakaoReadyResponse kakaoPayReady(Long orderId, String authorizationHeader) {
+    public KakaoReadyResponse kakaoPayReady(Long orderId) {
 
         // 카카오페이 요청 양식
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -38,12 +38,12 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         parameters.add("total_amount", 10000);
         parameters.add("vat_amount", 100);
         parameters.add("tax_free_amount", 0);
-        parameters.add("approval_url", String.format("http://localhost:9000/payment/kakao/success/%d", orderId));
-        parameters.add("cancel_url", String.format("http://localhost:9000/payment/kakao/cancel?orderId=%d", orderId));
-        parameters.add("fail_url", String.format("http://localhost:9000/payment/kakao/fail?orderId=%d", orderId));
+        parameters.add("approval_url", String.format("http://localhost:9000/damdda/payment/kakao/success/%d", orderId));
+        parameters.add("cancel_url", String.format("http://localhost:9000/damdda/payment/kakao/cancel?orderId=%d", orderId));
+        parameters.add("fail_url", String.format("http://localhost:9000/damdda/payment/kakao/fail?orderId=%d", orderId));
 
         // 파라미터, 헤더
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders(authorizationHeader));
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
 
         // 외부에 보낼 url
         RestTemplate restTemplate = new RestTemplate();
@@ -58,7 +58,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 
     // 결제 승인
     @Override
-    public KakaoApproveResponse approveResponse(String pgToken, Long orderId, String authorizationHeader) {
+    public KakaoApproveResponse approveResponse(String pgToken, Long orderId) {
         System.out.println("pg_token: " + pgToken);
 
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -68,7 +68,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         parameters.add("partner_user_id", 0);
         parameters.add("pg_token", pgToken);
 
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders(authorizationHeader));
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
 
         RestTemplate restTemplate = new RestTemplate();
         KakaoApproveResponse approveResponse = restTemplate.postForObject(
@@ -82,14 +82,13 @@ public class KakaoPayServiceImpl implements KakaoPayService {
     /**
      * 카카오 요구 헤더값
      */
-    private HttpHeaders getHeaders(String damddaAuth) {
+    private HttpHeaders getHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         String auth = "KakaoAK " + KAKAO_ADMIN_KEY;
         httpHeaders.set("Authorization", auth);
-        httpHeaders.set("x-damdda-authorization", damddaAuth);
+//        httpHeaders.set("x-damdda-authorization", damddaAuth);
         httpHeaders.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
         return httpHeaders;
     }
 }

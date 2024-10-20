@@ -11,28 +11,26 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-public class SupportingPackage {
+public class  SupportingPackage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long packageId;
 
     @ManyToOne
-    @JoinColumn(name = "project_package_id")
+    @JoinColumn(name="id")
     private ProjectPackage projectPackage;
 
     @ManyToOne
     @JoinColumn(name = "supporting_project_id")
     private SupportingProject supportingProject;
 
-    // 양방향 매핑 설정, ManyToOne 관계
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name="order_id")
     private Order order;
 
     private Integer packageCount;
 
     @Column(columnDefinition = "json")
-    private String optionList;
+    private String OptionList;
 }

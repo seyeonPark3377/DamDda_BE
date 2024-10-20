@@ -26,14 +26,14 @@ public class TossPayServiceImpl implements TossPayService {
     private TossResponse tossResponse;
 
     @Override
-    public TossResponse confirmPayment(String paymentKey, String orderId, String amount, String authorizationHeader) {
+    public TossResponse confirmPayment(String paymentKey, String orderId, String amount) {
         // Toss Payments 결제 승인 API 호출
         String tossApiUrl = "https://api.tosspayments.com/v1/payments/confirm";
 
         // HTTP 헤더 설정
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(TOSS_SECRET_KEY, "");
-        headers.set("x-damdda-authorization", authorizationHeader); // Custom 헤더 설정
+        //headers.set("x-damdda-authorization", authorizationHeader); // Custom 헤더 설정
         headers.add("Content-Type", "application/json");
 
         // 요청 DTO 생성

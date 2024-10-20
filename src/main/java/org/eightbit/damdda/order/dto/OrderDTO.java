@@ -20,6 +20,6 @@ public class OrderDTO {
     /* 중요 */
     /*supportingProject -> DTO로 바꾸기*/
     private SupportingProject supportingProject;  // 연관된 SupportingProject 객체
-    private Set<SupportingPackageDTO> supportingPackages;  // 연관된 SupportingPackage 객체
+    private Set<PaymentPackageDTO> paymentPackageDTO;  // 연관된 SupportingPackage 객체
 
 }
