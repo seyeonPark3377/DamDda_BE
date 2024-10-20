@@ -12,8 +12,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class RegisterDTO {
 
-    // NotNull 및 Size 추가
-
     @NotNull(message = "ID를 입력해야만 회원가입이 가능합니다.")
     private String loginId;
 
@@ -38,19 +36,6 @@ public class RegisterDTO {
     private String detailedAddress;
     // int -> Integer로 변경
     private Integer postCode;
-
-    @Builder
-    public RegisterDTO(String loginId, String password, String nickname, String name, String email, String phoneNumber, String address, String detailedAddress, int postCode) {
-        this.loginId = loginId;
-        this.password = password;
-        this.nickname = nickname;
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.detailedAddress = detailedAddress;
-        this.postCode = postCode;
-    }
 
     public Member toEntity() {
         return Member.builder()

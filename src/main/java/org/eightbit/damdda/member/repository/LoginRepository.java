@@ -8,6 +8,7 @@ import java.util.Optional;
 
 @RepositoryRestResource(exported = false)
 public interface LoginRepository extends JpaRepository<Member, Long> {
+
     Optional<Member> findByLoginId(String loginId);
 
     Optional<Member> findByNameAndEmail(String name, String email);

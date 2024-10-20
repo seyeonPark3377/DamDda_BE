@@ -1,6 +1,5 @@
 package org.eightbit.damdda.member.dto;
 
-
 import lombok.*;
 import org.eightbit.damdda.member.domain.Member;
 
@@ -56,4 +55,5 @@ public class MemberDTO {
                 .deletedAt(deletedAt)
                 .build();
     }
+
 }

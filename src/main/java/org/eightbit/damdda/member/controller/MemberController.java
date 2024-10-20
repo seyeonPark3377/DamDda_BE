@@ -180,7 +180,6 @@ public class MemberController {
             @PathVariable Long id,
             @RequestBody PasswordDTO passwordDTO
     ) {
-        memberValidator.validateMemberIdForLoginUser(id);
         try {
             boolean result = loginService.modifyPassword(id, passwordDTO.getPassword());
             return ResponseEntity.ok(Map.of("isSuccess", result));

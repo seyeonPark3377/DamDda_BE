@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-public class WebClientConfig {
+public class AIWebClientConfig {
 
     // application.properties에서 값 주입
     @Value("${server.ai-python.base-url}")
