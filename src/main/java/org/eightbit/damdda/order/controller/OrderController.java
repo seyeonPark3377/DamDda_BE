@@ -46,7 +46,9 @@ public class OrderController {
     @GetMapping("/supportingprojects")
     public List<OrderDTO> getOrdersByUserId(@AuthenticationPrincipal User user) {
         Long userId = user.getMemberId();
-        return orderService.getOrdersWithPaymentByUserId(userId);
+        List<OrderDTO> orderDTO =  orderService.getOrdersWithPaymentByUserId(userId);
+        log.info("박명수"+orderDTO);
+        return orderDTO;
     }
 
     // PaymentSuccess.jsx - 결제 완료
