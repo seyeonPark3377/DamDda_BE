@@ -9,7 +9,6 @@ import org.eightbit.damdda.project.repository.ProjectRepository;
 import org.eightbit.damdda.project.repository.TagRepository;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,6 @@ public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
     private final ProjectRepository projectRepository;
-    @PersistenceContext
 
     public List<Tag> registerTags(List<TagDTO> tags) {
         List<String> tagNames = tags.stream()
