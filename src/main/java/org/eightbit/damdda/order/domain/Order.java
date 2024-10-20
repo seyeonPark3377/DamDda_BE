@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "orders")
-@Data
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

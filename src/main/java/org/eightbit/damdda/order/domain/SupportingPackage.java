@@ -7,7 +7,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "supporting_packages")
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

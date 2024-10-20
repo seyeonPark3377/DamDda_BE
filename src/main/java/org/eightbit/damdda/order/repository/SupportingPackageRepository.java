@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface SupportingPackageRepository extends JpaRepository<SupportingPackage, Long> {
@@ -43,4 +44,5 @@ public interface SupportingPackageRepository extends JpaRepository<SupportingPac
     Long getTargetFundingByProjectId(@Param("projectId") Long projectId);
 
 
+    Set<SupportingPackage> findByOrder_OrderId(@Param("orderId") Long orderId);
 }
