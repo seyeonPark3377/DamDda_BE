@@ -93,16 +93,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 
     // JSON Processing
-    implementation 'org.json:json:20210307'
+    implementation 'org.json:json:20231013'
 
     // Validation
     implementation 'javax.validation:validation-api:2.0.1.Final'
     implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'

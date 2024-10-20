@@ -26,7 +26,6 @@ public class AdminApprovalServiceImpl implements AdminApprovalService {
      *
      * @param project 제출할 프로젝트
      */
-    // TODO: AdminApporvalDTO, ProjectDTO 사용 필요
     @Override
     @Transactional
     public void submitProject(Project project) {
@@ -42,7 +41,6 @@ public class AdminApprovalServiceImpl implements AdminApprovalService {
      * @param projectId 프로젝트 고유 ID
      * @return 해당 프로젝트에 대한 승인 기록 (Optional)
      */
-    // TODO: AdminApporvalDTO 사용 필요
     @Override
     public Optional<AdminApproval> findByProjectId(Long projectId) {
         return adminApprovalRepository.findByProjectId(projectId);
@@ -54,7 +52,6 @@ public class AdminApprovalServiceImpl implements AdminApprovalService {
      * @param approval 승인 상태 (0: 대기, 1: 승인, 2: 거절)
      * @return 해당 승인 상태에 대한 승인 기록 리스트
      */
-    // TODO: AdminApporvalDTO 사용 필요
     @Override
     public List<AdminApproval> findAllByApproval(Integer approval) {
         return adminApprovalRepository.findAllByApproval(approval);

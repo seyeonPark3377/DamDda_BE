@@ -2,7 +2,6 @@ package org.eightbit.damdda.order.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -11,23 +10,19 @@ import org.eightbit.damdda.common.utils.file.ExcelGenerator;
 import org.eightbit.damdda.common.utils.validation.ProjectValidator;
 import org.eightbit.damdda.member.domain.Member;
 import org.eightbit.damdda.order.domain.*;
-
-import org.eightbit.damdda.order.dto.*;
-import org.eightbit.damdda.project.domain.PackageRewards;
+import org.eightbit.damdda.order.dto.OrderDTO;
+import org.eightbit.damdda.order.dto.PaymentPackageDTO;
+import org.eightbit.damdda.order.dto.PaymentRewardDTO;
+import org.eightbit.damdda.order.dto.ProjectStatisticsDTO;
 import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.domain.ProjectPackage;
-import org.eightbit.damdda.project.dto.PackageDTO;
-import org.eightbit.damdda.project.dto.RewardDTO;
 import org.eightbit.damdda.security.util.SecurityContextUtil;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-
-import java.sql.Timestamp;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,7 +37,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements  OrderService{
 
-    @Autowired
+
     private final org.eightbit.damdda.order.repository.OrderRepository orderRepository;
     private final org.eightbit.damdda.order.repository.DeliveryRepository deliveryRepository;
     private final org.eightbit.damdda.order.repository.PaymentRepository paymentRepository;
@@ -166,9 +161,7 @@ public class OrderServiceImpl implements  OrderService{
         // userId로 SupportingProject 가져오기
 
         List<SupportingProject> supportingProjects = supportingProjectRepository.findAllByUser_Id(userId);
-
-        System.out.println("Supporting Projects: " + supportingProjects);
-
+        
         // 각 후원 프로젝트에 속한 주문을 모두 조회
         return supportingProjects.stream()
                 .flatMap(supportingProject -> orderRepository.findAllBySupportingProject(supportingProject).stream())
@@ -275,18 +268,17 @@ public class OrderServiceImpl implements  OrderService{
         }
         return null; // 프로젝트가 없으면 null 반환
     }
-
     // ProjectStatistics 후원 프로젝트의 시작일, 마감일, 달성률, 총 후원 금액, 후원자 수, 남은 기간을 가져옴
     //프로젝트 통계 정보를 가져오는 서비스 메서드
     @Override
     public ProjectStatisticsDTO getProjectStatistics(Long projectId) {
 
         //1. 내 프로젝트 ID 찾기
-        Project project = projectRepository.findById(projectId)
+        projectRepository.findById(projectId)
                 .orElseThrow(() -> new EntityNotFoundException("Project not found"));
 
         //2. 총 후원 금액가져오기->
-        List<String> packagePrices=supportingPackageRepository.findPackagePricesByProjectId(projectId);
+        List<String> packagePrices = supportingPackageRepository.findPackagePricesByProjectId(projectId);
 
         // String을 Integer로 변환한 후, 합계를 계산
         Long totalAmount = packagePrices.stream()
@@ -296,7 +288,7 @@ public class OrderServiceImpl implements  OrderService{
                 .sum();  // 합계 계산
 
         //3. 후원자 수 가져오기
-        Long totalSupporters =supportingPackageRepository.getTotalSupporters(projectId);
+        Long totalSupporters = supportingPackageRepository.getTotalSupporters(projectId);
 
         // 4. 남은 기간 계산
         LocalDate today = LocalDate.now();
@@ -312,15 +304,15 @@ public class OrderServiceImpl implements  OrderService{
 
         // 4. created_at 가져오기
         LocalDateTime createdAtLocalDateTime = supportingPackageRepository.getCreatedAtByProjectId(projectId);
-        LocalDateTime createdAtTime = createdAtLocalDateTime.toLocalDate().atStartOfDay();
-        LocalDate createdAt = createdAtTime.toLocalDate();
+
         // 5. target Funding
-        Long targetFunding=supportingPackageRepository.getTargetFundingByProjectId(projectId);
+        Long targetFunding = supportingPackageRepository.getTargetFundingByProjectId(projectId);
+
         // 5. DTO로 통계 정보를 반환
         return ProjectStatisticsDTO.builder()
                 .startDate(createdAtLocalDateTime) // created_at 값을 LocalDateTime로 사용
                 .endDate(endDateLocalDateTime)     // endDate 값을 LocalDateTime로 사용
-                .totalSupportAmount(totalAmount != null ? totalAmount : 0)
+                .totalSupportAmount(totalAmount)
                 .totalSupporters(totalSupporters != null ? totalSupporters : 0)
                 .remainingDays(Math.max(remainingDays, 0)) // 남은 기간이 음수면 0
                 .targetFunding(targetFunding)
@@ -329,28 +321,46 @@ public class OrderServiceImpl implements  OrderService{
 
     @Override
     public String generateUploadAndGetPresignedUrlForSupportersExcel(Long projectId) throws IOException {
-        // Validate that the currently authenticated user is the organizer of the given project.
-        // Throws UnauthorizedAccessException if the user is not the organizer.
         projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
 
+        // Validate that the projectId is not null
+        if (projectId == null) {
+            throw new IllegalArgumentException("projectId cannot be null.");
+        }
 
         // Generate the file name for the Excel file
-        String fileName = "후원자_관리_" + projectId;
+        String fileName = "Supporter_Management_" + projectId;
         String fileType = ".xlsx";
 
+        // Validate that the S3Util instance is not null
+        if (s3Util == null) {
+            throw new IllegalStateException("S3Util is not initialized.");
+        }
+
+        // Validate that the supporters data is not null or empty
+        List<Map<String, Object>> supportersData = getSupportersDataForExcel(projectId);
+        if (supportersData.isEmpty()) {
+            throw new IllegalStateException("Supporters data is null or empty.");
+        }
+
+        // Generate the Excel file and check if it is null
+        File excelFile = excelGenerator.generateExcelFile(fileName, supportersData);
+        if (excelFile == null) {
+            throw new IllegalStateException("Failed to generate Excel file.");
+        }
+
+        // Validate the generated file before uploading
+        if (!excelFile.exists() || excelFile.length() == 0) {
+            throw new IllegalStateException("Generated Excel file is either not existing or empty.");
+        }
+
         // Upload the generated Excel file to the S3 bucket
-        s3Util.uploadFileToS3(
-                fileName,
-                fileType,
-                excelGenerator.generateExcelFile(
-                        fileName,
-                        getSupportersDataForExcel(projectId)
-                )
-        );
+        s3Util.uploadFileToS3(fileName, fileType, excelFile);
 
         // Return the presigned URL for the uploaded file, with an expiration time
         return s3Util.generatePresignedUrlWithExpiration(fileName, fileType, s3UrlExpirationMinutes);
     }
+
 
     private List<Map<String, Object>> getSupportersDataForExcel(Long projectId) {
         // Retrieve the list of orders for the specified project
@@ -367,16 +377,14 @@ public class OrderServiceImpl implements  OrderService{
             rowData.put("후원일시", order.getCreatedAt());
 
             // Add package details
-            rowData.put("패키지 이름", joinSupportingPackageDetails(order.getSupportingPackage(), supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackageName())));
-            //rowData.put("패키지 이름", joinSupportingPackageDetails(order.getSupportingPackage().stream().map(sp->sp.getProjectPackage().getPackageName()), SupportingPackage::getPackageName));
-            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackage(),
+            rowData.put("패키지 이름", joinSupportingPackageDetails(order.getSupportingPackages(), supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackageName())));
+            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackages(),
                     supportingPackage -> String.valueOf(supportingPackage.getPackageCount())));
-            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackage(),
-                    supportingPackage -> String.valueOf(supportingPackage.getPackageCount())));
-            rowData.put("패키지 가격", joinSupportingPackageDetails(order.getSupportingPackage(),
+            rowData.put("패키지 가격", joinSupportingPackageDetails(order.getSupportingPackages(),
                     supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackagePrice())));
 
-            // TODO: 옵션 정보 추가 필요
+            // Add option details
+            rowData.put("패키지 옵션 정보", joinSupportingPackageDetails(order.getSupportingPackages(), supportingPackage -> String.valueOf(supportingPackage.getOptionList())));
 
             // Add payment details, if available
             if (order.getPayment() != null) {
@@ -408,42 +416,8 @@ public class OrderServiceImpl implements  OrderService{
                 .map(mapper)
                 .collect(Collectors.joining(", "));
     }
-
-
     public Set<PaymentPackageDTO>  packageEntityToDto(Set<SupportingPackage> supportingPackage){
-//        Set<SupportingPackageDTO> supportingPackageDTOS = supportingPackage.stream().map( pac-> {
-//
-//                    ObjectMapper objectMapper = new ObjectMapper();
-//                    PackageDTO packageDTO = PackageDTO.builder()
-//                            .id(pac.getProjectPackage().getId())
-//                            .name(pac.getProjectPackage().getPackageName())
-//                            .price(pac.getProjectPackage().getPackagePrice())
-//                            .quantityLimited(pac.getProjectPackage().getQuantityLimited())
-//                            .RewardList(pac.getProjectPackage().getPackageRewards().stream().map(pr -> {
-//                                try {
-//                                    return RewardDTO.builder()
-//                                            .id(pr.getId())
-//                                            .name(pr.getProjectReward().getRewardName())
-//                                            .count(pac.getProjectPackage().getPackageRewards().stream()
-//                                                    .filter(packageReward ->
-//                                                            packageReward.getProjectReward().getId().equals(pr.getId())
-//                                                    )
-//                                                    .mapToInt(PackageRewards::getRewardCount).sum())
-//                                            .optionType(pr.getProjectReward().getOptionType())
-//                                            .OptionList(objectMapper.readValue(pac.getOptionList(), new TypeReference<List<String>>(){}))
-//                                            .build();
-//                                } catch (JsonProcessingException e) {
-//                                    throw new RuntimeException(e);
-//                                }
-//                            }).collect(Collectors.toList()))
-//                            .build();
-//                    return SupportingPackageDTO.builder()
-//                            .packageDTO(packageDTO)
-//                            .packageCount(pac.getPackageCount())
-//                            .build();
-//                }
-//        ).collect(Collectors.toSet());
-//        return supportingPackageDTOS;
+
         Set<PaymentPackageDTO> paymentPackageDTOs = supportingPackage.stream().map( pac-> {
             return PaymentPackageDTO.builder()
                     .id(pac.getProjectPackage().getId())

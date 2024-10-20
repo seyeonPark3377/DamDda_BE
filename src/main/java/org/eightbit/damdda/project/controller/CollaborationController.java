@@ -41,17 +41,19 @@ public class CollaborationController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDisposition(ContentDisposition.builder("attachment")
-                .filename(URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString())).build());
+                .filename(URLEncoder.encode(fileName, StandardCharsets.UTF_8)).build());
         return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
 
     @PostMapping("/register/{projectId}")
     public ResponseEntity<?> register(@RequestPart("jsonData") String jsonDataStr,
-                                      @RequestPart(name="collabDocList", required = false) List<MultipartFile> collabDocList,
+                                      @RequestPart(name = "collabDocList", required = false) List<MultipartFile> collabDocList,
                                       @PathVariable Long projectId, @AuthenticationPrincipal User user) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         CollaborationDetailDTO collaborationDetailDTO = mapper.registerModule(new JavaTimeModule()).readValue(jsonDataStr, CollaborationDetailDTO.class);
-        if(collabDocList!=null){collaborationDetailDTO.setCollabDocList(convertToObjectList(collabDocList));}
+        if (collabDocList != null) {
+            collaborationDetailDTO.setCollabDocList(convertToObjectList(collabDocList));
+        }
         collaborationDetailDTO.setUser_id(user.getLoginId());
         collaborationService.register(collaborationDetailDTO, projectId);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -96,13 +98,8 @@ public class CollaborationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //multipart -> object로 변환하는 함수.
     private List<Object> convertToObjectList(List<MultipartFile> multipartFiles) {
-        List<Object> objectList = new ArrayList<>();
-        for (MultipartFile file : multipartFiles) {
-            objectList.add(file);
-        }
-        return objectList;
+        return new ArrayList<>(multipartFiles);
     }
 
 }

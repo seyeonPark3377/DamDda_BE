@@ -3,7 +3,6 @@ package org.eightbit.damdda.project.domain;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.v3.core.util.Json;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -34,7 +33,7 @@ public class Collaboration {
     private String userId;
 
     @ManyToOne
-    @JoinColumn(name = "projectId")
+    @JoinColumn(name = "project_id")
     private Project project;
 
     private Date approvalDate;
@@ -62,15 +61,15 @@ public class Collaboration {
     }
 
     //json 역직렬화
-    public List<String> getCollabDocList() throws JsonProcessingException {
-        if(this.collabDocList == null || this.collabDocList.isEmpty()){
+    public List<String> getCollabDocList() {
+        if (this.collabDocList == null || this.collabDocList.isEmpty()) {
             return new ArrayList<>();
         }
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(this.collabDocList, new TypeReference<List<String>>() {
+            return objectMapper.readValue(this.collabDocList, new TypeReference<>() {
             });
-        }catch (JsonProcessingException e){
+        } catch (JsonProcessingException e) {
             return new ArrayList<>();
         }
     }
@@ -104,10 +103,8 @@ public class Collaboration {
                     ", collabDocList=" + objectMapper.writeValueAsString(getCollabDocList()) +
                     '}';
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return "Error processing JSON";
+            throw new RuntimeException(e);
         }
     }
-
 
 }

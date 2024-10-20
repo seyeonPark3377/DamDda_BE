@@ -19,11 +19,8 @@ import javax.transaction.Transactional;
 public class TossPayServiceImpl implements TossPayService {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    @Value("${TOSS_CLIENT_KEY}")
-    private String TOSS_CLIENT_KEY;
     @Value("${TOSS_SECRET_KEY}")
     private String TOSS_SECRET_KEY;
-    private TossResponse tossResponse;
 
     @Override
     public TossResponse confirmPayment(String paymentKey, String orderId, String amount) {
@@ -33,7 +30,6 @@ public class TossPayServiceImpl implements TossPayService {
         // HTTP 헤더 설정
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(TOSS_SECRET_KEY, "");
-        //headers.set("x-damdda-authorization", authorizationHeader); // Custom 헤더 설정
         headers.add("Content-Type", "application/json");
 
         // 요청 DTO 생성

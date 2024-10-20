@@ -48,7 +48,7 @@ public class ProjectRewards {
     //json 역직렬화
     public List<String> getOptionList() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(this.optionList, new TypeReference<List<String>>() {
+        return objectMapper.readValue(this.optionList, new TypeReference<>() {
         });
     }
 
@@ -70,8 +70,7 @@ public class ProjectRewards {
                     ", optionList=" + objectMapper.writeValueAsString(getOptionList()) +
                     '}';
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return "Error processing JSON";
+            throw new RuntimeException(e);
         }
     }
 

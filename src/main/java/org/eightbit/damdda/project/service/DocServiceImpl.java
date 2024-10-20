@@ -6,7 +6,6 @@ import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.domain.ProjectDocument;
 import org.eightbit.damdda.project.dto.FileDTO;
 import org.eightbit.damdda.project.repository.ProjectDocumentRepository;
-import org.eightbit.damdda.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,13 +21,11 @@ import java.util.List;
 @Transactional
 public class DocServiceImpl implements DocService {
 
-    private final ProjectRepository projectRepository;
     private final ProjectDocumentRepository projectDocumentRepository;
     @Value("${org.eightbit.damdda.path}")
     private String basePath;
 
     public boolean deleteDocFiles(List<ProjectDocument> docs) {
-        log.info("delete doc files" + docs);
         boolean result = true;
 
         for (ProjectDocument doc : docs) {
@@ -58,12 +55,17 @@ public class DocServiceImpl implements DocService {
         File uploadDir = new File(uploadDirectory);
 
         if (!uploadDir.exists()) {
-            uploadDir.mkdirs();  // 경로 없으면 생성
+            // 경로가 없으면 디렉터리 생성
+            if (!uploadDir.mkdirs()) {
+                // 디렉터리 생성 실패 시 로그 또는 예외 처리
+                throw new RuntimeException("Failed to create the directory: " + uploadDir.getAbsolutePath());
+            }
         }
 
-        for (int i = 0; i < docs.size(); i++) {
+
+        for (FileDTO doc : docs) {
             try {
-                MultipartFile file = docs.get(i).getFile();
+                MultipartFile file = doc.getFile();
                 String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
                 File destinationFile = new File(uploadDirectory + "/" + fileName);
 
@@ -75,14 +77,14 @@ public class DocServiceImpl implements DocService {
                         .project(project)
                         .url("files/projects/" + project.getId() + "/" + fileName)
                         .fileName(fileName)
-                        .ord(docs.get(i).getOrd())
+                        .ord(doc.getOrd())
                         .build();
 
                 projectDocumentRepository.save(projectDocument);
 
             } catch (IOException e) {
                 // 예외 처리 로직 작성 (로그 기록 또는 사용자에게 알림 등)
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }

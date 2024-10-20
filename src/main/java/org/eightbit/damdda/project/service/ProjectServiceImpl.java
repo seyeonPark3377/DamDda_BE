@@ -53,18 +53,18 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectImage> projectImages = projectImageRepository.findAllByProjectIdOrderByOrd(projectId);
         List<String> productImages = projectImages.stream()
                 .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))
-                .map(projectImage -> projectImage.getUrl())  // URL에 "http://files/projects/" 추가
+                .map(ProjectImage::getUrl)  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
 
         List<String> descriptionImages = projectImages.stream()
                 .filter(projectImage -> projectImage.getImageType().getImageType().equals("description"))
-                .map(projectImage -> projectImage.getUrl())
+                .map(ProjectImage::getUrl)
                 .collect(Collectors.toList());
 
         List<ProjectDocument> projectDocs = projectDocumentRepository.findAllByProjectIdOrderByOrd(projectId);
 
         List<String> docs = projectDocs.stream()
-                .map(ProjectDocument -> ProjectDocument.getUrl())  // URL에 "http://files/projects/" 추가
+                .map(ProjectDocument::getUrl)  // URL에 "http://files/projects/" 추가
                 .collect(Collectors.toList());
 
         List<Tag> tags = project.getTags();
@@ -72,7 +72,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .map(Tag::getName)
                 .collect(Collectors.toList());
 
-        ProjectRegisterDetailDTO dto = ProjectRegisterDetailDTO.builder()
+        return ProjectRegisterDetailDTO.builder()
                 .id(project.getId())
                 .title(project.getTitle())
                 .description(project.getDescription())
@@ -86,7 +86,6 @@ public class ProjectServiceImpl implements ProjectService {
                 .docs(docs)
                 .tags(tagDTOs)
                 .build();
-        return dto;
 
     }
 
@@ -241,16 +240,13 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<WritingProjectDTO> getWritingProjectDTO(Long memberId) {
         List<Project> result = projectRepository.findAllByMemberIdAndSubmitAtIsNullAndDeletedAtIsNull(memberId);
-        List<WritingProjectDTO> dtoList = result.stream()
-                .map(project -> {
-                    return WritingProjectDTO.builder()
-                            .id(project.getId())
-                            .title(project.getTitle())
-                            .build();
-                })
-                .collect(Collectors.toList());
 
-        return dtoList;
+        return result.stream()
+                .map(project -> WritingProjectDTO.builder()
+                        .id(project.getId())
+                        .title(project.getTitle())
+                        .build())
+                .collect(Collectors.toList());
 
     }
 
@@ -284,7 +280,9 @@ public class ProjectServiceImpl implements ProjectService {
         AdminApproval adminApproval = adminApprovalService.findByProjectId(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("Approval not found for projectId: " + project.getId()));
 
-        ProjectDetailHostDTO projectDetailHostDTO = ProjectDetailHostDTO.builder()
+        // 좋아요 여부는 기본적으로 false
+
+        return ProjectDetailHostDTO.builder()
                 .id(project.getId())
                 .title(project.getTitle())
                 .description(project.getDescription())
@@ -302,8 +300,6 @@ public class ProjectServiceImpl implements ProjectService {
                 .productImages(productImages)
                 .tags(tagDTOs)
                 .build();
-
-        return projectDetailHostDTO;
     }
 
     @Override
@@ -328,7 +324,6 @@ public class ProjectServiceImpl implements ProjectService {
 
             List<ProjectImage> projectImages = projectImageRepository.findAllByProjectId(projectId);
 
-            log.info(projectImages);
             List<String> productImages = projectImages.stream()
                     .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))
 
@@ -347,7 +342,9 @@ public class ProjectServiceImpl implements ProjectService {
 
             project.setViewCnt(project.getViewCnt() + 1);
 
-            ProjectResponseDetailDTO projectResponseDetailDTO = ProjectResponseDetailDTO.builder()
+            // 좋아요 여부는 기본적으로 false
+
+            return ProjectResponseDetailDTO.builder()
                     .id(project.getId())
                     .title(project.getTitle())
                     .description(project.getDescription())
@@ -367,8 +364,6 @@ public class ProjectServiceImpl implements ProjectService {
                     .tags(tagDTOs)
                     .build();
 
-            return projectResponseDetailDTO;
-
         }
 
     }
@@ -378,7 +373,7 @@ public class ProjectServiceImpl implements ProjectService {
         projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
-        List<Tag> delTags = tagService.delProjectFromTags(project);
+        tagService.delProjectFromTags(project);
 
         boolean delImg = imgService.deleteImageFiles(projectImageRepository.findAllByProjectId(projectId));
         project.setThumbnailUrl(null);
@@ -515,7 +510,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        List<Tag> delTags = tagService.delProjectFromTags(project);
+        tagService.delProjectFromTags(project);
         List<Tag> newTags = tagService.addProjectToTags(projectDetailDTO.getTags(), projectId);
 
 
@@ -530,34 +525,31 @@ public class ProjectServiceImpl implements ProjectService {
                 .collect(Collectors.toList());
 
 
-        List<ProjectImage> delProductImages = updateFiles(updateProductImage, projectProductImages, ProjectImage::getUrl, (projectImage, ord) -> projectImage.setOrd(ord));
-        List<ProjectImage> delDescriptionImages = updateFiles(updateDescriptionImage, projectDescriptionImages, ProjectImage::getUrl, (projectImage, ord) -> projectImage.setOrd(ord));
+        List<ProjectImage> delProductImages = updateFiles(updateProductImage, projectProductImages, ProjectImage::getUrl, ProjectImage::setOrd);
+        List<ProjectImage> delDescriptionImages = updateFiles(updateDescriptionImage, projectDescriptionImages, ProjectImage::getUrl, ProjectImage::setOrd);
 
         List<ProjectDocument> projectDocs = projectDocumentRepository.findAllByProjectId(projectId);
 
-        List<ProjectDocument> delDocs = updateFiles(updateDocs, projectDocs, ProjectDocument::getUrl, (ProjectDocument, ord) -> ProjectDocument.setOrd(ord));
+        List<ProjectDocument> delDocs = updateFiles(updateDocs, projectDocs, ProjectDocument::getUrl, ProjectDocument::setOrd);
 
         imgService.deleteImageFiles(delProductImages);
         imgService.deleteImageFiles(delDescriptionImages);
         docService.deleteDocFiles(delDocs);
 
-        log.info("check productImagesFile files : " + productImagesFile);
-        log.info("check productImagesFile files : " + productImagesFile);
-        if (productImagesFile != null && productImagesFile.size() > 0) {
+        if (productImagesFile != null && !productImagesFile.isEmpty()) {
             imgService.saveImages(project, productImagesFile, 1L);
         }
 
-        if (descriptionImagesFile != null && descriptionImagesFile.size() > 0) {
+        if (descriptionImagesFile != null && !descriptionImagesFile.isEmpty()) {
             imgService.saveImages(project, descriptionImagesFile, 3L);
         }
 
         ProjectImage thumbnailImage = projectImageRepository.findByProject_IdAndOrdAndImageType_Id(projectId, 1, 1L);
         if (thumbnailImage != null) {
-            log.info("thumbnailImage : " + thumbnailImage);
             project.setThumbnailUrl(imgService.saveThumbnailImages(project, thumbnailImage));
         }
 
-        if (docsFile != null && docsFile.size() > 0) {
+        if (docsFile != null && !docsFile.isEmpty()) {
             docService.saveDocs(project, docsFile);
         }
 

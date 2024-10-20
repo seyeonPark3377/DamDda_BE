@@ -9,7 +9,6 @@ import org.eightbit.damdda.project.domain.ProjectImageType;
 import org.eightbit.damdda.project.dto.FileDTO;
 import org.eightbit.damdda.project.repository.ProjectImageRepository;
 import org.eightbit.damdda.project.repository.ProjectImageTypeRepository;
-import org.eightbit.damdda.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +26,6 @@ import java.util.List;
 @Transactional
 public class ImgServiceImpl implements ImgService {
 
-    private final ProjectRepository projectRepository;
     private final ProjectImageRepository projectImageRepository;
     private final ProjectImageTypeRepository projectImageTypeRepository;
     @Value("${org.eightbit.damdda.path}")
@@ -35,15 +33,9 @@ public class ImgServiceImpl implements ImgService {
 
     @Override
     public boolean deleteImageFiles(List<ProjectImage> images) {
-        log.info(images);
         boolean result = true;
         // 첫 번째 파일의 폴더 경로를 추출
         if (!images.isEmpty()) {
-            String folderPath = basePath + images.get(0).getUrl().replace("files", ""); // 기본 경로 설정
-            folderPath = folderPath.substring(0, folderPath.lastIndexOf("/")); // 파일명 제외하고 폴더 경로만 추출
-            File directory = new File(folderPath);
-
-
             for (ProjectImage img : images) {
                 String filePath = basePath + img.getUrl().replace("files", "");  // img.getUrl()이 상대 경로라 가정
                 File file = new File(filePath);
@@ -58,80 +50,27 @@ public class ImgServiceImpl implements ImgService {
                     result = false;
                 }
             }
-
-            // 폴더가 존재하고, 폴더 안에 파일이 없는 경우 삭제
-            if (directory.exists() && directory.isDirectory() && directory.list().length == 0) {
-                if (directory.delete()) {
-                    System.out.println("빈 폴더 삭제 완료: " + directory.getAbsolutePath());
-                } else {
-                    System.out.println("폴더 삭제 실패: " + directory.getAbsolutePath());
-                }
-            } else {
-                System.out.println("폴더가 비어 있지 않거나 존재하지 않습니다: " + directory.getAbsolutePath());
-            }
-
         }
 
         return result;  // 파일이 존재하지 않으면 false 반환
     }
-//
-//    @Override
-//    public void saveThumbnailImages(Project project, FileDTO productImage) {
-//        String uploadDirectory = basePath + "/projects/" + project.getId();
-//        File uploadDir = new File(uploadDirectory);
-//        if (!uploadDir.exists()) {
-//            uploadDir.mkdirs();  // 경로 없으면 생성
-//        }
-//        try {
-//            MultipartFile file = productImage.getFile();
-//            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-//            File destinationFile = new File(uploadDirectory + "/" + fileName);
-//
-//                String thumbnailFileName = "thumbnail_" + fileName;
-//                File thumbnailFile = new File(uploadDirectory + "/" + thumbnailFileName);
-//
-//                // 이미지 리사이징 및 압축하여 썸네일 생성
-//                Thumbnails.of(destinationFile)
-//                        .size(300, 300)  // 썸네일 크기 설정 (200x200 예시)
-////                            .outputFormat("jpg")  // 출력 포맷 설정 (필요 시)
-//                        .toFile(thumbnailFile);
-//
-//                String thumbnailUrl = "files/projects/" + project.getId() + "/" + thumbnailFileName;
-//                // 프로젝트에 썸네일 경로 저장
-//                project.setThumbnailUrl(thumbnailUrl);
-//                projectRepository.save(project);  // 썸네일 URL 저장
-//
-//                // 이미지 타입 설정 (썸네일과 일반 이미지)
-//                ProjectImageType imageType = projectImageTypeRepository.findById(2L).orElse(null);
-//
-//                // 이미지 엔티티 저장
-//                ProjectImage projectImage = ProjectImage.builder()
-//                        .project(project)
-//                        .url(thumbnailUrl)
-//                        .fileName(thumbnailFileName)
-//                        .ord(0)
-//                        .imageType(imageType)
-//                        .build();
-//
-//                projectImageRepository.save(projectImage);
-//        } catch (IOException e) {
-//            // 예외 처리 로직 작성 (로그 기록 또는 사용자에게 알림 등)
-//            e.printStackTrace();
-//        }
-//    }
 
     @Override
     public String saveThumbnailImages(Project project, ProjectImage thumbnailImage) {
         String uploadDirectory = basePath + "/projects/" + project.getId();
         File uploadDir = new File(uploadDirectory);
         if (!uploadDir.exists()) {
-            uploadDir.mkdirs();  // 경로 없으면 생성
+            // 경로가 없으면 디렉터리 생성
+            if (!uploadDir.mkdirs()) {
+                // 디렉터리 생성 실패 시 로그 또는 예외 처리
+                throw new RuntimeException("Failed to create the directory: " + uploadDir.getAbsolutePath());
+            }
         }
+
         try {
             // ProjectImage 엔티티에서 이미지 파일 경로(URL)를 가져옴
             String imageUrl = thumbnailImage.getUrl();
             imageUrl = basePath + imageUrl.replace("files", "");
-            log.info("imageUrl: " + imageUrl);
             File originalImageFile = new File(imageUrl);
 
             if (!originalImageFile.exists()) {
@@ -159,7 +98,6 @@ public class ImgServiceImpl implements ImgService {
                     .ord(0)
                     .imageType(imageType)
                     .build();
-            log.info("projectImage : " + newThumbnailImage);
             projectImageRepository.save(newThumbnailImage);
 
 
@@ -168,9 +106,8 @@ public class ImgServiceImpl implements ImgService {
             return newThumbnailImage.getUrl();
         } catch (IOException e) {
             // 예외 처리 로직 작성 (로그 기록 또는 사용자에게 알림 등)
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
 
@@ -180,9 +117,12 @@ public class ImgServiceImpl implements ImgService {
         String uploadDirectory = basePath + "/projects/" + project.getId();
         File uploadDir = new File(uploadDirectory);
 
-
         if (!uploadDir.exists()) {
-            uploadDir.mkdirs();  // 경로 없으면 생성
+            // 경로가 없으면 디렉터리 생성
+            if (!uploadDir.mkdirs()) {
+                // 디렉터리 생성 실패 시 로그 또는 예외 처리
+                throw new RuntimeException("Failed to create the directory: " + uploadDir.getAbsolutePath());
+            }
         }
 
         for (FileDTO image : Images) {
@@ -205,12 +145,11 @@ public class ImgServiceImpl implements ImgService {
                         .ord(image.getOrd())
                         .imageType(imageType)
                         .build();
-                log.info("projectImage : " + projectImage);
                 projectImageRepository.save(projectImage);
 
             } catch (IOException e) {
                 // 예외 처리 로직 작성 (로그 기록 또는 사용자에게 알림 등)
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
 
 

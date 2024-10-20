@@ -21,6 +21,7 @@ import java.util.List;
 @ToString(exclude = {"category", "tags"})
 @EntityListeners(value = {AuditingEntityListener.class})
 public class Project {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,32 +42,37 @@ public class Project {
     private List<Tag> tags;
 
     private String title;
+
     private String description;
 
-    //    @Column(length = 10000000)
     @Column(columnDefinition = "TEXT")
     private String descriptionDetail;
+
     private LocalDateTime startDate;
+
     private LocalDateTime endDate;
+
     private Long targetFunding;
+
     @ColumnDefault("0")
     private Long fundsReceive;
+
     @ColumnDefault("0")
     private Long supporterCnt;
+
     @ColumnDefault("0")
     private Long viewCnt;
+
     @ColumnDefault("0")
     private Long likeCnt;
+
     private String thumbnailUrl;
+
     private LocalDateTime submitAt;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime deletedAt;
-
-
-//    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval=true)
-//    private List<PackageRewards> packageRewards;
-
 }

@@ -81,6 +81,6 @@ public class QnaQuestion {
      */
     public enum Visibility {
         PUBLIC,  // 공개.
-        PRIVATE; // 비공개.
+        PRIVATE // 비공개.
     }
 }
