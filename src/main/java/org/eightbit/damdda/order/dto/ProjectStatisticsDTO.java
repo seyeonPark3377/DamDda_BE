@@ -10,9 +10,9 @@ import java.util.Map;
 @Builder
 public class ProjectStatisticsDTO {
 
-    private Long targetFundingGoal;                 // 목표 후원 금액
-
     private Long currentFundingReceived;            // 현재 총 후원 금액
+
+    private Long targetFundingGoal;                 // 목표 후원 금액
 
     private Long currentSupportersCount;            // 후원자 수
 
