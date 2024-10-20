@@ -1,6 +1,9 @@
 package org.eightbit.damdda.order.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.eightbit.damdda.project.domain.ProjectPackage;
 
 import javax.persistence.*;
@@ -11,14 +14,14 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class  SupportingPackage {
+public class SupportingPackage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long packageId;
 
     @ManyToOne
-    @JoinColumn(name="id")
+    @JoinColumn(name = "id")
     private ProjectPackage projectPackage;
 
     @ManyToOne
@@ -26,7 +29,7 @@ public class  SupportingPackage {
     private SupportingProject supportingProject;
 
     @ManyToOne
-    @JoinColumn(name="order_id")
+    @JoinColumn(name = "order_id")
     private Order order;
 
     private Integer packageCount;

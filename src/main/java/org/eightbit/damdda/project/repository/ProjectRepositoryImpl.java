@@ -65,12 +65,16 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         // 3. progress 필터
         if (progress != null) {
             LocalDateTime now = LocalDateTime.now();
-            if ("ongoing".equals(progress)) {
-                builder.and(project.startDate.before(now).and(project.endDate.after(now)));
-            } else if ("upcoming".equals(progress)) {
-                builder.and(project.startDate.after(now));
-            } else if ("completed".equals(progress)) {
-                builder.and(project.endDate.before(now));
+            switch (progress) {
+                case "ongoing":
+                    builder.and(project.startDate.before(now).and(project.endDate.after(now)));
+                    break;
+                case "upcoming":
+                    builder.and(project.startDate.after(now));
+                    break;
+                case "completed":
+                    builder.and(project.endDate.before(now));
+                    break;
             }
         }
 
@@ -149,7 +153,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
 
     public Page<Project> getProjectByRecommendOrder(Long memberId, String category, String search, String progress, List<String> sortConditions, Pageable pageable) {
         if (memberId == 0L) {
-            return findProjects(memberId, category, search, progress, Arrays.asList("likeCnt"), pageable);
+            return findProjects(memberId, category, search, progress, List.of("likeCnt"), pageable);
         }
 
         try {
@@ -174,7 +178,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                 log.info("[project] RECOMMENDATION ORDER : {}", jsonArray.toString());
 
                 if (jsonArray.isEmpty()) {
-                    return findProjects(memberId, category, search, progress, Arrays.asList("likeCnt"), pageable);
+                    return findProjects(memberId, category, search, progress, List.of("likeCnt"), pageable);
                 } else {
                     QProject project = QProject.project;
                     List<Project> content = jsonArray
@@ -199,7 +203,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return null;

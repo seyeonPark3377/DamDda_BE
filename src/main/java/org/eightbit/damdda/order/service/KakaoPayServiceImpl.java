@@ -18,7 +18,6 @@ import javax.transaction.Transactional;
 @Transactional
 public class KakaoPayServiceImpl implements KakaoPayService {
 
-
     static final String cid = "TC0ONETIME"; // 가맹점 테스트 코드
     @Value("${KAKAO_ADMIN_KEY}")
     private String KAKAO_ADMIN_KEY;
@@ -71,12 +70,11 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
 
         RestTemplate restTemplate = new RestTemplate();
-        KakaoApproveResponse approveResponse = restTemplate.postForObject(
+
+        return restTemplate.postForObject(
                 "https://kapi.kakao.com/v1/payment/approve",
                 requestEntity,
                 KakaoApproveResponse.class);
-
-        return approveResponse;
     }
 
     /**
@@ -87,7 +85,6 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 
         String auth = "KakaoAK " + KAKAO_ADMIN_KEY;
         httpHeaders.set("Authorization", auth);
-//        httpHeaders.set("x-damdda-authorization", damddaAuth);
         httpHeaders.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
         return httpHeaders;
     }
