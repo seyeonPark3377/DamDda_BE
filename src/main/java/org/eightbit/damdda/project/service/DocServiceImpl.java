@@ -27,12 +27,10 @@ import java.util.List;
 public class DocServiceImpl implements DocService {
 
     private final ProjectDocumentRepository projectDocumentRepository;
-    @Value("${org.eightbit.damdda.path}")
-    private String basePath;
+    private final AmazonS3 amazonS3;
+
     @Value("${cloud.aws.credentials.bucket}")
     private String bucketName;
-
-    private final AmazonS3 amazonS3;
 
     public boolean deleteDocFiles(List<ProjectDocument> docs) {
         boolean result = true;
@@ -44,26 +42,6 @@ public class DocServiceImpl implements DocService {
                 projectDocumentRepository.delete(doc);
             }
         }
-//        boolean result = true;
-//
-//        for (ProjectDocument doc : docs) {
-//            String filePath = basePath + doc.getUrl().replace("files", "");  // img.getUrl()이 상대 경로라 가정
-//            File file = new File(filePath);
-//
-//            if (file.exists()) {
-//                boolean isDelete = file.delete();
-//                result = result && isDelete; // 파일 삭제
-//                if (isDelete) {
-//                    projectDocumentRepository.delete(doc);
-//                }
-//            } else {
-//                result = false;
-//            }
-//        }
-//
-//        if (result) {
-//            projectDocumentRepository.deleteAll(docs);
-//        }
         return result;  // 파일이 존재하지 않으면 false 반환
     }
 

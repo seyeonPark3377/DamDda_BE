@@ -37,7 +37,6 @@ public class FileApiController {
     public ResponseEntity<Resource> serveFile(@PathVariable String projectId, @PathVariable String fileName) {
         String filePath = "projects/" + projectId + "/" + fileName;
 
-        boolean download = false;
         S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucketName, filePath));
         S3ObjectInputStream inputStream = s3Object.getObjectContent();
         Resource resource = new InputStreamResource(inputStream);
@@ -47,43 +46,10 @@ public class FileApiController {
         }
 
         HttpHeaders headers = new HttpHeaders();
-        if (download) {
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
-                            UriUtils.encode(Objects.requireNonNull(resource.getFilename()), StandardCharsets.UTF_8) + "\"")
-                    .body(resource);
-        }
         headers.add("Content-Type", s3Object.getObjectMetadata().getContentType());
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(resource);
     }
-//        try {
-//            // 파일 경로 생성
-//            Path filePath = Paths.get(basePath).resolve("projects").resolve(projectId).resolve(fileName).normalize();
-//            // 파일 리소스를 생성
-//            Resource resource = new UrlResource(filePath.toUri());
-//            if (resource.exists() && resource.isReadable()) {
-//                // 파일의 MIME 타입 추출
-//                String contentType = Files.probeContentType(filePath);
-//
-//                // 기본 contentType이 null인 경우 설정
-//                if (contentType == null) {
-//                    contentType = "application/octet-stream";
-//                }
-//                // ResponseEntity로 파일과 헤더 반환
-//                return ResponseEntity.ok()
-//                        .contentType(MediaType.parseMediaType(contentType))
-//                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + UriUtils.encode(Objects.requireNonNull(resource.getFilename()), StandardCharsets.UTF_8) + "\"")
-//                        .body(resource);
-//            } else {
-//                throw new RuntimeException(fileName + " not found" + "파일을 찾을 수 없거나 읽을 수 없습니다.");
-//            }
-//        } catch (MalformedURLException e) {
-//            throw new RuntimeException("잘못된 파일 경로입니다.", e);
-//        } catch (IOException e) {
-//            throw new RuntimeException("파일을 읽는 동안 오류가 발생했습니다.", e);
-//        }
-//    }
+
 }
