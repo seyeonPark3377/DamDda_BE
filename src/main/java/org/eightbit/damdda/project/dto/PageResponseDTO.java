@@ -42,7 +42,7 @@ public class PageResponseDTO<E> {
 
         int last = (int) (Math.ceil((total / (double) size)));
 
-        this.end = end > last ? last : end;
+        this.end = Math.min(end, last);
 
         this.prev = this.start > 1;
 

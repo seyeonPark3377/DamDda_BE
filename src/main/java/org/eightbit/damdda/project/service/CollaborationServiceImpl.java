@@ -93,7 +93,7 @@ public class CollaborationServiceImpl implements CollaborationService {
     //협업 상세 보기
     @Override
     @Transactional
-    public CollaborationDetailDTO readDetail(Long rno) throws JsonProcessingException {
+    public CollaborationDetailDTO readDetail(Long rno) {
         Collaboration collaboration = collaborationRepository.findById(rno).orElseThrow(() -> new EntityNotFoundException("collaboration not found"));
         //엔티티로 바꾸기
         return collabEntityToDto(collaboration);
@@ -148,12 +148,8 @@ public class CollaborationServiceImpl implements CollaborationService {
             if (collaboration.getUserId().equals(user_id)) { //협업 제안자가 삭제를 한다면
                 // 연관된 파일 삭제
                 collaboration.addSenderDeletedAt();
-                try {
-                    for (String collabDoc : collaboration.getCollabDocList()) {
-                        deleteFile(collabDoc); //ncp에서 제거.
-                    }
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
+                for (String collabDoc : collaboration.getCollabDocList()) {
+                    deleteFile(collabDoc); //ncp에서 제거.
                 }
                 collaboration.removeCollabDocList();
             } else { //협업 제안을 받은 사람이 삭제를 한다면 > 게시판에서만 삭제됨.

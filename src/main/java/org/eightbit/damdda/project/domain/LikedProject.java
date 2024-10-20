@@ -26,6 +26,6 @@ public class LikedProject {
     private Project project;
 
     @CreatedDate
-    @Column(updatable = true)
+    @Column
     private LocalDateTime likedAt;
 }

@@ -78,7 +78,7 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
             }
         }
 
-// 4. 삭제되지 않은 항목 필터 (deletedAt IS NULL 추가)
+        // 삭제되지 않은 항목 필터 (deletedAt IS NULL 추가)
         builder.and(project.deletedAt.isNull()); // deletedAt이 NULL인 항목만 조회
 
         // 4. 정렬 처리 (동적 정렬)
@@ -132,9 +132,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
                     case "createdAt":
                         orderSpecifiers.add(project.createdAt.desc());
                         break;
-//                    case "fundsReceive":
-//                        orderSpecifiers.add(project.fundsReceive.desc());
-//                        break;
                     default:
                         break;
                 }

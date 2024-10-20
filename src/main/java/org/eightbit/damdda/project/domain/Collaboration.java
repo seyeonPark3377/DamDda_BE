@@ -61,7 +61,7 @@ public class Collaboration {
     }
 
     //json 역직렬화
-    public List<String> getCollabDocList() throws JsonProcessingException {
+    public List<String> getCollabDocList() {
         if (this.collabDocList == null || this.collabDocList.isEmpty()) {
             return new ArrayList<>();
         }
