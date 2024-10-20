@@ -189,6 +189,11 @@ public class OrderServiceImpl implements  OrderService{
                 Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp-> (long) sp.getPackageCount() *sp.getProjectPackage().getPackagePrice()).sum();
                 fundsReceive = fundsReceive *-1L;
                 projectRepository.updateProjectStatus(fundsReceive,order.getSupportingProject().getProject().getId(),-1L);
+                //package의 salesQuantity,
+                order.getSupportingPackage().forEach(sp ->{
+                    Integer salesQunatity = sp.getPackageCount()*-1;
+                    packageRepository.updateQuantities(salesQunatity,sp.getProjectPackage().getId());
+                });
                 return "결제 취소됨";
             } else {
                 throw new IllegalArgumentException("Payment not found for this supporting project");
