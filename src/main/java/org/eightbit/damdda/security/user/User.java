@@ -1,5 +1,6 @@
 package org.eightbit.damdda.security.user;
 
+import lombok.Getter;
 import org.eightbit.damdda.member.domain.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@Getter
 public class User implements UserDetails {
 
     private final Member member;
@@ -15,12 +17,17 @@ public class User implements UserDetails {
         this.member = member;
     }
 
-    public Member getMember() {
-        return member;
-    }
-
+    // Lombok @Getter로 대체되지 않는 추가 메서드들
     public String getNickname() {
         return member.getNickname();
+    }
+
+    public String getLoginId() {
+        return member.getLoginId();
+    }
+
+    public Long getMemberId() {
+        return member.getId();
     }
 
     @Override
@@ -36,14 +43,6 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return member.getLoginId();
-    }
-
-    public String getLoginId() {
-        return member.getLoginId();
-    }
-
-    public Long getMemberId() {
-        return member.getId();
     }
 
     @Override
@@ -65,5 +64,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }

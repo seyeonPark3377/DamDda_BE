@@ -13,7 +13,7 @@ import java.util.Date;
 @Component
 public class JwtService {
 
-    static final long EXPIRATION_TIME = 60 * 60 * 24 * 1 * 1000; // 1 day in milliseconds
+    static final long EXPIRATION_TIME = 60 * 60 * 24 * 1000; // 1 day in milliseconds
     static final String PREFIX = "Bearer ";
     static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Generate a secret key for HS256 algorithm
 

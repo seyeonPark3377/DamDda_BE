@@ -12,7 +12,8 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class  SupportingPackage {
+@EqualsAndHashCode(exclude = "order")
+public class SupportingPackage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,11 +28,12 @@ public class  SupportingPackage {
     private SupportingProject supportingProject;
 
     @ManyToOne
-    @JoinColumn(name="order_id")
+    @JoinColumn(name = "order_id")
     private Order order;
 
     private Integer packageCount;
 
     @Column(columnDefinition = "json")
     private String OptionList;
+
 }

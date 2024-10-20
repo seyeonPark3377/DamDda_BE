@@ -100,10 +100,6 @@ dependencies {
     implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     options.compilerArgs << "-Xlint:deprecation"  // Deprecated API 사용 경고 표시

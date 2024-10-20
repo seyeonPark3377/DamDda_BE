@@ -15,6 +15,7 @@ import org.eightbit.damdda.order.dto.PaymentPackageDTO;
 import org.eightbit.damdda.order.dto.PaymentRewardDTO;
 import org.eightbit.damdda.order.dto.ProjectStatisticsDTO;
 import org.eightbit.damdda.project.domain.PackageRewards;
+
 import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.domain.ProjectPackage;
 import org.eightbit.damdda.security.util.SecurityContextUtil;
@@ -103,15 +104,14 @@ public class OrderServiceImpl implements  OrderService{
 
         orderDTO.getPaymentPackageDTO().stream().forEach((sp)-> {
 
+
             ProjectPackage projectPackage = packageRepository.findById(sp.getId()).orElseThrow(()->new RuntimeException("해당 패키지를 찾을 수 없습니다."));
-            SupportingPackage supportingPackage = null;
+            SupportingPackage supportingPackage;
             try {
+                // 첫 번째 배열의 첫 번째 요소만 가져옵니다.
                 supportingPackage = SupportingPackage.builder()
                         .packageCount(sp.getCount())
-                        .OptionList(objectMapper.writeValueAsString(sp.getRewardList().stream().map(reward -> {
-                                            // 첫 번째 배열의 첫 번째 요소만 가져옵니다.
-                                            return reward.getSelectOption();
-                                        })
+                        .OptionList(objectMapper.writeValueAsString(sp.getRewardList().stream().map(PaymentRewardDTO::getSelectOption)
                                         .filter(Objects::nonNull)
                                         .collect(Collectors.toList())
                         ))
@@ -128,20 +128,6 @@ public class OrderServiceImpl implements  OrderService{
 
         return orderDTO;
     }
-
-    // userId로 주문 목록을 조회하는 메서드
-    @Override
-    public List<OrderDTO> getOrdersByUserId(Long userId) {
-        List<Order> orders = orderRepository.findAllBySupportingProject_User_Id(userId);  // userId로 주문 리스트 조회
-        return orders.stream().map(order -> OrderDTO.builder()
-                        .delivery(order.getDelivery())  // 배송 정보
-                        .payment(order.getPayment())    // 결제 정보
-                        .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                        .paymentPackageDTO(packageEntityToDto(order.getSupportingPackage()))  // 선물 구성 정보
-                        .build())
-                .collect(Collectors.toList());  // List<OrderDTO>로 변환
-    }
-
 
     // 특정 주문 정보 가져오기 (orderId로 조회)
     @Override
@@ -171,16 +157,6 @@ public class OrderServiceImpl implements  OrderService{
                 .collect(Collectors.toList());
     }
 
-    //결제 완료
-    @Override
-    public void updatePaymentStatus(Long orderId, String paymentStatus) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
-
-        order.getSupportingProject().getPayment().setPaymentStatus(paymentStatus); // 결제 상태 업데이트
-        orderRepository.save(order);
-    }
-
     @Transactional
     @Override
     public void updateOrderStatus(Long orderId, String paymentStatus) {
@@ -194,9 +170,7 @@ public class OrderServiceImpl implements  OrderService{
         projectRepository.updateProjectStatus(fundsReceive,order.getSupportingProject().getProject().getId(),1L);
 
         //package의 salesQuantity,
-        order.getSupportingPackage().forEach(sp ->{
-            packageRepository.updateQuantities(sp.getPackageCount(),sp.getProjectPackage().getId());
-        });
+        order.getSupportingPackage().forEach(sp -> packageRepository.updateQuantities(sp.getPackageCount(),sp.getProjectPackage().getId()));
 
         orderRepository.save(order);  // 변경된 상태를 저장
     }
@@ -224,6 +198,7 @@ public class OrderServiceImpl implements  OrderService{
         }
 
     }
+
 
     //order 테이블 가져오기
     @Override
@@ -317,80 +292,83 @@ public class OrderServiceImpl implements  OrderService{
                 .targetFunding(targetFunding)
                 .build();
     }
-
-    @Override
+  @Override
     public String generateUploadAndGetPresignedUrlForSupportersExcel(Long projectId) throws IOException {
-        projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
-
-        // Validate that the projectId is not null
-        if (projectId == null) {
-            throw new IllegalArgumentException("projectId cannot be null.");
+        // 후원자 데이터를 가져옴
+        List<Map<String, Object>> supportersData = getSupportersData(projectId);
+        // 후원자 데이터가 비어있는지 확인
+        if (supportersData.isEmpty()) {
+            throw new IllegalStateException("후원자 데이터가 없거나 비어 있습니다.");
         }
 
-        // Generate the file name for the Excel file
+        // 엑셀 파일의 이름과 형식을 설정
         String fileName = "Supporter_Management_" + projectId;
         String fileType = ".xlsx";
 
-        // Validate that the S3Util instance is not null
-        if (s3Util == null) {
-            throw new IllegalStateException("S3Util is not initialized.");
-        }
-
-        // Validate that the supporters data is not null or empty
-        List<Map<String, Object>> supportersData = getSupportersDataForExcel(projectId);
-        if (supportersData.isEmpty()) {
-            throw new IllegalStateException("Supporters data is null or empty.");
-        }
-
-        // Generate the Excel file and check if it is null
+        // 엑셀 파일을 생성하고, 생성이 실패한 경우 예외 처리
         File excelFile = excelGenerator.generateExcelFile(fileName, supportersData);
         if (excelFile == null) {
-            throw new IllegalStateException("Failed to generate Excel file.");
+            throw new IllegalStateException("엑셀 파일 생성에 실패했습니다.");
         }
 
-        // Validate the generated file before uploading
+        // 생성된 파일이 존재하는지, 크기가 0이 아닌지 확인
         if (!excelFile.exists() || excelFile.length() == 0) {
-            throw new IllegalStateException("Generated Excel file is either not existing or empty.");
+            throw new IllegalStateException("생성된 엑셀 파일이 존재하지 않거나 비어 있습니다.");
         }
 
-        // Upload the generated Excel file to the S3 bucket
+        // S3Util 인스턴스가 초기화되었는지 확인
+        if (s3Util == null) {
+            throw new IllegalStateException("S3Util이 초기화되지 않았습니다.");
+        }
+
+        // 생성된 엑셀 파일을 S3 버킷에 업로드
         s3Util.uploadFileToS3(fileName, fileType, excelFile);
 
-        // Return the presigned URL for the uploaded file, with an expiration time
+        // 업로드된 파일에 대한 presigned URL을 생성하여 반환 (유효 시간 설정)
         return s3Util.generatePresignedUrlWithExpiration(fileName, fileType, s3UrlExpirationMinutes);
     }
 
+    @Override
+    public List<Map<String, Object>> getSupportersData(Long projectId) {
+        // projectId가 null인지 검증
+        if (projectId == null) {
+            throw new IllegalArgumentException("projectId는 null일 수 없습니다.");
+        }
 
-    private List<Map<String, Object>> getSupportersDataForExcel(Long projectId) {
-        // Retrieve the list of orders for the specified project
+        // 사용자가 해당 프로젝트의 주최자인지 검증
+        projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
+
+        // 해당 프로젝트의 후원 주문 목록을 조회
         List<Order> orders = orderRepository.findAllBySupportingProject_Project_Id(projectId);
         List<Map<String, Object>> data = new ArrayList<>(orders.size());
 
-        // Loop through each order and gather the necessary details
+        // 각 주문을 순회하면서 필요한 데이터를 수집
         for (Order order : orders) {
-            Map<String, Object> rowData = new HashMap<>();
+            Map<String, Object> rowData = new LinkedHashMap<>(); // 데이터를 순서대로 저장하기 위해 LinkedHashMap 사용
 
-            // Add order details
+            // 주문 정보를 추가
             rowData.put("후원번호", order.getOrderId());
             rowData.put("이름", order.getSupportingProject().getUser().getName());
             rowData.put("후원일시", order.getCreatedAt());
 
-            // Add package details
-            rowData.put("패키지 이름", joinSupportingPackageDetails(order.getSupportingPackage(), supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackageName())));
+            // 패키지 정보를 추가
+            rowData.put("패키지 이름", joinSupportingPackageDetails(order.getSupportingPackage(),
+                    supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackageName())));
             rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackage(),
                     supportingPackage -> String.valueOf(supportingPackage.getPackageCount())));
             rowData.put("패키지 가격", joinSupportingPackageDetails(order.getSupportingPackage(),
                     supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackagePrice())));
 
-            // Add option details
-            rowData.put("패키지 옵션 정보", joinSupportingPackageDetails(order.getSupportingPackage(), supportingPackage -> String.valueOf(supportingPackage.getOptionList())));
+            // 옵션 정보를 추가
+            rowData.put("패키지 옵션 정보", joinSupportingPackageDetails(order.getSupportingPackage(),
+                    supportingPackage -> String.valueOf(supportingPackage.getOptionList())));
 
-            // Add payment details, if available
+            // 결제 정보가 있을 경우 추가
             if (order.getPayment() != null) {
                 rowData.put("결제 여부", order.getPayment().getPaymentStatus());
             }
 
-            // Add delivery details, if available
+            // 배송 정보가 있을 경우 추가
             if (order.getDelivery() != null) {
                 rowData.put("닉네임", order.getDelivery().getDeliveryName());
                 rowData.put("전화번호", order.getDelivery().getDeliveryPhoneNumber());
@@ -401,20 +379,22 @@ public class OrderServiceImpl implements  OrderService{
                 rowData.put("우편번호", order.getDelivery().getDeliveryPostCode());
             }
 
-            // Add the row data to the list
+            // 수집한 데이터를 리스트에 추가
             data.add(rowData);
         }
 
-        // Return the list of data for Excel generation
+        // 엑셀 생성을 위한 데이터 리스트 반환
         return data;
     }
 
     private String joinSupportingPackageDetails(Set<SupportingPackage> supportingPackages, Function<SupportingPackage, String> mapper) {
-        // Convert package details into a single string, joined by commas
+        // 패키지 정보를 단일 문자열로 변환, 각 항목은 쉼표로 구분됨
         return supportingPackages.stream()
                 .map(mapper)
                 .collect(Collectors.joining(", "));
     }
+
+  
     public Set<PaymentPackageDTO>  packageEntityToDto(Set<SupportingPackage> supportingPackage){
 
         Set<PaymentPackageDTO> paymentPackageDTOs = supportingPackage.stream().map( pac-> {
@@ -427,6 +407,7 @@ public class OrderServiceImpl implements  OrderService{
                     .build();
         }).collect(Collectors.toSet());
         return paymentPackageDTOs;
+
     }
 
     private List<PaymentRewardDTO> convertToPaymentRewardDTOList(List<PackageRewards> packageRewards, String optionList) {

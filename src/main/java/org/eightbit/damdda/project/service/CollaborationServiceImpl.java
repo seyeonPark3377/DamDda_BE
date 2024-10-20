@@ -82,7 +82,7 @@ public class CollaborationServiceImpl implements CollaborationService {
                     String fileName = uploadFile((MultipartFile) file);
                     fileList.add(fileName);
                 } catch (IOException e) {
-                    log.info(e.getMessage());
+                    throw new RuntimeException(e);
                 }
             }
             collaboration.setCollabDocList(fileList);
@@ -93,11 +93,10 @@ public class CollaborationServiceImpl implements CollaborationService {
     //협업 상세 보기
     @Override
     @Transactional
-    public CollaborationDetailDTO readDetail(Long rno) throws JsonProcessingException {
+    public CollaborationDetailDTO readDetail(Long rno) {
         Collaboration collaboration = collaborationRepository.findById(rno).orElseThrow(() -> new EntityNotFoundException("collaboration not found"));
         //엔티티로 바꾸기
-        CollaborationDetailDTO collaborationDetailDTO = collabEntityToDto(collaboration);
-        return collaborationDetailDTO;
+        return collabEntityToDto(collaboration);
     }
 
     //협업 리스트 보기 ->요청받은
@@ -110,9 +109,7 @@ public class CollaborationServiceImpl implements CollaborationService {
 
         //엔티티를 dto로 변환.
         //협업을 요청한 리스트
-        List<CollaborationDTO> dtoListReceive = collaborationPageReceive.stream().map(collaboration -> {
-            return collabEntityToDtoList(collaboration);
-        }).collect(Collectors.toList());
+        List<CollaborationDTO> dtoListReceive = collaborationPageReceive.stream().map(this::collabEntityToDtoList).collect(Collectors.toList());
 
         return PageResponseDTO.<CollaborationDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
@@ -132,9 +129,7 @@ public class CollaborationServiceImpl implements CollaborationService {
 
         //엔티티를 dto로 변환.
         //협업을 요청한 리스트
-        List<CollaborationDTO> dtoListRequest = collaborationPageRequest.stream().map(collaboration -> {
-            return collabEntityToDtoList(collaboration);
-        }).collect(Collectors.toList());
+        List<CollaborationDTO> dtoListRequest = collaborationPageRequest.stream().map(this::collabEntityToDtoList).collect(Collectors.toList());
 
 
         return PageResponseDTO.<CollaborationDTO>withAll()
@@ -147,18 +142,14 @@ public class CollaborationServiceImpl implements CollaborationService {
     //협업 삭제하기
     @Override
     @Transactional
-    public int delete(List<Long> cnoList, String user_id) throws JsonProcessingException {
+    public int delete(List<Long> cnoList, String user_id) {
         List<Collaboration> collaborationList = collaborationRepository.findByIdList(cnoList);
         collaborationList.forEach(collaboration -> {
             if (collaboration.getUserId().equals(user_id)) { //협업 제안자가 삭제를 한다면
                 // 연관된 파일 삭제
                 collaboration.addSenderDeletedAt();
-                try {
-                    for (String collabDoc : collaboration.getCollabDocList()) {
-                        deleteFile(collabDoc); //ncp에서 제거.
-                    }
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
+                for (String collabDoc : collaboration.getCollabDocList()) {
+                    deleteFile(collabDoc); //ncp에서 제거.
                 }
                 collaboration.removeCollabDocList();
             } else { //협업 제안을 받은 사람이 삭제를 한다면 > 게시판에서만 삭제됨.

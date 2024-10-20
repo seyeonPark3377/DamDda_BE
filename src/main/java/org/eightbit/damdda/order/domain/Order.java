@@ -16,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @EntityListeners(value = {AuditingEntityListener.class})
+@EqualsAndHashCode(exclude = "supportingPackage")
 public class Order {
 
     @Id
@@ -44,5 +45,7 @@ public class Order {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
+
 }

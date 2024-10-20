@@ -71,7 +71,8 @@ public class PackageServiceImpl implements PackageService {
     public List<RewardDTO> viewRewardByPackage(Long package_id) {
         //패키지와 연관된 리워드 리스트를 보여줌.
         List<ProjectRewards> projectRewards = packageRewardsRepository.findRewardsByPackageId(package_id);
-        List<RewardDTO> rewardDTOList = projectRewards.stream().map(reward -> {
+        // packageRewardsRepository에서 reward_count를 들고옴
+        return projectRewards.stream().map(reward -> {
             // packageRewardsRepository에서 reward_count를 들고옴
             int rewardCount = packageRewardsRepository.findRewardCountByRewardId(package_id, reward.getId());
             try {
@@ -80,7 +81,6 @@ public class PackageServiceImpl implements PackageService {
                 throw new RuntimeException(e);
             }
         }).collect(Collectors.toList());
-        return rewardDTOList;
     }
 
     //프로젝트에 해당하는 리워드 보여주는 기능. 화면 설계서 17번, 19번
@@ -88,7 +88,9 @@ public class PackageServiceImpl implements PackageService {
     @Transactional(readOnly = true)
     public List<RewardDTO> viewRewardByProject(Long project_id) {
         //프로젝트와 연관된 리워드 리스트를 보여줌
-        List<RewardDTO> rewardDTOList = packageRewardsRepository.findRewardsByProjectId(project_id).stream().map(reward -> {
+        //대신 rewardCount는 설정 전이므로 입력x -> 임의의 rewardCount 초기값을 주는 형태 / 아니면 RewardDTO를 고치는 형태
+        //아직 reward가 저장되지 않았으므로 count는 0
+        return packageRewardsRepository.findRewardsByProjectId(project_id).stream().map(reward -> {
             //대신 rewardCount는 설정 전이므로 입력x -> 임의의 rewardCount 초기값을 주는 형태 / 아니면 RewardDTO를 고치는 형태
             try {
                 return new RewardDTO(reward.getId(), reward.getRewardName(), 0, reward.getOptionList(), reward.getOptionType()); //아직 reward가 저장되지 않았으므로 count는 0
@@ -96,13 +98,12 @@ public class PackageServiceImpl implements PackageService {
                 throw new RuntimeException(e);
             }
         }).collect(Collectors.toList());
-        return rewardDTOList;
     }
 
     //전체 프로젝트에 해당하는 패키지 보여줌.
     @Override
     @Transactional(readOnly = true)
-    public List<PackageDTO> viewPackage(Long project_id) throws JsonProcessingException {
+    public List<PackageDTO> viewPackage(Long project_id) {
         List<PackageDTO> packageDTOList = new ArrayList<>();
         List<PackageRewards> packageRewardList = packageRewardsRepository.findAllRewardsByProjectIdWithProjectReward(project_id);
         Map<ProjectPackage, List<ProjectRewards>> packageRewardsMap = packageRewardList.stream()
@@ -138,14 +139,12 @@ public class PackageServiceImpl implements PackageService {
         Map<Long, ProjectRewards> projectRewardsMap = projectRewards.stream().collect(Collectors.toMap(ProjectRewards::getId, reward -> reward));
         //새로운 packageReward 생성
         List<PackageRewards> newPackageRewards = packageDTO.getRewardList().stream()
-                .map(reward -> {
-                    return PackageRewards.builder()
-                            .projectReward(projectRewardsMap.get(reward.getId()))
-                            .rewardCount(reward.getCount())
-                            .projectPackage(projectPackage)
-                            .project(projectPackage.getPackageRewards().get(0).getProject())
-                            .build();
-                })
+                .map(reward -> PackageRewards.builder()
+                        .projectReward(projectRewardsMap.get(reward.getId()))
+                        .rewardCount(reward.getCount())
+                        .projectPackage(projectPackage)
+                        .project(projectPackage.getPackageRewards().get(0).getProject())
+                        .build())
                 .collect(Collectors.toList());
 
         // 기존의 packageRewards 클리어 -> orphanRemoval 속성 때문에 부모와 연관관계가 끊어진 packageReward는 삭제됨.

@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         LoginFilter loginFilter = new LoginFilter(authenticationManagerBean(), jwtService); // 로그인 필터
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtService, userDetailsService); // JWT 인증 필터
-
+        // TODO: Cloud 업로드 이후 수정 필요
         http.csrf().disable()
                 .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -62,20 +62,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "^/member/login$"                               // 로그인
                 ).permitAll()
                 .regexMatchers(HttpMethod.GET,
-                        "^/member/findid\\?name=[^&]*&email=[^&]*$",    // 아이디 찾기
-                        "^/member/check$",                              // 회원 정보 확인
+                        "^/member/.*$",                                 // 아이디 찾기
+                        "^/member/check/.*$",                           // 회원 정보 확인
                         "^/member/check/id\\?loginId=[^&]*$",           // 로그인 ID 중복 확인
                         "^/member/check/nickname\\?nickname=[^&]*$",    // 닉네임 중복 확인
-                        "^/project/projects(\\?page=[^&]*(&size=[^&]*)?(&category=[^&]*)?(&search=[^&]*)?(&progress=[^&]*)?(&sort=[^&]*)?)?$", // 프로젝트 목록 조회 (페이지네이션, 필터 및 정렬 포함)
-                        "^/files/projects/\\d+/.+$",                    // 프로젝트 문서 및 이미지 조회
+                        "^/project/.*",                                 // 프로젝트 목록 조회
+                        "^/files/.*",                                   // 프로젝트 목록 조회
                         "^/project/\\d+$",                              // 프로젝트 상세 조회 (숫자만 매칭)
                         "^/package/\\d+$",                              // 프로젝트 선물 구성 조회 (숫자만 매칭)
-                        "^/order/\\d+/supporters/excel$",            // 후원자 리스트 엑셀 파일 조회 (TODO: 삭제 필요)
+                        "^/order/\\d+/supporters/excel$",               // 후원자 리스트 엑셀 파일 조회
+                        "^/order/\\d+/supporters$",
                         "^/payment/kakao/.+$",
                         "^/payment/toss/.+$"
                 ).permitAll()
                 .regexMatchers(HttpMethod.PUT,
-                        "^/member/\\d+/password$"                       // 비밀번호 변경 (TODO: 수정 필요 (세연))
+                        "^/member/\\d+/password$"                       // 비밀번호 변경
                 ).permitAll()
                 .anyRequest().authenticated().and()
                 .logout()
