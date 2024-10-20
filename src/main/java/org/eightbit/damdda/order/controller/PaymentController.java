@@ -28,7 +28,7 @@ public class PaymentController {
             @RequestParam("paymentKey") String paymentKey,
             @RequestParam("orderId") String orderId,
             @RequestParam("amount") String amount,
-            HttpServletResponse response) throws IOException {
+            HttpServletResponse response) {
         // Toss 결제 승인 처리
         TossResponse tossResponse = tossPayService.confirmPayment(paymentKey, orderId, amount);
         // 결제 성공 여부 확인

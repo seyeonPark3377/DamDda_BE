@@ -190,9 +190,7 @@ public class OrderServiceImpl implements OrderService {
         projectRepository.updateProjectStatus(fundsReceive, order.getSupportingProject().getProject().getId(), 1L);
 
         //package의 salesQuantity,
-        order.getSupportingPackages().forEach(sp -> {
-            packageRepository.updateQuantities(sp.getPackageCount(), sp.getProjectPackage().getId());
-        });
+        order.getSupportingPackages().forEach(sp -> packageRepository.updateQuantities(sp.getPackageCount(), sp.getProjectPackage().getId()));
 
         orderRepository.save(order);  // 변경된 상태를 저장
     }
