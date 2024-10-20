@@ -65,9 +65,7 @@ public class OrderController {
     public ResponseEntity<String> cancelPayment(@PathVariable Long paymentId, @RequestBody Map<String, Object> requestBody) {
         try {
             String status = (String) requestBody.get("paymentStatus");
-            // 서비스에서 결제 상태 취소 처리**********
-            /*paymentId -> paymentId가 들어가서 repository바꿈.*/
-            String message = orderService.cancelPayment(paymentId, status);
+            orderService.cancelPayment(paymentId, status);
             return ResponseEntity.ok("Payment canceled successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel payment");
@@ -100,12 +98,22 @@ public class OrderController {
         return new ResponseEntity<>(statistics, HttpStatus.OK);
     }
 
+    // 엑셀 파일을 생성하고 S3에 업로드하여 presigned URL을 반환하는 엔드포인트
     @GetMapping("/{projectId}/supporters/excel")
     public ResponseEntity<String> generateAndGetSupportersExcel(@PathVariable Long projectId) throws IOException {
-        // Generate the presigned URL by calling the service method
+        // 서비스 메서드를 호출하여 presigned URL 생성
         String presignedUrl = orderService.generateUploadAndGetPresignedUrlForSupportersExcel(projectId);
-        // Return the presigned URL as a response
+        // 생성된 presigned URL을 HTTP 응답으로 반환
         return ResponseEntity.ok(presignedUrl);
+    }
+
+    // 후원자 데이터를 JSON 형식으로 반환하는 엔드포인트
+    @GetMapping("/{projectId}/supporters")
+    public ResponseEntity<List<Map<String, Object>>> getSupportersData(@PathVariable Long projectId) {
+        // 서비스 메서드를 호출하여 후원자 데이터를 가져옴
+        List<Map<String, Object>> supportersData = orderService.getSupportersData(projectId);
+        // 후원자 데이터를 HTTP 응답으로 반환
+        return ResponseEntity.ok(supportersData);
     }
 
 }

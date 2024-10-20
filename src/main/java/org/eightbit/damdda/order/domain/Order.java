@@ -16,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @EntityListeners(value = {AuditingEntityListener.class})
-@EqualsAndHashCode(exclude = "supportingPackages")
+@EqualsAndHashCode(exclude = "supportingPackage")
 public class Order {
 
     @Id
