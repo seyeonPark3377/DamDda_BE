@@ -35,26 +35,32 @@ public class ExcelGenerator {
             throw new IllegalArgumentException("Data cannot be null or empty.");
         }
 
-        // Create a new Excel workbook and sheet
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet(sheetName);
-        log.info("[Excel Generator] Created Excel sheet '{}'.", sheetName);
+        // Use try-with-resources to ensure the Workbook is closed properly
+        try (Workbook workbook = new XSSFWorkbook()) {
+            // Create a new sheet in the workbook
+            Sheet sheet = workbook.createSheet(sheetName);
+            log.info("[Excel Generator] Created Excel sheet '{}'.", sheetName);
 
-        // Extract headers from the first row of the data
-        List<String> headers = new ArrayList<>(data.get(0).keySet());
+            // Extract headers from the first row of the data
+            List<String> headers = new ArrayList<>(data.get(0).keySet());
 
-        // Create the header row
-        createHeaderRow(sheet, headers);
+            // Create the header row
+            createHeaderRow(sheet, headers);
 
-        // Create a reusable date cell style
-        CellStyle dateCellStyle = createDateCellStyle(workbook);
+            // Create a reusable date cell style
+            CellStyle dateCellStyle = createDateCellStyle(workbook);
 
-        // Fill the sheet with data rows
-        fillDataRows(sheet, headers, data, dateCellStyle);
+            // Fill the sheet with data rows
+            fillDataRows(sheet, headers, data, dateCellStyle);
 
-        // Write the workbook content to a temporary file
-        return writeToFile(workbook);
+            // Write the workbook content to a temporary file
+            return writeToFile(workbook);
+        } catch (IOException e) {
+            log.error("[Excel Generator] Failed to generate Excel file.", e);
+            throw e;
+        }
     }
+
 
     /**
      * Creates the header row based on the provided headers list.

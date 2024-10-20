@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -93,8 +94,8 @@ public class OrderServiceImpl implements OrderService {
                 supportingPackage = SupportingPackage.builder()
                         .packageCount(sp.getCount())
                         .OptionList(objectMapper.writeValueAsString(sp.getRewardList().stream().map(PaymentRewardDTO::getSelectOption)
-                                        .filter(Objects::nonNull)
-                                        .collect(Collectors.toList())
+                                .filter(Objects::nonNull)
+                                .collect(Collectors.toList())
                         ))
                         .supportingProject(supportingProject)  // 어떤 프로젝트를 참조하는지 설정
                         .projectPackage(projectPackage)
@@ -313,27 +314,46 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String generateUploadAndGetPresignedUrlForSupportersExcel(Long projectId) throws IOException {
-        // Validate that the currently authenticated user is the organizer of the given project.
-        // Throws UnauthorizedAccessException if the user is not the organizer.
         projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
 
+        // Validate that the projectId is not null
+        if (projectId == null) {
+            throw new IllegalArgumentException("projectId cannot be null.");
+        }
+
         // Generate the file name for the Excel file
-        String fileName = "후원자_관리_" + projectId;
+        String fileName = "Supporter_Management_" + projectId;
         String fileType = ".xlsx";
 
+        // Validate that the S3Util instance is not null
+        if (s3Util == null) {
+            throw new IllegalStateException("S3Util is not initialized.");
+        }
+
+        // Validate that the supporters data is not null or empty
+        List<Map<String, Object>> supportersData = getSupportersDataForExcel(projectId);
+        if (supportersData.isEmpty()) {
+            throw new IllegalStateException("Supporters data is null or empty.");
+        }
+
+        // Generate the Excel file and check if it is null
+        File excelFile = excelGenerator.generateExcelFile(fileName, supportersData);
+        if (excelFile == null) {
+            throw new IllegalStateException("Failed to generate Excel file.");
+        }
+
+        // Validate the generated file before uploading
+        if (!excelFile.exists() || excelFile.length() == 0) {
+            throw new IllegalStateException("Generated Excel file is either not existing or empty.");
+        }
+
         // Upload the generated Excel file to the S3 bucket
-        s3Util.uploadFileToS3(
-                fileName,
-                fileType,
-                excelGenerator.generateExcelFile(
-                        fileName,
-                        getSupportersDataForExcel(projectId)
-                )
-        );
+        s3Util.uploadFileToS3(fileName, fileType, excelFile);
 
         // Return the presigned URL for the uploaded file, with an expiration time
         return s3Util.generatePresignedUrlWithExpiration(fileName, fileType, s3UrlExpirationMinutes);
     }
+
 
     private List<Map<String, Object>> getSupportersDataForExcel(Long projectId) {
         // Retrieve the list of orders for the specified project
@@ -346,19 +366,18 @@ public class OrderServiceImpl implements OrderService {
 
             // Add order details
             rowData.put("후원번호", order.getOrderId());
-//            rowData.put("이름", order.getSupportingProject().getUser().getName());
+            rowData.put("이름", order.getSupportingProject().getUser().getName());
             rowData.put("후원일시", order.getCreatedAt());
 
             // Add package details
             rowData.put("패키지 이름", joinSupportingPackageDetails(order.getSupportingPackages(), supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackageName())));
-//            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackage(),
-//                    supportingPackage -> String.valueOf(supportingPackage.getPackageCount())));
-//            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackage(),
-//                    supportingPackage -> String.valueOf(supportingPackage.getPackageCount())));
-//            rowData.put("패키지 가격", joinSupportingPackageDetails(order.getSupportingPackage(),
-//                    supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackagePrice())));
+            rowData.put("패키지 개수", joinSupportingPackageDetails(order.getSupportingPackages(),
+                    supportingPackage -> String.valueOf(supportingPackage.getPackageCount())));
+            rowData.put("패키지 가격", joinSupportingPackageDetails(order.getSupportingPackages(),
+                    supportingPackage -> String.valueOf(supportingPackage.getProjectPackage().getPackagePrice())));
 
-            // TODO: 옵션 정보 추가 필요
+            // Add option details
+            rowData.put("패키지 옵션 정보", joinSupportingPackageDetails(order.getSupportingPackages(), supportingPackage -> String.valueOf(supportingPackage.getOptionList())));
 
             // Add payment details, if available
             if (order.getPayment() != null) {

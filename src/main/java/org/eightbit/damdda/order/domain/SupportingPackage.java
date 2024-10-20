@@ -1,9 +1,6 @@
 package org.eightbit.damdda.order.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.eightbit.damdda.project.domain.ProjectPackage;
 
 import javax.persistence.*;
@@ -14,6 +11,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(exclude = "order")
 public class SupportingPackage {
 
     @Id
@@ -36,4 +34,5 @@ public class SupportingPackage {
 
     @Column(columnDefinition = "json")
     private String OptionList;
+
 }
