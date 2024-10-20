@@ -49,7 +49,6 @@ public class ProjectServiceImpl implements ProjectService {
         projectValidator.validateMemberIsOrganizer(securityContextUtil.getAuthenticatedMemberId(), projectId);
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("해당 아이디와 일치하는 프로젝트 없음! Project not found with ID: " + projectId));
-        // TODO: 수정필요
         List<ProjectImage> projectImages = projectImageRepository.findAllByProjectIdOrderByOrd(projectId);
         List<String> productImages = projectImages.stream()
                 .filter(projectImage -> projectImage.getImageType().getImageType().equals("product"))

@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class QnaQuestionServiceImpl implements QnaQuestionService {
-    // TODO: 생성, 수정 시에 memberId를 서비스 단에서 넣기.
-    // TODO: 사용자 정보 (이름, 프로필 사진)도 같이 리턴해주기.
 
     private final ModelMapper modelMapper;
     private final QnaQuestionRepository qnaQuestionRepository;
