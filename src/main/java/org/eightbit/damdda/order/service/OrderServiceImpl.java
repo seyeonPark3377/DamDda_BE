@@ -14,6 +14,8 @@ import org.eightbit.damdda.order.dto.OrderDTO;
 import org.eightbit.damdda.order.dto.PaymentPackageDTO;
 import org.eightbit.damdda.order.dto.PaymentRewardDTO;
 import org.eightbit.damdda.order.dto.ProjectStatisticsDTO;
+import org.eightbit.damdda.project.domain.PackageRewards;
+
 import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.domain.ProjectPackage;
 import org.eightbit.damdda.security.util.SecurityContextUtil;
@@ -83,9 +85,19 @@ public class OrderServiceImpl implements  OrderService{
 
         // 여러 개의 SupportingPackage를 처리할 수 있도록 Set을 사용
         Set<SupportingPackage> supportingPackages = new HashSet<>();
+        
+        // Order 엔티티 생성 및 저장
+        Order order = Order.builder()
+                .delivery(delivery)
+                .payment(payment)
+                .supportingProject(supportingProject)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Order savedOrder=orderRepository.save(order);
+        orderDTO.setOrderId(savedOrder.getOrderId());
 
         orderDTO.getPaymentPackageDTO().forEach((sp)-> {
-
             ProjectPackage projectPackage = packageRepository.findById(sp.getId()).orElseThrow(()->new RuntimeException("해당 패키지를 찾을 수 없습니다."));
             SupportingPackage supportingPackage;
             try {
@@ -97,6 +109,7 @@ public class OrderServiceImpl implements  OrderService{
                                         .collect(Collectors.toList())
                         ))
                         .supportingProject(supportingProject)  // 어떤 프로젝트를 참조하는지 설정
+                        .order(order)
                         .projectPackage(projectPackage)
                         .build();
             } catch (JsonProcessingException e) {
@@ -106,17 +119,6 @@ public class OrderServiceImpl implements  OrderService{
             supportingPackages.add(supportingPackage);
         });
 
-        // Order 엔티티 생성 및 저장
-        Order order = Order.builder()
-                .delivery(delivery)
-                .payment(payment)
-                .supportingProject(supportingProject)
-                .supportingPackage(supportingPackages)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        Order savedOrder=orderRepository.save(order);
-        orderDTO.setOrderId(savedOrder.getOrderId());
         return orderDTO;
     }
 
@@ -144,12 +146,7 @@ public class OrderServiceImpl implements  OrderService{
         // 각 후원 프로젝트에 속한 주문을 모두 조회
         return supportingProjects.stream()
                 .flatMap(supportingProject -> orderRepository.findAllBySupportingProject(supportingProject).stream())
-                .map(order -> OrderDTO.builder()
-                        .delivery(order.getDelivery())  // 배송 정보
-                        .payment(order.getPayment())    // 결제 정보
-                        .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                        .paymentPackageDTO(packageEntityToDto(order.getSupportingPackage()))  // 선물 구성 정보
-                        .build())
+                .map(this::convertToOrderDTO)
                 .collect(Collectors.toList());
     }
 
@@ -185,6 +182,11 @@ public class OrderServiceImpl implements  OrderService{
                 Long fundsReceive = order.getSupportingPackage().stream().mapToLong(sp-> (long) sp.getPackageCount() *sp.getProjectPackage().getPackagePrice()).sum();
                 fundsReceive = fundsReceive *-1L;
                 projectRepository.updateProjectStatus(fundsReceive,order.getSupportingProject().getProject().getId(),-1L);
+                //package의 salesQuantity,
+                order.getSupportingPackage().forEach(sp ->{
+                    Integer salesQunatity = sp.getPackageCount()*-1;
+                    packageRepository.updateQuantities(salesQunatity,sp.getProjectPackage().getId());
+                });
                 return "결제 취소됨";
             } else {
                 throw new IllegalArgumentException("Payment not found for this supporting project");
@@ -192,6 +194,24 @@ public class OrderServiceImpl implements  OrderService{
         } else {
             throw new IllegalArgumentException("SupportingProject not found with id: " + paymentId);
         }
+
+    }
+
+
+    //order 테이블 가져오기
+    @Override
+    public List<Order> getOrdersBySupportingProject(SupportingProject supportingProject) {
+        return orderRepository.findAllBySupportingProject(supportingProject);
+    }
+
+    private OrderDTO convertToOrderDTO(Order order) {
+        return OrderDTO.builder()
+                .orderId(order.getOrderId())
+                .delivery(order.getDelivery())
+                .payment(order.getPayment())
+                .supportingProject(order.getSupportingProject())
+                .paymentPackageDTO(packageEntityToDto(order.getSupportingPackage()))
+                .build();
 
     }
 
@@ -205,7 +225,7 @@ public class OrderServiceImpl implements  OrderService{
                     .delivery(order.getDelivery())  // 배송 정보
                     .payment(order.getPayment())    // 결제 정보
                     .supportingProject(order.getSupportingProject())  // 후원 프로젝트 정보
-                    .paymentPackageDTO(packageEntityToDto(order.getSupportingPackage()))  // 선물 구성 정보
+                    .paymentPackageDTO(packageEntityToDto(supportingPackageRepository.findByOrder_OrderId(order.getOrderId())))  // 선물 구성 정보
                     .build();
         }).collect(Collectors.toList());
     }
@@ -365,7 +385,7 @@ public class OrderServiceImpl implements  OrderService{
         // 업로드된 파일에 대한 presigned URL을 생성하여 반환 (유효 시간 설정)
         return s3Util.generatePresignedUrlWithExpiration(fileName, fileType, s3UrlExpirationMinutes);
     }
-    
+
     // Set으로 이루어진 여러개의 패키지 정보 "," 기준으로 병합
     private String joinSupportingPackageDetails(Set<SupportingPackage> supportingPackages, Function<SupportingPackage, String> mapper) {
         // 패키지 정보를 단일 문자열로 변환, 각 항목은 쉼표로 구분됨
@@ -374,18 +394,29 @@ public class OrderServiceImpl implements  OrderService{
                 .collect(Collectors.joining(", "));
     }
 
+
     private Set<PaymentPackageDTO> packageEntityToDto(Set<SupportingPackage> supportingPackage){
 
-        return supportingPackage.stream().map(pac-> PaymentPackageDTO.builder()
-                .id(pac.getProjectPackage().getId())
-                .name(pac.getProjectPackage().getPackageName())
-                .price(pac.getProjectPackage().getPackagePrice())
-                .count(pac.getPackageCount())
-                .rewardList(pac.getProjectPackage().getPackageRewards().stream().map(pr -> PaymentRewardDTO.builder()
+        Set<PaymentPackageDTO> paymentPackageDTOs = supportingPackage.stream().map( pac-> {
+            return PaymentPackageDTO.builder()
+                    .id(pac.getProjectPackage().getId())
+                    .name(pac.getProjectPackage().getPackageName())
+                    .price(pac.getProjectPackage().getPackagePrice())
+                    .count(pac.getPackageCount())
+                    .rewardList(convertToPaymentRewardDTOList(pac.getProjectPackage().getPackageRewards(), pac.getOptionList()))
+                    .build();
+        }).collect(Collectors.toSet());
+        return paymentPackageDTOs;
+
+    }
+
+    private List<PaymentRewardDTO> convertToPaymentRewardDTOList(List<PackageRewards> packageRewards, String optionList) {
+        return packageRewards.stream()
+                .map(pr->PaymentRewardDTO.builder()
                         .rewardName(pr.getProjectReward().getRewardName())
-                        .selectOption(pac.getOptionList())
-                        .build()).collect(Collectors.toList()))
-                .build()).collect(Collectors.toSet());
+                        .selectOption(optionList)
+                        .build()
+                ).collect(Collectors.toList());
     }
 
     // 해당 프로젝트 아이디의 프로젝트가 존재하는지 유효성 확인

@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface SupportingPackageRepository extends JpaRepository<SupportingPackage, Long> {
@@ -32,4 +33,5 @@ public interface SupportingPackageRepository extends JpaRepository<SupportingPac
     // 반환값:
     // - List<Object[]> 형식으로 반환하며, 각 배열의 첫 번째 요소는 후원 날짜(LocalDateTime), 두 번째 요소는 총 후원 금액(Long)
 
+    Set<SupportingPackage> findByOrder_OrderId(@Param("orderId") Long orderId);
 }
