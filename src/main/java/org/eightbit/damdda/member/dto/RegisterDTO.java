@@ -1,6 +1,5 @@
 package org.eightbit.damdda.member.dto;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.eightbit.damdda.member.domain.Member;

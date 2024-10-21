@@ -4,7 +4,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import net.coobird.thumbnailator.Thumbnails;
 import org.eightbit.damdda.project.domain.Project;
 import org.eightbit.damdda.project.domain.ProjectImage;
 import org.eightbit.damdda.project.domain.ProjectImageType;
@@ -12,14 +11,10 @@ import org.eightbit.damdda.project.dto.FileDTO;
 import org.eightbit.damdda.project.repository.ProjectImageRepository;
 import org.eightbit.damdda.project.repository.ProjectImageTypeRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -32,8 +27,6 @@ public class ImgServiceImpl implements ImgService {
 
     private final ProjectImageRepository projectImageRepository;
     private final ProjectImageTypeRepository projectImageTypeRepository;
-    @Value("${org.eightbit.damdda.path}")
-    private String basePath;
     @Value("${cloud.aws.credentials.bucket}")
     private String bucketName;
 
