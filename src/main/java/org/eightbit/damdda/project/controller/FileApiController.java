@@ -10,15 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriUtils;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
-
-@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.0.35:3000"})
 
 @RestController
 @RequestMapping("/files/projects")
@@ -26,8 +20,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class FileApiController {
 
-    @Value("${org.eightbit.damdda.path}")
-    private String basePath;  // 실제 파일이 저장된 경로
     @Value("${cloud.aws.credentials.bucket}")
     private String bucketName;
 
