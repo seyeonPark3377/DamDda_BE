@@ -24,7 +24,7 @@ public class PaymentController {
     private final KakaoPayService kakaoPayService;
     private final TossPayService tossPayService;
 
-    @Value("${server.client.base-url}")
+    @Value("${server.client.base-url2}")
     private String clientBaseUrl;
 
     @GetMapping("/toss/success")
