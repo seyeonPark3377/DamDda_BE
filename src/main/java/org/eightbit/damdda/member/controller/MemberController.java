@@ -154,6 +154,7 @@ public class MemberController {
                 memberDTO.setImageUrl(fileName);
             }
             MemberDTO updateInfo = memberService.updateMember(memberDTO);
+
             return ResponseEntity.ok(updateInfo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

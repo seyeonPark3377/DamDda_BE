@@ -61,7 +61,7 @@ public class QnaQuestionServiceImpl implements QnaQuestionService {
                 .title(qnaQuestionDTO.getTitle())
                 .content(qnaQuestionDTO.getContent())
                 .member(existingMember)  // member도 빌더로 설정
-                .visibility(qnaQuestionDTO.getVisibility())
+                .visibility(QnaQuestion.Visibility.PUBLIC)
                 .build();
 
         // 기존 질문이 존재하는 경우 작성자가 일치하는지 확인
