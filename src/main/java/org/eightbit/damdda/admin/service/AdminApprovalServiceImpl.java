@@ -32,7 +32,6 @@ public class AdminApprovalServiceImpl implements AdminApprovalService {
         AdminApproval adminApproval = AdminApproval.builder()
                 .approval(0)
                 .project(project)
-                .approval(0)
                 .build();
         adminApprovalRepository.save(adminApproval);
     }

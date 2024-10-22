@@ -380,7 +380,7 @@ public class ProjectServiceImpl implements ProjectService {
         docService.deleteDocFiles(projectDocumentRepository.findAllByProjectId(projectId));
 
         if (delImg) {
-            project.setDeletedAt(LocalDateTime.from(Instant.now()));
+            project.setDeletedAt(LocalDateTime.now());
             projectRepository.save(project);
         }
 
