@@ -62,17 +62,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "^/member/login$"                               // 로그인
                 ).permitAll()
                 .regexMatchers(HttpMethod.GET,
-                        "^/notice\\?projectId=[^&]*$",
-                        "^/member/.*$",                                 // 아이디 찾기
-                        "^/member/check/.*$",                           // 회원 정보 확인
+                        "^/member/.*$",                                 // 아이디 찾기 및 회원 관련 모든 경로
+                        "^/member/check/.*$",                           // 회원 정보 확인 관련 경로
                         "^/member/check/id\\?loginId=[^&]*$",           // 로그인 ID 중복 확인
                         "^/member/check/nickname\\?nickname=[^&]*$",    // 닉네임 중복 확인
                         "^/project/.*",                                 // 프로젝트 목록 조회
-                        "^/files/.*",                                   // 프로젝트 목록 조회
-                        "^/project/\\d+$",                              // 프로젝트 상세 조회 (숫자만 매칭)
-                        "^/package/\\d+$",                              // 프로젝트 선물 구성 조회 (숫자만 매칭)
-                        "^/payment/kakao/.+$",
-                        "^/payment/toss/.+$"
+                        "^/files/.*",                                   // 파일 관련 작업
+                        "^/project/\\d+$",                              // 프로젝트 상세 조회 (숫자 ID만 매칭)
+                        "^/package/\\d+$",                              // 프로젝트 선물 구성 조회 (숫자 ID만 매칭)
+                        "^/payment/kakao/.+$",                          // 카카오 결제 관련 경로
+                        "^/payment/toss/.+$",                           // 토스 결제 관련 경로
+                        "^/qna/(question|reply).*",                     // 질문 및 답변 관련 경로
+                        "^/notice\\?projectId=[^&]*$",                  // 특정 프로젝트 공지 조회
                 ).permitAll()
                 .regexMatchers(HttpMethod.PUT,
                         "^/member/\\d+/password$"                       // 비밀번호 변경
