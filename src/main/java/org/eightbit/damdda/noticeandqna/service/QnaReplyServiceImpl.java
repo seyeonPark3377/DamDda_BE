@@ -3,6 +3,7 @@ package org.eightbit.damdda.noticeandqna.service;
 import lombok.RequiredArgsConstructor;
 import org.eightbit.damdda.common.exception.custom.UnauthorizedAccessException;
 import org.eightbit.damdda.member.domain.Member;
+import org.eightbit.damdda.member.service.MemberService;
 import org.eightbit.damdda.noticeandqna.domain.QnaQuestion;
 import org.eightbit.damdda.noticeandqna.domain.QnaReply;
 import org.eightbit.damdda.noticeandqna.dto.QnaReplyDTO;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QnaReplyServiceImpl implements QnaReplyService {
 
+    private final MemberService memberService;
     private final QnaReplyRepository qnaReplyRepository;
     private final ModelMapper modelMapper;
     private final SecurityContextUtil securityContextUtil;
@@ -29,8 +31,6 @@ public class QnaReplyServiceImpl implements QnaReplyService {
     public QnaReplyDTO saveQnaReply(QnaReplyDTO qnaReplyDTO) {
         Long qnaReplyId = qnaReplyDTO.getId();
         Long memberId = securityContextUtil.getAuthenticatedMemberId();
-
-        qnaReplyDTO.setMemberId(memberId);
 
         Member existingMember = Member.builder().id(memberId).build();
 
@@ -81,7 +81,13 @@ public class QnaReplyServiceImpl implements QnaReplyService {
         List<QnaReply> qnaReplies = qnaReplyRepository.findAllByDeletedAtIsNullAndQnaQuestionId(qnaQuestionId);
 
         return qnaReplies.stream()
-                .map(qnaReply -> modelMapper.map(qnaReply, QnaReplyDTO.class))  // 각 엔티티를 DTO로 변환.
+                .map(qnaReply -> {
+                    // QnaReply를 QnaReplyDTO로 변환
+                    QnaReplyDTO qnaReplyDTO = modelMapper.map(qnaReply, QnaReplyDTO.class);
+                    // memberId를 이용해 닉네임을 설정
+                    qnaReplyDTO.setMemberId(memberService.getById(qnaReply.getMember().getId()).getNickname());
+                    return qnaReplyDTO;
+                })
                 .collect(Collectors.toList());
     }
 

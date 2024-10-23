@@ -45,9 +45,6 @@ public class QnaQuestionServiceImpl implements QnaQuestionService {
         Long qnaQuestionId = qnaQuestionDTO.getId();
         Long memberId = securityContextUtil.getAuthenticatedMemberId();
 
-        // 현재 로그인한 사용자의 ID를 DTO에 설정
-        qnaQuestionDTO.setMemberId(memberId);
-
         // 이미 존재하는 멤버를 가져와서 빌더에 포함
         Member existingMember = memberService.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
@@ -116,7 +113,13 @@ public class QnaQuestionServiceImpl implements QnaQuestionService {
 
         // 엔티티 -> DTO 변환.
         List<QnaQuestionDTO> qnaQuestionDTOs = qnaQuestions.stream()
-                .map(qnaQuestion -> modelMapper.map(qnaQuestion, QnaQuestionDTO.class))
+                .map(qnaQuestion -> {
+                    // QnaQuestion을 QnaQuestionDTO로 변환
+                    QnaQuestionDTO qnaQuestionDTO = modelMapper.map(qnaQuestion, QnaQuestionDTO.class);
+                    // memberId를 이용해 닉네임을 설정
+                    qnaQuestionDTO.setMemberId(memberService.getById(qnaQuestion.getMember().getId()).getNickname());
+                    return qnaQuestionDTO;
+                })
                 .collect(Collectors.toList());
 
         // DTO 리스트를 Page 객체로 반환.

@@ -121,15 +121,12 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public MemberDTO updateMember(MemberDTO memberDTO) {
-        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
-        memberDTO.setNickname(memberDTO.getNickname());
-        memberDTO.setEmail(memberDTO.getEmail());
-        memberDTO.setPhoneNumber(memberDTO.getPhoneNumber());
-        memberDTO.setAddress(memberDTO.getAddress());
-        memberDTO.setDetailedAddress(memberDTO.getDetailedAddress());
-        memberDTO.setPostCode(memberDTO.getPostCode());
-        memberDTO.setImageUrl(memberDTO.getImageUrl());
-
+        if (memberDTO.getPassword() == null || memberDTO.getPassword().isBlank()) {
+            Member member = memberRepository.findById(memberDTO.getId()).orElseThrow();
+            memberDTO.setPassword(member.getPassword());
+        } else {
+            memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
+        }
         this.memberRepository.save(memberDTO.toEntity());
         memberDTO.setPassword(null);
         return memberDTO;

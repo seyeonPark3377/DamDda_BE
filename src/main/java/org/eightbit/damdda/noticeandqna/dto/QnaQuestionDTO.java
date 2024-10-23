@@ -29,7 +29,7 @@ public class QnaQuestionDTO extends BaseDTO {
     /**
      * Q&A 질문을 작성한 회원의 ID.
      */
-    private Long memberId;
+    private String memberId;
 
     /**
      * Q&A 질문의 제목.

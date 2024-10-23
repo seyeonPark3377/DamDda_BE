@@ -17,7 +17,7 @@ public class QnaReplyDTO extends BaseDTO {
     private Long qnaQuestionId;
 
     // Q&A 댓글 작성자 ID
-    private Long memberId;
+    private String memberId;
 
     // 부모 댓글 ID
     private Long parentReplyId;
