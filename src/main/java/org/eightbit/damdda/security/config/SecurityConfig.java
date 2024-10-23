@@ -62,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "^/member/login$"                               // 로그인
                 ).permitAll()
                 .regexMatchers(HttpMethod.GET,
+                        "^/notice\\?projectId=[^&]*$",
                         "^/member/.*$",                                 // 아이디 찾기
                         "^/member/check/.*$",                           // 회원 정보 확인
                         "^/member/check/id\\?loginId=[^&]*$",           // 로그인 ID 중복 확인
