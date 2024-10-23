@@ -73,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "^/payment/kakao/.+$",                          // 카카오 결제 관련 경로
                         "^/payment/toss/.+$",                           // 토스 결제 관련 경로
                         "^/qna/(question|reply).*",                     // 질문 및 답변 관련 경로
-                        "^/notice\\?projectId=[^&]*$",                  // 특정 프로젝트 공지 조회
+                        "^/notice\\?projectId=[^&]*$"                   // 특정 프로젝트 공지 조회
                 ).permitAll()
                 .regexMatchers(HttpMethod.PUT,
                         "^/member/\\d+/password$"                       // 비밀번호 변경
