@@ -26,8 +26,10 @@ public class QnaQuestionDTO extends BaseDTO {
     @NotNull(message = "프로젝트 ID는 필수 항목입니다.")
     private Long projectId;
 
+    // TODO: 프론트 AXIOS NickName을 위한 임시 조치
+
     /**
-     * Q&A 질문을 작성한 회원의 ID.
+     * Q&A 질문을 작성한 회원의 닉네임.
      */
     private String memberId;
 

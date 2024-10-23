@@ -70,7 +70,12 @@ public class QnaQuestionServiceImpl implements QnaQuestionService {
         QnaQuestion savedQnaQuestion = qnaQuestionRepository.save(qnaQuestion);
 
         // 저장된 Q&A 질문을 DTO로 변환하여 반환
-        return modelMapper.map(savedQnaQuestion, QnaQuestionDTO.class);
+        QnaQuestionDTO resultQnaQuestionDTO = modelMapper.map(savedQnaQuestion, QnaQuestionDTO.class);
+
+        // TODO: 프론트 AXIOS NickName을 위한 임시 조치
+        resultQnaQuestionDTO.setMemberId(memberService.getById(qnaQuestion.getMember().getId()).getNickname());
+
+        return resultQnaQuestionDTO;
     }
 
     /**
@@ -116,7 +121,6 @@ public class QnaQuestionServiceImpl implements QnaQuestionService {
                 .map(qnaQuestion -> {
                     // QnaQuestion을 QnaQuestionDTO로 변환
                     QnaQuestionDTO qnaQuestionDTO = modelMapper.map(qnaQuestion, QnaQuestionDTO.class);
-                    // memberId를 이용해 닉네임을 설정
                     qnaQuestionDTO.setMemberId(memberService.getById(qnaQuestion.getMember().getId()).getNickname());
                     return qnaQuestionDTO;
                 })

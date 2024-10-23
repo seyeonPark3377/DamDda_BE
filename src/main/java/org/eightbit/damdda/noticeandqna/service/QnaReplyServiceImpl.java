@@ -58,7 +58,12 @@ public class QnaReplyServiceImpl implements QnaReplyService {
 
         QnaReply savedQnaReply = qnaReplyRepository.save(qnaReply);
 
-        return modelMapper.map(savedQnaReply, QnaReplyDTO.class);
+        QnaReplyDTO resultQnaReplyDTO = modelMapper.map(savedQnaReply, QnaReplyDTO.class);
+
+        // TODO: 프론트 AXIOS NickName을 위한 임시 조치
+        resultQnaReplyDTO.setMemberId(memberService.getById(qnaReply.getMember().getId()).getNickname());
+
+        return resultQnaReplyDTO;
     }
 
     @Override
@@ -84,7 +89,6 @@ public class QnaReplyServiceImpl implements QnaReplyService {
                 .map(qnaReply -> {
                     // QnaReply를 QnaReplyDTO로 변환
                     QnaReplyDTO qnaReplyDTO = modelMapper.map(qnaReply, QnaReplyDTO.class);
-                    // memberId를 이용해 닉네임을 설정
                     qnaReplyDTO.setMemberId(memberService.getById(qnaReply.getMember().getId()).getNickname());
                     return qnaReplyDTO;
                 })

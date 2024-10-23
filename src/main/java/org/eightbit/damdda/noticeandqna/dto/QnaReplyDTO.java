@@ -16,7 +16,8 @@ public class QnaReplyDTO extends BaseDTO {
     // Q&A 댓글이 작성된 질문 ID
     private Long qnaQuestionId;
 
-    // Q&A 댓글 작성자 ID
+    // TODO: 프론트 AXIOS NickName을 위한 임시 조치
+    // Q&A 댓글 작성자 닉네임
     private String memberId;
 
     // 부모 댓글 ID
